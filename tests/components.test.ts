@@ -71,3 +71,25 @@ describe("switch", () => {
     expect(tracks.some((e) => e.backgroundColor === color.muted)).toBe(true);
   });
 });
+
+describe("select", () => {
+  it("shows a trigger with a chevron and an open menu with a highlighted item", () => {
+    const els = load(out, "select");
+    expect(texts(els)).toContain("Pick a style");
+    expect(texts(els)).toContain("Comic");
+    // One chevron line.
+    expect(count(els, "line")).toBe(1);
+    // The highlighted menu row is an accent-filled rectangle.
+    expect(els.some((e) => e.type === "rectangle" && e.backgroundColor === color.accent)).toBe(true);
+  });
+});
+
+describe("dropdown-menu", () => {
+  it("shows a trigger, four items, one hover row and one separator", () => {
+    const els = load(out, "dropdown-menu");
+    expect(texts(els)).toContain("Duplicate");
+    expect(texts(els)).toContain("Delete");
+    // One separator rule.
+    expect(count(els, "line")).toBe(1);
+  });
+});
