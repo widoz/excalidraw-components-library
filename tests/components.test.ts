@@ -93,3 +93,39 @@ describe("dropdown-menu", () => {
     expect(count(els, "line")).toBe(1);
   });
 });
+
+describe("card", () => {
+  it("has a title, two body lines and a footer button", () => {
+    const els = load(out, "card");
+    expect(texts(els)).toContain("Sketch Kit");
+    expect(texts(els)).toContain("Get it");
+    expect(count(els, "line")).toBe(2);
+  });
+});
+
+describe("badge", () => {
+  it("has four badges with four labels", () => {
+    const els = load(out, "badge");
+    expect(count(els, "text")).toBe(4);
+    expect(texts(els)).toContain("New");
+  });
+});
+
+describe("alert", () => {
+  it("has a burst behind the icon plus a title and body", () => {
+    const els = load(out, "alert");
+    const bursts = els.filter((e) => e.type === "line" && Array.isArray(e.points) && (e.points as unknown[]).length > 10);
+    expect(bursts).toHaveLength(1);
+    expect(texts(els)).toContain("Heads up!");
+  });
+});
+
+describe("avatar", () => {
+  it("has an image placeholder, an initials circle and a stack of three", () => {
+    const els = load(out, "avatar");
+    expect(texts(els)).toContain("GS");
+    // 2 shadowed avatars (2 ellipses each) = 4, + 2 glyph ellipses = 6,
+    // + 3 flat stacked avatars (1 each) = 9.
+    expect(count(els, "ellipse")).toBe(9);
+  });
+});
