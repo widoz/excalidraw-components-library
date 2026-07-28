@@ -188,3 +188,23 @@ describe("dialog", () => {
     expect(count(els, "line")).toBe(4);
   });
 });
+
+describe("breadcrumb", () => {
+  it("has three crumbs and two chevron separators", () => {
+    const els = load(out, "breadcrumb");
+    expect(texts(els)).toEqual(expect.arrayContaining(["Home", "Library", "Button"]));
+    expect(count(els, "line")).toBe(2);
+  });
+});
+
+describe("pagination", () => {
+  it("has five page cells with one active, plus prev and next arrows", () => {
+    const els = load(out, "pagination");
+    expect(texts(els)).toEqual(expect.arrayContaining(["1", "2", "3", "4", "5"]));
+    const active = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    // Active page cell is drawn as a shadowed box, so the accent rect is the surface one.
+    expect(active).toHaveLength(1);
+    // Two chevrons.
+    expect(count(els, "line")).toBe(2);
+  });
+});

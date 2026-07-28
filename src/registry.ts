@@ -2,12 +2,14 @@ import type { ExcalidrawElement } from "./element.js";
 import alert from "./components/alert.js";
 import avatar from "./components/avatar.js";
 import badge from "./components/badge.js";
+import breadcrumb from "./components/breadcrumb.js";
 import button from "./components/button.js";
 import card from "./components/card.js";
 import checkboxGroup from "./components/checkbox-group.js";
 import dialog from "./components/dialog.js";
 import dropdownMenu from "./components/dropdown-menu.js";
 import input from "./components/input.js";
+import pagination from "./components/pagination.js";
 import progress from "./components/progress.js";
 import radioGroup from "./components/radio-group.js";
 import select from "./components/select.js";
@@ -30,12 +32,14 @@ export const registry: Record<string, ComponentEntry> = {
   alert: { title: "Alert", build: alert },
   avatar: { title: "Avatar", build: avatar },
   badge: { title: "Badge", build: badge },
+  breadcrumb: { title: "Breadcrumb", build: breadcrumb },
   button: { title: "Button", build: button },
   card: { title: "Card", build: card },
   "checkbox-group": { title: "Checkbox Group", build: checkboxGroup },
   dialog: { title: "Dialog", build: dialog },
   "dropdown-menu": { title: "Dropdown Menu", build: dropdownMenu },
   input: { title: "Input", build: input },
+  pagination: { title: "Pagination", build: pagination },
   progress: { title: "Progress", build: progress },
   "radio-group": { title: "Radio Group", build: radioGroup },
   select: { title: "Select", build: select },

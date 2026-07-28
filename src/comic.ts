@@ -107,13 +107,26 @@ export function checkMark(
 
 export function chevron(
   f: Factory,
-  o: { x: number; y: number; s: number; dir: "down" | "right"; stroke?: string },
+  o: { x: number; y: number; s: number; dir: "down" | "right" | "left"; stroke?: string },
 ): ExcalidrawElement[] {
   const s = o.s;
-  const points: Array<[number, number]> = o.dir === "down"
-    ? [[0, 0], [s, s * 0.7], [s * 2, 0]]
-    : [[0, 0], [s * 0.7, s], [0, s * 2]];
-  return [f.line({ x: o.x, y: o.y, points, stroke: o.stroke ?? color.ink })];
+  if (o.dir === "down") {
+    return [f.line({ x: o.x, y: o.y, points: [[0, 0], [s, s * 0.7], [s * 2, 0]], stroke: o.stroke ?? color.ink })];
+  }
+  if (o.dir === "left") {
+    // Mirror the "right" points ([0,0],[s*0.7,s],[0,s*2]) horizontally about x = s*0.7:
+    // mirrored x' = s*0.7 - x, giving (s*0.7,0), (0,s), (s*0.7,s*2). Factory.line requires
+    // the first point to be [0,0], so shift the origin right by s*0.7 and subtract that
+    // from every mirrored x: (0,0), (-s*0.7,s), (0,s*2). The drawn bounding box is then
+    // [x, x+s*0.7] — identical to a "right" chevron at the same x, just mirrored.
+    return [f.line({
+      x: o.x + s * 0.7,
+      y: o.y,
+      points: [[0, 0], [-s * 0.7, s], [0, s * 2]],
+      stroke: o.stroke ?? color.ink,
+    })];
+  }
+  return [f.line({ x: o.x, y: o.y, points: [[0, 0], [s * 0.7, s], [0, s * 2]], stroke: o.stroke ?? color.ink })];
 }
 
 /** Speech bubble: box plus a closed triangular tail. */

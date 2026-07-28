@@ -76,6 +76,22 @@ describe("chevron", () => {
     expect((right!.points as number[][]).length).toBe(3);
     expect(down!.points).not.toEqual(right!.points);
   });
+
+  it("mirrors right when pointing left, occupying the same bounding box", () => {
+    const [right] = chevron(new Factory("demo"), { x: 0, y: 0, s: 12, dir: "right" });
+    const [left] = chevron(new Factory("demo"), { x: 0, y: 0, s: 12, dir: "left" });
+    expect((left!.points as number[][]).length).toBe(3);
+    expect(left!.points).not.toEqual(right!.points);
+    // Factory.line requires the first point to be exactly [0, 0].
+    expect((left!.points as number[][])[0]).toEqual([0, 0]);
+    // Same drawn bounding box (width s*0.7, height s*2) as a "right" chevron at the same x.
+    expect(left!.width).toBe(right!.width);
+    expect(left!.height).toBe(right!.height);
+    const rightXs = (right!.points as number[][]).map(([px]) => (right!.x as number) + px!);
+    const leftXs = (left!.points as number[][]).map(([px]) => (left!.x as number) + px!);
+    expect(Math.min(...leftXs)).toBe(Math.min(...rightXs));
+    expect(Math.max(...leftXs)).toBe(Math.max(...rightXs));
+  });
 });
 
 describe("bubble", () => {
