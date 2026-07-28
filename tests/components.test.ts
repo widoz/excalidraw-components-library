@@ -170,3 +170,21 @@ describe("slider", () => {
     expect(tails).toHaveLength(1);
   });
 });
+
+describe("tooltip", () => {
+  it("has a trigger and a speech bubble with a tail", () => {
+    const els = load(out, "tooltip");
+    expect(texts(els)).toContain("Save your work!");
+    const tails = els.filter((e) => e.type === "line" && (e.points as unknown[]).length === 4);
+    expect(tails).toHaveLength(1);
+  });
+});
+
+describe("dialog", () => {
+  it("has a panel frame, a close X, and two footer buttons", () => {
+    const els = load(out, "dialog");
+    expect(texts(els)).toEqual(expect.arrayContaining(["Delete drawing?", "Cancel", "Delete"]));
+    // The close X is two 2-point lines; body copy is two ruled lines.
+    expect(count(els, "line")).toBe(4);
+  });
+});

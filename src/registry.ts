@@ -5,6 +5,7 @@ import badge from "./components/badge.js";
 import button from "./components/button.js";
 import card from "./components/card.js";
 import checkboxGroup from "./components/checkbox-group.js";
+import dialog from "./components/dialog.js";
 import dropdownMenu from "./components/dropdown-menu.js";
 import input from "./components/input.js";
 import progress from "./components/progress.js";
@@ -15,6 +16,7 @@ import switchComponent from "./components/switch.js";
 import table from "./components/table.js";
 import tabs from "./components/tabs.js";
 import textarea from "./components/textarea.js";
+import tooltip from "./components/tooltip.js";
 
 export type ComponentBuilder = () => ExcalidrawElement[];
 
@@ -31,6 +33,7 @@ export const registry: Record<string, ComponentEntry> = {
   button: { title: "Button", build: button },
   card: { title: "Card", build: card },
   "checkbox-group": { title: "Checkbox Group", build: checkboxGroup },
+  dialog: { title: "Dialog", build: dialog },
   "dropdown-menu": { title: "Dropdown Menu", build: dropdownMenu },
   input: { title: "Input", build: input },
   progress: { title: "Progress", build: progress },
@@ -41,4 +44,5 @@ export const registry: Record<string, ComponentEntry> = {
   table: { title: "Table", build: table },
   tabs: { title: "Tabs", build: tabs },
   textarea: { title: "Textarea", build: textarea },
+  tooltip: { title: "Tooltip", build: tooltip },
 };
