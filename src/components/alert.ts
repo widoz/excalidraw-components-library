@@ -12,7 +12,7 @@ export default function alert(): ExcalidrawElement[] {
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H, fill: color.surface }));
 
   // Burst sits behind the "!" glyph.
-  els.push(...burst(f, { cx: 52, cy: H / 2, r: 30, spikes: 10, fill: color.muted }));
+  els.push(...burst(f, { cx: 52, cy: H / 2, r: 30, fill: color.muted }));
   els.push(...label(f, {
     x: 52,
     y: H / 2 - (size.fontLg * 1.25) / 2,

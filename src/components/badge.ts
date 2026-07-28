@@ -1,4 +1,4 @@
-import { Factory, type ExcalidrawElement } from "../element.js";
+import { estimateTextWidth, Factory, type ExcalidrawElement } from "../element.js";
 import { color, font, inkBox, label, size } from "../comic.js";
 
 const H = 38;
@@ -19,7 +19,7 @@ export default function badge(): ExcalidrawElement[] {
 
   let x = 0;
   for (const v of variants) {
-    const w = v.text.length * size.fontSm * 0.55 + PAD * 2;
+    const w = estimateTextWidth(v.text, size.fontSm) + PAD * 2;
     els.push(...inkBox(f, { x, y: 0, w, h: H, fill: v.fill, shadow: false }));
     els.push(...label(f, {
       x: x + w / 2,
