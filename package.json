@@ -1,0 +1,19 @@
+{
+  "name": "excalidraw-comic-components",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Comic-styled shadcn-inspired UI components for Excalidraw",
+  "scripts": {
+    "build": "tsx src/build.ts",
+    "validate": "tsx src/validate.ts",
+    "test": "vitest run",
+    "check": "npm run build && npm run validate && npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}
