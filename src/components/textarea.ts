@@ -1,0 +1,40 @@
+import { Factory, type ExcalidrawElement } from "../element.js";
+import { color, inkBox, label, rule, size } from "../comic.js";
+
+const W = size.control;
+const H = 180;
+
+/** Multi-line box with ruled placeholder lines and a corner resize grip. */
+export default function textarea(): ExcalidrawElement[] {
+  const f = new Factory("textarea");
+  const els: ExcalidrawElement[] = [];
+
+  els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H }));
+  els.push(...label(f, {
+    x: 18,
+    y: 16,
+    text: "Tell us your story...",
+    fontSize: size.fontSm,
+    stroke: color.subtle,
+  }));
+
+  // Ruled lines suggesting wrapped text.
+  const widths = [W - 52, W - 36, W - 90, W - 140];
+  widths.forEach((w, i) => {
+    els.push(...rule(f, { x: 18, y: 62 + i * 24, w, stroke: color.muted, strokeWidth: 2 }));
+  });
+
+  // Resize grip: three short diagonals in the bottom-right corner.
+  for (let i = 0; i < 3; i++) {
+    const offset = 8 + i * 8;
+    els.push(f.line({
+      x: W - offset,
+      y: H - 8,
+      points: [[0, 0], [offset - 8, -(offset - 8)]],
+      stroke: color.subtle,
+      strokeWidth: 2,
+    }));
+  }
+
+  return els;
+}

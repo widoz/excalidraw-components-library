@@ -95,10 +95,12 @@ export function checkMark(
   o: { x: number; y: number; s: number; stroke?: string },
 ): ExcalidrawElement[] {
   const s = o.s;
+  // Points are re-origined so the first is [0, 0], as the factory expects;
+  // x/y absorb the original first point's offset to keep the same absolute placement.
   return [f.line({
     x: o.x,
-    y: o.y,
-    points: [[0, s * 0.55], [s * 0.38, s], [s, 0]],
+    y: o.y + s * 0.55,
+    points: [[0, 0], [s * 0.38, s * 0.45], [s, -s * 0.55]],
     stroke: o.stroke ?? color.ink,
   })];
 }
