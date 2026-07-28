@@ -11,9 +11,9 @@ export default function tabs(): ExcalidrawElement[] {
   const f = new Factory("tabs");
   const els: ExcalidrawElement[] = [];
 
-  // Panel first, so the active tab's outline overlaps it.
+  // Panel first, so the active tab's extra height paints over the seam and overlaps it.
   const panelY = TAB_H;
-  els.push(...inkBox(f, { x: 0, y: panelY, w: W, h: PANEL_H }));
+  els.push(...inkBox(f, { x: 0, y: panelY, w: W, h: PANEL_H, rounded: false }));
 
   const titles = ["Preview", "Code", "Notes"];
   titles.forEach((title, i) => {
@@ -23,8 +23,9 @@ export default function tabs(): ExcalidrawElement[] {
       x,
       y: 0,
       w: TAB_W,
-      h: TAB_H,
+      h: active ? TAB_H + 4 : TAB_H,
       fill: active ? color.accent : color.muted,
+      rounded: false,
     }));
     els.push(...label(f, {
       x: x + TAB_W / 2,
