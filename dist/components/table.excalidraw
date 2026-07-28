@@ -70,10 +70,10 @@
     {
       "id": "table-group-2-ffp2cc",
       "type": "rectangle",
-      "x": 0,
-      "y": 0,
-      "width": 380,
-      "height": 50,
+      "x": 5,
+      "y": 5,
+      "width": 370,
+      "height": 45,
       "angle": 0,
       "strokeColor": "#18181b",
       "backgroundColor": "#e4e4e7",
@@ -87,7 +87,9 @@
       ],
       "frameId": null,
       "index": "a00002V",
-      "roundness": null,
+      "roundness": {
+        "type": 3
+      },
       "seed": 886148470,
       "version": 1,
       "versionNonce": 982754676,
@@ -178,9 +180,9 @@
     {
       "id": "table-group-5-eq9o4b",
       "type": "line",
-      "x": 0,
+      "x": 5,
       "y": 50,
-      "width": 380,
+      "width": 370,
       "height": 0,
       "angle": 0,
       "strokeColor": "#d4d4d8",
@@ -212,7 +214,7 @@
           0
         ],
         [
-          380,
+          370,
           0
         ]
       ],
@@ -303,9 +305,9 @@
     {
       "id": "table-group-8-n1388d",
       "type": "rectangle",
-      "x": 0,
+      "x": 5,
       "y": 100,
-      "width": 380,
+      "width": 370,
       "height": 50,
       "angle": 0,
       "strokeColor": "#18181b",
@@ -333,9 +335,9 @@
     {
       "id": "table-group-9-9o2fck",
       "type": "line",
-      "x": 0,
+      "x": 5,
       "y": 100,
-      "width": 380,
+      "width": 370,
       "height": 0,
       "angle": 0,
       "strokeColor": "#d4d4d8",
@@ -367,7 +369,7 @@
           0
         ],
         [
-          380,
+          370,
           0
         ]
       ],
@@ -458,9 +460,9 @@
     {
       "id": "table-group-c-iberpq",
       "type": "line",
-      "x": 0,
+      "x": 5,
       "y": 150,
-      "width": 380,
+      "width": 370,
       "height": 0,
       "angle": 0,
       "strokeColor": "#d4d4d8",
@@ -492,7 +494,7 @@
           0
         ],
         [
-          380,
+          370,
           0
         ]
       ],

@@ -19,8 +19,8 @@ export default function table(): ExcalidrawElement[] {
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H }));
 
-  // Header band.
-  els.push(f.rect({ x: 0, y: 0, w: W, h: ROW_H, fill: color.muted, rounded: false }));
+  // Header band, inset so it stays inside the ink outline and follows its rounded corners.
+  els.push(f.rect({ x: 5, y: 5, w: W - 10, h: ROW_H - 5, fill: color.muted, rounded: true }));
   ["Name", "Role"].forEach((text, c) => {
     els.push(...label(f, {
       x: COL_X[c]!,
@@ -35,9 +35,9 @@ export default function table(): ExcalidrawElement[] {
     const y = ROW_H * (r + 1);
     // Stripe every other body row.
     if (r % 2 === 1) {
-      els.push(f.rect({ x: 0, y, w: W, h: ROW_H, fill: color.muted, rounded: false, opacity: 60 }));
+      els.push(f.rect({ x: 5, y, w: W - 10, h: ROW_H, fill: color.muted, rounded: false, opacity: 60 }));
     }
-    els.push(...rule(f, { x: 0, y, w: W, stroke: color.border }));
+    els.push(...rule(f, { x: 5, y, w: W - 10, stroke: color.border }));
     row.forEach((cell, c) => {
       els.push(...label(f, {
         x: COL_X[c]!,
