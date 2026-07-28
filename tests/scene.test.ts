@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Factory } from "../src/element.js";
 import { SOURCE, toLibrary, toScene } from "../src/scene.js";
+import { color } from "../src/tokens.js";
 
 const els = () => [new Factory("demo").rect({ x: 0, y: 0, w: 10, h: 10 })];
 
@@ -11,7 +12,7 @@ describe("toScene", () => {
     expect(scene.version).toBe(2);
     expect(scene.source).toBe(SOURCE);
     expect(scene.files).toEqual({});
-    expect(scene.appState).toEqual({ gridSize: null, viewBackgroundColor: "#ffffff" });
+    expect(scene.appState).toEqual({ gridSize: null, viewBackgroundColor: color.canvas });
     expect(scene.elements).toHaveLength(1);
   });
 });

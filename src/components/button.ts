@@ -11,9 +11,9 @@ export default function button(): ExcalidrawElement[] {
   const els: ExcalidrawElement[] = [];
 
   const variants = [
-    { text: "Click me!", fill: color.accent, ink: color.accentText, shadow: true, opacity: 100 },
-    { text: "Secondary", fill: color.surface, ink: color.ink, shadow: true, opacity: 100 },
-    { text: "Disabled", fill: color.muted, ink: color.mutedText, shadow: false, opacity: 100 },
+    { text: "Click me!", fill: color.accent, ink: color.accentText, shadow: true },
+    { text: "Secondary", fill: color.surface, ink: color.ink, shadow: true },
+    { text: "Disabled", fill: color.muted, ink: color.mutedText, shadow: false },
   ];
 
   variants.forEach((v, i) => {

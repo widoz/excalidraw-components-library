@@ -24,12 +24,14 @@ export const color = {
   accent: zinc[700],
   accentText: zinc[50],
   transparent: "transparent",
+  canvas: "#ffffff",
 } as const;
 
 /** Every value legally allowed to appear as a stroke or background in output. */
 export const PALETTE_VALUES: ReadonlySet<string> = new Set<string>([
   ...Object.values(zinc),
   "transparent",
+  "#ffffff",
 ]);
 
 /** The comic look, applied to every shape. */

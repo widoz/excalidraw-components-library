@@ -11,7 +11,47 @@ const REQUIRED_FIELDS = [
   "versionNonce", "isDeleted", "boundElements", "updated", "link", "locked",
 ];
 
+const TEXT_FIELDS = [
+  "text", "fontSize", "fontFamily", "textAlign", "verticalAlign",
+  "containerId", "originalText", "autoResize", "lineHeight",
+];
+
+const LINE_FIELDS = [
+  "points", "lastCommittedPoint", "startBinding", "endBinding",
+  "startArrowhead", "endArrowhead",
+];
+
 type El = Record<string, unknown>;
+
+function checkTypeFields(where: string, el: El, id: string, errors: string[]): void {
+  if (el.type === "text") {
+    for (const field of TEXT_FIELDS) {
+      if (!(field in el)) errors.push(`${where}/${id}: missing text field "${field}"`);
+    }
+  }
+
+  if (el.type === "line") {
+    for (const field of LINE_FIELDS) {
+      if (!(field in el)) errors.push(`${where}/${id}: missing line field "${field}"`);
+    }
+
+    const points = el.points;
+    if (!Array.isArray(points) || points.length === 0) {
+      errors.push(`${where}/${id}: "points" must be a non-empty array`);
+    } else {
+      for (const p of points) {
+        if (!Array.isArray(p) || p.length !== 2 || typeof p[0] !== "number" || typeof p[1] !== "number") {
+          errors.push(`${where}/${id}: "points" must contain [number, number] pairs`);
+          break;
+        }
+      }
+      const first = points[0];
+      if (Array.isArray(first) && (first[0] !== 0 || first[1] !== 0)) {
+        errors.push(`${where}/${id}: first point must be [0, 0]`);
+      }
+    }
+  }
+}
 
 function checkElements(where: string, elements: El[], errors: string[]): void {
   const ids = new Set<string>();
@@ -27,6 +67,8 @@ function checkElements(where: string, elements: El[], errors: string[]): void {
     for (const field of REQUIRED_FIELDS) {
       if (!(field in el)) errors.push(`${where}/${id}: missing field "${field}"`);
     }
+
+    checkTypeFields(where, el, id, errors);
 
     for (const field of ["x", "y", "width", "height"]) {
       const value = el[field];
@@ -88,6 +130,17 @@ export function validateAll(outDir: string = DEFAULT_OUT): string[] {
     if (scene.type !== "excalidraw") errors.push(`${file}: type is not "excalidraw"`);
     if (scene.version !== 2) errors.push(`${file}: version is not 2`);
     if (scene.source !== SOURCE) errors.push(`${file}: unexpected source`);
+
+    const appState = (scene.appState ?? {}) as Record<string, unknown>;
+    const appStateKeys = Object.keys(appState).sort();
+    if (appStateKeys.join(",") !== "gridSize,viewBackgroundColor") {
+      errors.push(`${file}: appState must have exactly the keys "gridSize" and "viewBackgroundColor", found ${appStateKeys.join(", ")}`);
+    }
+    const bg = String(appState.viewBackgroundColor);
+    if (!PALETTE_VALUES.has(bg)) {
+      errors.push(`${file}: appState.viewBackgroundColor "${bg}" is not in the palette`);
+    }
+
     checkElements(file, (scene.elements ?? []) as El[], errors);
   }
 

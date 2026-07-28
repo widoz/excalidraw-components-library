@@ -1,4 +1,5 @@
 import type { ExcalidrawElement } from "./element.js";
+import { color } from "./tokens.js";
 
 export const SOURCE = "excalidraw-comic-components";
 
@@ -8,7 +9,7 @@ export function toScene(elements: ExcalidrawElement[]): object {
     version: 2,
     source: SOURCE,
     elements,
-    appState: { gridSize: null, viewBackgroundColor: "#ffffff" },
+    appState: { gridSize: null, viewBackgroundColor: color.canvas },
     files: {},
   };
 }

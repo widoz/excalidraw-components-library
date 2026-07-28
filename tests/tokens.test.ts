@@ -25,6 +25,11 @@ describe("tokens", () => {
     expect(PALETTE_VALUES.has("#ff0000")).toBe(false);
   });
 
+  it("exposes the canvas background colour", () => {
+    expect(color.canvas).toBe("#ffffff");
+    expect(PALETTE_VALUES.has(color.canvas)).toBe(true);
+  });
+
   it("pins the comic style constants", () => {
     expect(style.roughness).toBe(2);
     expect(style.strokeWidth).toBe(4);
