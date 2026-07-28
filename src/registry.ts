@@ -10,6 +10,8 @@ import input from "./components/input.js";
 import radioGroup from "./components/radio-group.js";
 import select from "./components/select.js";
 import switchComponent from "./components/switch.js";
+import table from "./components/table.js";
+import tabs from "./components/tabs.js";
 import textarea from "./components/textarea.js";
 
 export type ComponentBuilder = () => ExcalidrawElement[];
@@ -32,5 +34,7 @@ export const registry: Record<string, ComponentEntry> = {
   "radio-group": { title: "Radio Group", build: radioGroup },
   select: { title: "Select", build: select },
   switch: { title: "Switch", build: switchComponent },
+  table: { title: "Table", build: table },
+  tabs: { title: "Tabs", build: tabs },
   textarea: { title: "Textarea", build: textarea },
 };

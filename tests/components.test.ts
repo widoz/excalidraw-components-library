@@ -129,3 +129,23 @@ describe("avatar", () => {
     expect(count(els, "ellipse")).toBe(9);
   });
 });
+
+describe("tabs", () => {
+  it("has three headers with the first active, and a panel", () => {
+    const els = load(out, "tabs");
+    expect(texts(els)).toEqual(expect.arrayContaining(["Preview", "Code", "Notes"]));
+    // Only the active tab is accent-filled.
+    const active = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(active).toHaveLength(1);
+  });
+});
+
+describe("table", () => {
+  it("has a header row, three body rows and alternating stripes", () => {
+    const els = load(out, "table");
+    expect(texts(els)).toEqual(expect.arrayContaining(["Name", "Role", "Ada", "Grace"]));
+    const striped = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.muted);
+    // Header row plus one striped body row.
+    expect(striped.length).toBeGreaterThanOrEqual(2);
+  });
+});
