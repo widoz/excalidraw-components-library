@@ -149,3 +149,24 @@ describe("table", () => {
     expect(striped.length).toBeGreaterThanOrEqual(2);
   });
 });
+
+describe("progress", () => {
+  it("has two tracks and two accent fills", () => {
+    const els = load(out, "progress");
+    const fills = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(fills).toHaveLength(2);
+    expect(texts(els)).toEqual(expect.arrayContaining(["35%", "80%"]));
+  });
+});
+
+describe("slider", () => {
+  it("has a filled track, a knob and a value bubble", () => {
+    const els = load(out, "slider");
+    expect(texts(els)).toContain("64");
+    // Knob: shadow + surface ellipse.
+    expect(count(els, "ellipse")).toBe(2);
+    // Bubble tail is a closed 4-point line.
+    const tails = els.filter((e) => e.type === "line" && (e.points as unknown[]).length === 4);
+    expect(tails).toHaveLength(1);
+  });
+});

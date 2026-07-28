@@ -7,8 +7,10 @@ import card from "./components/card.js";
 import checkboxGroup from "./components/checkbox-group.js";
 import dropdownMenu from "./components/dropdown-menu.js";
 import input from "./components/input.js";
+import progress from "./components/progress.js";
 import radioGroup from "./components/radio-group.js";
 import select from "./components/select.js";
+import slider from "./components/slider.js";
 import switchComponent from "./components/switch.js";
 import table from "./components/table.js";
 import tabs from "./components/tabs.js";
@@ -31,8 +33,10 @@ export const registry: Record<string, ComponentEntry> = {
   "checkbox-group": { title: "Checkbox Group", build: checkboxGroup },
   "dropdown-menu": { title: "Dropdown Menu", build: dropdownMenu },
   input: { title: "Input", build: input },
+  progress: { title: "Progress", build: progress },
   "radio-group": { title: "Radio Group", build: radioGroup },
   select: { title: "Select", build: select },
+  slider: { title: "Slider", build: slider },
   switch: { title: "Switch", build: switchComponent },
   table: { title: "Table", build: table },
   tabs: { title: "Tabs", build: tabs },
