@@ -13,11 +13,14 @@
 - Node 20 or newer. ES modules (`"type": "module"` in `package.json`).
 - Zero runtime dependencies. `typescript`, `tsx` and `vitest` are devDependencies only.
 - Every colour written into output must come from `tokens.ts` or be the literal string `"transparent"`. No inline hex anywhere outside `tokens.ts`.
-- Every shape uses `roughness: 2` and `fillStyle: "solid"`. `strokeWidth` defaults to `4`
-  (the bold ink outline) for every primary shape. Two deliberate exceptions, both specified
-  in the plan's own code: hairline rules drawn by `comic.rule()` use `2`, and the hard-shadow
-  rectangles/ellipses inside `comic.inkBox()` / `comic.inkCircle()` use `1` so their own
-  outline does not fatten the silhouette.
+- Every shape uses `roughness: 2` and `fillStyle: "solid"`.
+- `strokeWidth` is `4` — the bold comic ink — for every primary shape: component outlines,
+  ticks, chevrons, bubbles, bursts, close marks. Fine detail deliberately goes thinner, and
+  the thinner value is always stated explicitly at the call site: `comic.rule()` hairlines
+  and small incidental strokes (text caret, resize grip) use `2`; the hard-shadow shapes
+  inside `comic.inkBox()` / `comic.inkCircle()` use `1` so their own outline does not fatten
+  the silhouette. A `strokeWidth` below `4` is only correct on a stroke that is secondary to
+  the component's silhouette.
 - Builds are deterministic: seeded PRNG only, never `Math.random()`, never `Date.now()`.
 - All elements of one component share exactly one groupId.
 - Text elements are standalone: `containerId` is always `null`, `boundElements` is always `null`.
