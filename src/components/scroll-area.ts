@@ -31,11 +31,11 @@ export default function scrollArea(): ExcalidrawElement[] {
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H }));
 
-  // Eight lines of "copy". The first six sit at a uniform 24px pitch; the last two
-  // are deliberately pushed down past that pitch so the final line lands exactly on
-  // the frame's bottom edge (y = H), reading as content cut off by the frame rather
-  // than content that happens to fit.
-  const rowYs = [20, 44, 68, 92, 116, 140, 180, 220];
+  // Eight lines of "copy" at a uniform 24px pitch. Every row must stay strictly
+  // inside the frame: Excalidraw does not clip, so a row at y = H would paint a pale
+  // 2px muted line straight over the frame's 4px ink bottom edge. The last row sits
+  // at 188, a full 32px clear of the bottom edge.
+  const rowYs = [20, 44, 68, 92, 116, 140, 164, 188];
   for (const y of rowYs) {
     els.push(...rule(f, { x: CONTENT_X, y, w: CONTENT_W, stroke: color.muted }));
   }

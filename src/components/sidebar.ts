@@ -28,8 +28,11 @@ export default function sidebar(): ExcalidrawElement[] {
   items.forEach((text, i) => {
     const y = NAV_Y + i * ROW_H;
     if (text === "Components") {
-      els.push(...fillBand(f, { x: 0, y, w: W, h: ROW_H, fill: color.muted, rounded: false }));
-      els.push(...fillBand(f, { x: 0, y, w: 4, h: ROW_H, fill: color.accent, rounded: false }));
+      // Inset by 2 on both sides. The panel's 4px ink border is centred on x = 0 and
+      // x = W, so a band spanning the full 0..W would repaint the inner half of that
+      // border down the whole active row.
+      els.push(...fillBand(f, { x: 2, y, w: W - 4, h: ROW_H, fill: color.muted, rounded: false }));
+      els.push(...fillBand(f, { x: 2, y, w: 4, h: ROW_H, fill: color.accent, rounded: false }));
     }
     els.push(...label(f, {
       x: 32,

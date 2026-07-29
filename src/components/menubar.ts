@@ -1,4 +1,4 @@
-import { Factory, type ExcalidrawElement } from "../element.js";
+import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import { color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 420;
@@ -7,6 +7,8 @@ const PITCH = 100;
 const PAD_X = 20;
 const ITEM_H = 40;
 const MENU_W = 200;
+/** Symmetric breathing room around the open title's label. */
+const BAND_PAD_X = 12;
 
 /** A menu bar with four titles; "Edit" is open below it. */
 export default function menubar(): ExcalidrawElement[] {
@@ -16,18 +18,19 @@ export default function menubar(): ExcalidrawElement[] {
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: BAR_H, rounded: false }));
 
   const titles = ["File", "Edit", "View", "Help"];
-  const bandW = 80;
   const bandH = 36;
   let editX = 0;
   titles.forEach((title, i) => {
     const x = PAD_X + i * PITCH;
     if (title === "Edit") {
       editX = x;
+      // The band is sized off the label's measured advance width plus symmetric
+      // padding, so it cannot overhang the title it highlights.
       // Band paints before the label, or it would cover the title.
       els.push(...fillBand(f, {
-        x: x - 10,
+        x: x - BAND_PAD_X,
         y: (BAR_H - bandH) / 2,
-        w: bandW,
+        w: estimateTextWidth(title, size.fontMd) + BAND_PAD_X * 2,
         h: bandH,
         fill: color.muted,
         rounded: false,
@@ -43,7 +46,7 @@ export default function menubar(): ExcalidrawElement[] {
   });
 
   // The open menu hangs from Edit's highlighted band, so it shares the band's left edge.
-  const menuX = editX - 10;
+  const menuX = editX - BAND_PAD_X;
   const menuY = BAR_H + 16;
   const items = ["Undo", "Redo", "Preferences"];
   // 3 rows, 16px padding top/bottom, plus a 12px separator gap before the last row.

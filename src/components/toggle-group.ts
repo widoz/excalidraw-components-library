@@ -5,7 +5,8 @@ const CELL_W = 70;
 const CELL_H = 60;
 const W = CELL_W * 3;
 const PAD = 8;
-const MARK_STROKE = 3;
+/** The library's incidental-stroke weight. 4 / 2 / 1 are the only widths in use. */
+const MARK_STROKE = 2;
 const WIDTHS = [30, 20, 26];
 const MARK_YS = [16, 28, 40];
 

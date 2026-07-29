@@ -27,13 +27,17 @@ export default function contextMenu(): ExcalidrawElement[] {
     strokeStyle: "dashed",
     shadow: false,
   }));
+  // The caption sits in the dashed area's top-left corner, clear of the menu that is
+  // drawn over it later: the menu occupies x >= MENU_X and y >= MENU_Y, so a caption
+  // ending well before MENU_Y stays fully readable. Centring it would have put
+  // "Right-click here" at x 79.6..220.4, of which the menu would have hidden all but
+  // the first four characters.
   els.push(...label(f, {
-    x: DASH_W / 2,
-    y: (DASH_H - size.fontSm * 1.25) / 2,
+    x: 16,
+    y: 16,
     text: "Right-click here",
     fontSize: size.fontSm,
     stroke: color.subtle,
-    align: "center",
   }));
 
   const items = ["Back", "Reload", "Inspect"];

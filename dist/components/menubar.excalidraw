@@ -105,9 +105,9 @@
     {
       "id": "menubar-group-3-s34bv3",
       "type": "rectangle",
-      "x": 110,
+      "x": 108,
       "y": 8,
-      "width": 80,
+      "width": 68,
       "height": 36,
       "angle": 0,
       "strokeColor": "transparent",
@@ -252,7 +252,7 @@
     {
       "id": "menubar-group-7-vmhkt1",
       "type": "rectangle",
-      "x": 116,
+      "x": 114,
       "y": 74,
       "width": 200,
       "height": 148,
@@ -284,7 +284,7 @@
     {
       "id": "menubar-group-8-17crt2",
       "type": "rectangle",
-      "x": 110,
+      "x": 108,
       "y": 68,
       "width": 200,
       "height": 148,
@@ -316,7 +316,7 @@
     {
       "id": "menubar-group-9-2br1s9",
       "type": "text",
-      "x": 132,
+      "x": 130,
       "y": 86,
       "width": 35.2,
       "height": 20,
@@ -355,7 +355,7 @@
     {
       "id": "menubar-group-a-7qmtwn",
       "type": "text",
-      "x": 132,
+      "x": 130,
       "y": 126,
       "width": 35.2,
       "height": 20,
@@ -394,7 +394,7 @@
     {
       "id": "menubar-group-b-xr69ph",
       "type": "line",
-      "x": 122,
+      "x": 120,
       "y": 162,
       "width": 176,
       "height": 0,
@@ -441,7 +441,7 @@
     {
       "id": "menubar-group-c-nvu2sr",
       "type": "text",
-      "x": 132,
+      "x": 130,
       "y": 178,
       "width": 96.80000000000001,
       "height": 20,

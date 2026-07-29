@@ -45,7 +45,7 @@
     {
       "id": "navigation-menu-group-1-4yrbo8",
       "type": "line",
-      "x": 90,
+      "x": 85,
       "y": 16,
       "width": 16,
       "height": 5.6,
@@ -96,9 +96,9 @@
     {
       "id": "navigation-menu-group-2-dwy3sl",
       "type": "rectangle",
-      "x": 122,
+      "x": 118,
       "y": 2,
-      "width": 84,
+      "width": 68,
       "height": 36,
       "angle": 0,
       "strokeColor": "transparent",
@@ -165,7 +165,7 @@
     {
       "id": "navigation-menu-group-4-bv76yf",
       "type": "line",
-      "x": 220,
+      "x": 182,
       "y": 16,
       "width": 16,
       "height": 5.6,
@@ -255,7 +255,7 @@
     {
       "id": "navigation-menu-group-6-fxbyaf",
       "type": "line",
-      "x": 350,
+      "x": 345,
       "y": 16,
       "width": 16,
       "height": 5.6,

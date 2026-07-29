@@ -277,8 +277,11 @@ describe("chart", () => {
     for (const month of ["Mar", "Apr", "May", "Jun", "Jul"]) {
       expect(texts(els)).toContain(month);
     }
-    const bars = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
+    // Bars carry the house 4px ink outline, so they are ink-stroked rectangles, not
+    // outline-less fill bands. Nothing else in the component is a rectangle.
+    const bars = els.filter((e) => e.type === "rectangle");
     expect(bars).toHaveLength(5);
+    expect(bars.every((e) => e.strokeColor === color.ink && e.strokeWidth === 4)).toBe(true);
     const accentBars = bars.filter((e) => e.backgroundColor === color.accent);
     expect(accentBars).toHaveLength(1);
   });
@@ -621,13 +624,29 @@ describe("toggle", () => {
     const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
     expect(shadowRects).toHaveLength(1);
   });
+
+  it("centres each caption under its own toggle, not beside the pair", () => {
+    const els = load(out, "toggle");
+    const centreOf = (t: string) => {
+      const el = els.find((e) => e.type === "text" && e.text === t) as { x: number; width: number; y: number };
+      return { cx: el.x + el.width / 2, y: el.y };
+    };
+    // Toggles are 60px cells at x = 0 and x = 80, so their centres are 30 and 110.
+    expect(centreOf("Bold").cx).toBeCloseTo(centreOf("B").cx, 5);
+    expect(centreOf("Bold").cx).toBeCloseTo(30, 5);
+    expect(centreOf("Italic").cx).toBeCloseTo(centreOf("I").cx, 5);
+    expect(centreOf("Italic").cx).toBeCloseTo(110, 5);
+    // And they sit below the 60px-tall cells, not level with them.
+    expect(centreOf("Bold").y).toBeGreaterThanOrEqual(60);
+    expect(centreOf("Italic").y).toBeGreaterThanOrEqual(60);
+  });
 });
 
 describe("toggle-group", () => {
   it("has zero text, nine alignment marks, one pressed cell and one shared shadow", () => {
     const els = load(out, "toggle-group");
     expect(count(els, "text")).toBe(0);
-    const marks = els.filter((e) => e.type === "line" && e.strokeWidth === 3);
+    const marks = els.filter((e) => e.type === "line" && e.strokeWidth === 2);
     expect(marks).toHaveLength(9);
     const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
     expect(accentRects).toHaveLength(1);

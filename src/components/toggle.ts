@@ -35,25 +35,17 @@ export default function toggle(): ExcalidrawElement[] {
       stroke: t.pressed ? color.accentText : color.ink,
       align: "center",
     }));
+    // Each label sits centred directly beneath its own toggle. Stacking both to the
+    // right of the pair left it ambiguous which name belonged to which square.
+    els.push(...label(f, {
+      x: x + CELL / 2,
+      y: CELL + 10,
+      text: t.label,
+      fontSize: size.fontSm,
+      stroke: color.mutedText,
+      align: "center",
+    }));
   });
-
-  // Legend, stacked to the right of the toggle pair — there's no room for it
-  // between the two 20px-apart toggles, so it reads as a shared key instead.
-  const legendX = toggles.length * (CELL + GAP) - GAP + 20;
-  els.push(...label(f, {
-    x: legendX,
-    y: 8,
-    text: "Bold",
-    fontSize: size.fontSm,
-    stroke: color.mutedText,
-  }));
-  els.push(...label(f, {
-    x: legendX,
-    y: 34,
-    text: "Italic",
-    fontSize: size.fontSm,
-    stroke: color.mutedText,
-  }));
 
   return els;
 }

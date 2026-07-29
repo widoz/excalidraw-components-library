@@ -1,5 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, fillBand, font, label, rule, size } from "../comic.js";
+import { color, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 340;
 const BAR_W = 44;
@@ -31,13 +31,18 @@ export default function chart(): ExcalidrawElement[] {
   BARS.forEach((bar, i) => {
     const x = startX + i * (BAR_W + BAR_GAP);
     const y = BASELINE_Y - bar.h;
-    els.push(...fillBand(f, {
+    // Bars carry the house 4px ink outline like every other filled shape in the
+    // library, so they are inkBoxes rather than outline-less fill bands. The drop
+    // shadow is off: five shadowed bars sitting on one baseline would read as a
+    // second, offset row of bars.
+    els.push(...inkBox(f, {
       x,
       y,
       w: BAR_W,
       h: bar.h,
       fill: i === TALLEST_INDEX ? color.accent : color.muted,
       rounded: false,
+      shadow: false,
     }));
     els.push(...label(f, {
       x: x + BAR_W / 2,

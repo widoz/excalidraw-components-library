@@ -9,11 +9,13 @@ export default function spinner(): ExcalidrawElement[] {
   const f = new Factory("spinner");
   const els: ExcalidrawElement[] = [];
 
+  // 90, then 180, then 270 degrees of sweep, each starting further round the circle:
+  // the growing gap reads as a progression, which three near-identical arcs did not.
   const sweeps = [
-    { startDeg: 0, endDeg: 270 },
-    { startDeg: 90, endDeg: 330 },
-    // Wraps past 360 rather than running backwards from 200 to 100.
-    { startDeg: 200, endDeg: 460 },
+    { startDeg: 0, endDeg: 90 },
+    { startDeg: 100, endDeg: 280 },
+    // Wraps past 360 rather than running backwards from 200 to 110.
+    { startDeg: 200, endDeg: 470 },
   ];
 
   sweeps.forEach((s, i) => {

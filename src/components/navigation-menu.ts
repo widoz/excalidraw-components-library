@@ -1,4 +1,4 @@
-import { Factory, type ExcalidrawElement } from "../element.js";
+import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import { chevron, color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
 
 const PITCH = 130;
@@ -9,6 +9,11 @@ const PANEL_PAD = 24;
 const COL_GAP = 40;
 const COL_W = (PANEL_W - PANEL_PAD * 2 - COL_GAP) / 2;
 const ROW_H = 70;
+/** Symmetric breathing room around a highlighted item's label. */
+const BAND_PAD_X = 12;
+/** Gap between the end of a nav label and its chevron. */
+const CHEVRON_GAP = 8;
+const CHEVRON_S = 8;
 
 /** A nav row of three items ("Docs" open) with a mega-panel of two columns below. */
 export default function navigationMenu(): ExcalidrawElement[] {
@@ -18,12 +23,15 @@ export default function navigationMenu(): ExcalidrawElement[] {
   const items = ["Product", "Docs", "Pricing"];
   items.forEach((text, i) => {
     const x = i * PITCH;
+    // Both the band and the chevron are placed off the label's measured advance
+    // width, so neither can drift when a label changes.
+    const textW = estimateTextWidth(text, size.fontMd);
     if (text === "Docs") {
       // Band paints before the label, or it would cover the title.
       els.push(...fillBand(f, {
-        x: x - 8,
+        x: x - BAND_PAD_X,
         y: 2,
-        w: 84,
+        w: textW + BAND_PAD_X * 2,
         h: NAV_ROW_H - 4,
         fill: color.muted,
         rounded: false,
@@ -36,7 +44,12 @@ export default function navigationMenu(): ExcalidrawElement[] {
       fontSize: size.fontMd,
       fontFamily: font.comic,
     }));
-    els.push(...chevron(f, { x: x + 90, y: NAV_ROW_H / 2 - 4, s: 8, dir: "down" }));
+    els.push(...chevron(f, {
+      x: x + textW + CHEVRON_GAP,
+      y: NAV_ROW_H / 2 - 4,
+      s: CHEVRON_S,
+      dir: "down",
+    }));
   });
 
   const panelY = NAV_ROW_H + 20;
