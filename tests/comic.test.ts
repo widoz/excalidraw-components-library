@@ -174,10 +174,48 @@ describe("arc", () => {
     expect(el!.y).toBeCloseTo(100);
   });
 
-  it("sweeps a wider angle into a wider bounding box", () => {
-    const quarter = arc(new Factory("a"), { cx: 0, cy: 0, r: 40, startDeg: 0, endDeg: 90 })[0]!;
-    const full = arc(new Factory("b"), { cx: 0, cy: 0, r: 40, startDeg: 0, endDeg: 350 })[0]!;
-    expect(Number(full.width)).toBeGreaterThan(Number(quarter.width));
+  it("spans exactly the quadrants it sweeps", () => {
+    // A polyline can only undershoot the true circle, and never by more than the
+    // chord sag: r * (1 - cos(step/2)) <= 40 * (1 - cos(6 deg)) = 0.22px here.
+    const cases: Array<[number, number, number]> = [
+      // [endDeg, expected width, expected height]
+      [90, 40, 40],   // one quadrant: +x down to +y
+      [180, 80, 40],  // half circle: full width, one side's height
+      [270, 80, 80],  // three quadrants: full box, reached from three directions
+      [360, 80, 80],  // full circle
+    ];
+    for (const [endDeg, w, h] of cases) {
+      const el = arc(new Factory(`a${endDeg}`), { cx: 0, cy: 0, r: 40, startDeg: 0, endDeg })[0]!;
+      expect(Math.abs(Number(el.width) - w), `width at ${endDeg} deg`).toBeLessThan(0.5);
+      expect(Math.abs(Number(el.height) - h), `height at ${endDeg} deg`).toBeLessThan(0.5);
+    }
+  });
+
+  it("sweeps forward, not backwards, when the end angle wraps past 360", () => {
+    // spinner's third arc runs 200 -> 470 rather than 200 -> 110 precisely so it
+    // sweeps the long way round. If that ever silently reversed, the three spinners
+    // would stop reading as a progression.
+    const [el] = arc(new Factory("demo"), { cx: 0, cy: 0, r: 40, startDeg: 200, endDeg: 470 });
+    const angles = (el!.points as number[][]).map(([px, py]) => {
+      const ax = (el!.x as number) + px!;
+      const ay = (el!.y as number) + py!;
+      return (Math.atan2(ay, ax) * 180) / Math.PI;
+    });
+    // atan2 returns (-180, 180], so compare consecutive samples by their shortest
+    // signed step. Every step must be positive (forward) and they must total the
+    // requested 270 degree sweep — a backwards arc would total -90.
+    const steps = angles.slice(1).map((a, i) => {
+      let d = a - angles[i]!;
+      while (d <= -180) d += 360;
+      while (d > 180) d -= 360;
+      return d;
+    });
+    for (const [i, d] of steps.entries()) {
+      expect(d, `sample ${i + 1} runs backwards`).toBeGreaterThan(0);
+    }
+    expect(steps.reduce((a, b) => a + b, 0)).toBeCloseTo(270, 1);
+    // And the first sample really is at 200 degrees.
+    expect(((angles[0]! % 360) + 360) % 360).toBeCloseTo(200, 1);
   });
 });
 
@@ -199,6 +237,22 @@ describe("swash", () => {
     expect(pts[0]).toEqual([0, 0]);
     expect(pts[pts.length - 1]).toEqual([0, 0]);
     expect(el!.backgroundColor).toBe(color.muted);
+  });
+
+  it("bulges h*0.22 left and h*0.25 right of the w it is given", () => {
+    // The side lobes are what make it read as a hand-drawn stroke rather than a box,
+    // but they mean the drawn extent is wider than `w`. A caller sizing a highlight
+    // off `w` alone under-accounts for h*0.47 of overhang.
+    const [el] = swash(new Factory("demo"), { x: 100, y: 50, w: 120, h: 30 });
+    const xs = (el!.points as number[][]).map(([px]) => (el!.x as number) + px!);
+    const ys = (el!.points as number[][]).map(([, py]) => (el!.y as number) + py!);
+    expect(Math.min(...xs)).toBeCloseTo(100 - 30 * 0.22, 6);
+    expect(Math.max(...xs)).toBeCloseTo(100 + 120 + 30 * 0.25, 6);
+    expect(Number(el!.width)).toBeCloseTo(120 + 30 * 0.47, 6);
+    // Vertically it rides h*0.12 above the given y and h*0.08 below y + h.
+    expect(Math.min(...ys)).toBeCloseTo(50 - 30 * 0.12, 6);
+    expect(Math.max(...ys)).toBeCloseTo(50 + 30 * 1.08, 6);
+    expect(Number(el!.height)).toBeCloseTo(30 * 1.2, 6);
   });
 });
 

@@ -68,6 +68,14 @@ describe("registry", () => {
     expect(Object.keys(registry).sort()).toEqual(EXPECTED);
   });
 
+  it("declares its keys in alphabetical order in the source file", () => {
+    // Deliberately unsorted: sorting first would make any source ordering pass, which
+    // is what the previous version of this check did.
+    const keys = Object.keys(registry);
+    expect(keys).toEqual([...keys].sort());
+    expect(keys).toEqual(EXPECTED);
+  });
+
   it("gives every component a distinct title", () => {
     const titles = Object.values(registry).map((e) => e.title);
     expect(new Set(titles).size).toBe(titles.length);

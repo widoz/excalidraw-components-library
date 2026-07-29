@@ -132,26 +132,83 @@ describe("component extents", () => {
       expect([round(box.x0), round(box.y0), round(box.x1), round(box.y1)]).toEqual(expected);
     });
 
-    it(`${name} keeps every element inside that box`, () => {
-      const els = load(name);
-      const box = union(els);
-      for (const el of els) {
+    // The box comes from the EXPECTED literal above, never from union(load(name)):
+    // a union of the very elements being checked contains them by construction, so
+    // that form of the test could not fail and detected nothing.
+    it(`${name} keeps every element inside its expected box`, () => {
+      const [x0, y0, x1, y1] = expected;
+      const box: Box = { x0, y0, x1, y1 };
+      for (const el of load(name)) {
         expect(contains(box, bounds(el)), `${String(el.type)} ${String(el.id)} escapes`).toBe(true);
       }
     });
   }
 });
 
+/**
+ * Components that draw fill bands with no enclosing frame, on purpose. Listed
+ * explicitly so a new band-bearing component cannot quietly join them:
+ * `FRAMED_BAND_COMPONENTS` below is derived from the build, so anything that grows
+ * a band and is not named here starts being checked automatically.
+ */
+const FRAMELESS_BAND_COMPONENTS = new Set([
+  // Loading placeholders. The whole point is bare grey bars floating on the canvas
+  // with nothing around them.
+  "skeleton",
+  // The drag handle's band is the seam *between* the two panels, so it deliberately
+  // straddles their outlines rather than sitting inside either one.
+  "resizable",
+  // The "Docs" highlight sits in the bare nav row above the mega-panel; the nav row
+  // has no frame of its own.
+  "navigation-menu",
+  // Axis-and-baseline chart with no plot frame. Its bars now carry their own ink
+  // outline, so it has no fill bands left at all — kept here as a standing decision.
+  "chart",
+]);
+
+/** Every component whose fill bands are expected to sit inside an ink-outlined frame. */
+const FRAMED_BAND_COMPONENTS = [
+  "attachment",
+  "combobox",
+  "command",
+  "context-menu",
+  "drawer",
+  "dropdown-menu",
+  "menubar",
+  "progress",
+  "scroll-area",
+  "select",
+  "sidebar",
+  "slider",
+  "table",
+];
+
 describe("fill bands stay inside a frame", () => {
   // A fill band has no outline of its own, so it is only ever legible as the inside
   // of some ink-outlined box. If one drifts, it has nothing left to sit in.
-  for (const name of ["slider", "table", "progress", "select", "dropdown-menu"]) {
+
+  it("accounts for every band-bearing component in the library", () => {
+    const withBands = Object.keys(registry).filter((name) =>
+      load(name).some((e) => e.type === "rectangle" && e.strokeColor === color.transparent));
+    // A new component that grows a fill band must be added to one of the two lists,
+    // so nothing can escape this check by simply not being mentioned.
+    const accounted = new Set([...FRAMED_BAND_COMPONENTS, ...FRAMELESS_BAND_COMPONENTS]);
+    expect(withBands.filter((n) => !accounted.has(n))).toEqual([]);
+    // Every name on either list is a real component, and everything on the framed
+    // list really does still emit bands (so no case below is vacuous).
+    for (const name of accounted) expect(Object.keys(registry)).toContain(name);
+    expect(FRAMED_BAND_COMPONENTS.filter((n) => !withBands.includes(n))).toEqual([]);
+  });
+
+  for (const name of FRAMED_BAND_COMPONENTS) {
     it(`${name}: every fill band is enclosed by an ink-outlined rectangle`, () => {
       const els = load(name);
       const bands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
       expect(bands.length).toBeGreaterThan(0);
+      // Only real 4px outlines count as frames. The 1px ink rectangles are drop
+      // shadows, offset down and right, and enclose nothing the viewer can see.
       const frames = els
-        .filter((e) => e.type === "rectangle" && e.strokeColor === color.ink)
+        .filter((e) => e.type === "rectangle" && e.strokeColor === color.ink && e.strokeWidth === 4)
         .map(bounds);
       for (const band of bands) {
         const box = bounds(band);

@@ -20,6 +20,54 @@ function load(dir: string, name: string): El[] {
 const count = (els: El[], type: string) => els.filter((e) => e.type === type).length;
 const texts = (els: El[]) => els.filter((e) => e.type === "text").map((e) => String(e.text));
 
+/**
+ * A highlight band is an opaque fill with no outline. If it is emitted after the
+ * label it highlights, Excalidraw paints it straight over the text and the label
+ * vanishes. Several components carry a source comment promising the band goes first;
+ * this pins that promise. Excalidraw draws in ascending `index` order, and the
+ * factory's indices are fixed-width, so plain string comparison is z-order.
+ */
+function expectBandPrecedesLabel(dir: string, name: string, text: string): void {
+  const els = load(dir, name);
+  const labelEl = els.find((e) => e.type === "text" && e.text === text);
+  expect(labelEl, `${name} has no label "${text}"`).toBeDefined();
+  const bands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
+  expect(bands.length, `${name} emits no fill band`).toBeGreaterThan(0);
+  // The band must overlap the label horizontally and vertically, or it is some other
+  // band and this test would pass for the wrong reason.
+  const lx0 = labelEl!.x as number;
+  const lx1 = lx0 + (labelEl!.width as number);
+  const ly0 = labelEl!.y as number;
+  const ly1 = ly0 + (labelEl!.height as number);
+  const overlapping = bands.filter((b) => {
+    const bx0 = b.x as number;
+    const by0 = b.y as number;
+    return bx0 < lx1 && bx0 + (b.width as number) > lx0
+      && by0 < ly1 && by0 + (b.height as number) > ly0;
+  });
+  expect(overlapping.length, `${name}: no band overlaps "${text}"`).toBeGreaterThan(0);
+  for (const band of overlapping) {
+    expect(
+      String(band.index) < String(labelEl!.index),
+      `${name}: band at ${String(band.x)},${String(band.y)} paints over "${text}"`,
+    ).toBe(true);
+  }
+}
+
+describe("highlight bands are emitted before the label they sit behind", () => {
+  const cases: Array<[string, string]> = [
+    ["menubar", "Edit"],
+    ["navigation-menu", "Docs"],
+    ["sidebar", "Components"],
+    ["context-menu", "Reload"],
+  ];
+  for (const [name, text] of cases) {
+    it(`${name}: the band behind "${text}" is drawn first`, () => {
+      expectBandPrecedesLabel(out, name, text);
+    });
+  }
+});
+
 describe("input", () => {
   it("shows a placeholder field and a focused field", () => {
     const els = load(out, "input");
