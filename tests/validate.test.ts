@@ -16,17 +16,22 @@ function makeElements(): ExcalidrawElement[] {
   return [rect, text, line];
 }
 
-/** Writes a component scene (with an optional appState override) plus a matching, unmutated library file. */
-function writeScene(elements: ExcalidrawElement[], appStateOverride?: Record<string, unknown>): void {
+/** Writes a component scene (with optional overrides) plus a matching, unmutated library file. */
+function writeScene(
+  elements: ExcalidrawElement[],
+  appStateOverride?: Record<string, unknown>,
+  overrides?: { scene?: Record<string, unknown>; library?: Record<string, unknown> },
+): void {
   const componentsDir = join(dir, "components");
   mkdirSync(componentsDir, { recursive: true });
-  const scene = toScene(elements) as Record<string, unknown>;
+  const scene = { ...(toScene(elements) as Record<string, unknown>), ...overrides?.scene };
   if (appStateOverride) scene.appState = appStateOverride;
   writeFileSync(join(componentsDir, "widget.excalidraw"), JSON.stringify(scene));
-  writeFileSync(
-    join(dir, "comic-ui.excalidrawlib"),
-    JSON.stringify(toLibrary([{ name: "Widget", elements: makeElements() }])),
-  );
+  const library = {
+    ...(toLibrary([{ name: "Widget", elements: makeElements() }]) as Record<string, unknown>),
+    ...overrides?.library,
+  };
+  writeFileSync(join(dir, "comic-ui.excalidrawlib"), JSON.stringify(library));
 }
 
 beforeEach(() => {
@@ -101,6 +106,55 @@ describe("validateAll - line element checks", () => {
     writeScene(elements);
     const errors = validateAll(dir);
     expect(errors.some((e) => e.includes('"points" must be a non-empty array'))).toBe(true);
+  });
+
+  it("flags a line whose points all coincide", () => {
+    const elements = makeElements();
+    // Passes every other points check, yet draws nothing. This is the shape the
+    // textarea resize grip's first stroke had.
+    (elements[2] as Record<string, unknown>).points = [[0, 0], [0, 0]];
+    writeScene(elements);
+    const errors = validateAll(dir);
+    expect(errors.some((e) => e.includes('"points" span zero extent'))).toBe(true);
+  });
+
+  it("accepts a line with extent in only one axis", () => {
+    const elements = makeElements();
+    (elements[2] as Record<string, unknown>).points = [[0, 0], [0, 20]];
+    writeScene(elements);
+    expect(validateAll(dir)).toEqual([]);
+  });
+});
+
+describe("validateAll - size checks", () => {
+  it("flags a negative width", () => {
+    const elements = makeElements();
+    (elements[0] as Record<string, unknown>).width = -5;
+    writeScene(elements);
+    const errors = validateAll(dir);
+    expect(errors.some((e) => e.includes('"width" must not be negative'))).toBe(true);
+  });
+
+  it("flags a negative height", () => {
+    const elements = makeElements();
+    (elements[0] as Record<string, unknown>).height = -1;
+    writeScene(elements);
+    const errors = validateAll(dir);
+    expect(errors.some((e) => e.includes('"height" must not be negative'))).toBe(true);
+  });
+});
+
+describe("validateAll - structural checks", () => {
+  it("reports, rather than throws, when elements is not an array", () => {
+    writeScene(makeElements(), undefined, { scene: { elements: { nope: true } } });
+    const errors = validateAll(dir);
+    expect(errors.some((e) => e.includes('"elements" must be an array'))).toBe(true);
+  });
+
+  it("flags a library with the wrong source", () => {
+    writeScene(makeElements(), undefined, { library: { source: "somewhere-else" } });
+    const errors = validateAll(dir);
+    expect(errors.some((e) => e.includes("library: unexpected source"))).toBe(true);
   });
 });
 

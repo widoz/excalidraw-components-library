@@ -1,0 +1,138 @@
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { buildAll } from "../src/build.js";
+import { registry } from "../src/registry.js";
+import { color } from "../src/tokens.js";
+
+let out: string;
+beforeAll(() => {
+  out = mkdtempSync(join(tmpdir(), "comic-ui-contain-"));
+  buildAll(out);
+});
+afterAll(() => rmSync(out, { recursive: true, force: true }));
+
+type El = Record<string, unknown>;
+type Box = { x0: number; y0: number; x1: number; y1: number };
+
+function load(name: string): El[] {
+  return JSON.parse(readFileSync(join(out, "components", `${name}.excalidraw`), "utf8")).elements;
+}
+
+/**
+ * Drawn extent of one element. For lines, x/y is the origin and the points are
+ * relative and may be negative, so the drawn box is not x..x+width.
+ */
+function bounds(el: El): Box {
+  const x = el.x as number;
+  const y = el.y as number;
+  if (el.type === "line") {
+    const points = el.points as Array<[number, number]>;
+    const xs = points.map((p) => p[0]);
+    const ys = points.map((p) => p[1]);
+    return { x0: x + Math.min(...xs), y0: y + Math.min(...ys), x1: x + Math.max(...xs), y1: y + Math.max(...ys) };
+  }
+  return { x0: x, y0: y, x1: x + (el.width as number), y1: y + (el.height as number) };
+}
+
+function union(els: El[]): Box {
+  const boxes = els.map(bounds);
+  return {
+    x0: Math.min(...boxes.map((b) => b.x0)),
+    y0: Math.min(...boxes.map((b) => b.y0)),
+    x1: Math.max(...boxes.map((b) => b.x1)),
+    y1: Math.max(...boxes.map((b) => b.y1)),
+  };
+}
+
+function contains(outer: Box, inner: Box, tolerance = 1): boolean {
+  return inner.x0 >= outer.x0 - tolerance
+    && inner.y0 >= outer.y0 - tolerance
+    && inner.x1 <= outer.x1 + tolerance
+    && inner.y1 <= outer.y1 + tolerance;
+}
+
+/**
+ * The extent each component is expected to occupy, read back from a build that was
+ * checked by eye in Excalidraw. Any element that drifts or escapes its container
+ * moves one of these numbers: the pre-fix avatar, whose placeholder shoulders hung
+ * below the avatar circle, reached y = 70 rather than 66.
+ */
+const EXPECTED: Record<string, [number, number, number, number]> = {
+  "alert": [0, 0, 386, 126],
+  "avatar": [0, 0, 364, 66],
+  "badge": [0, 0, 324, 38],
+  "breadcrumb": [0, 0, 278.2, 25],
+  "button": [0, 0, 206, 224],
+  "card": [0, 0, 346, 236],
+  "checkbox-group": [0, 0, 199, 152],
+  "dialog": [0, 0, 426, 256],
+  "dropdown-menu": [0, 0, 266, 292],
+  "input": [-4, 0, 326, 158],
+  "pagination": [36.4, 0, 371.6, 54],
+  "progress": [0, 0, 366.4, 114],
+  "radio-group": [0, 0, 135, 154],
+  "select": [0, 0, 326, 238],
+  "slider": [0, 0, 326, 124],
+  "switch": [0, 0, 255, 122],
+  "table": [0, 0, 386, 206],
+  "tabs": [0, 0, 366, 204],
+  "textarea": [0, 0, 326, 186],
+  "tooltip": [0, 0, 226, 148],
+};
+
+describe("component extents", () => {
+  it("covers every registered component", () => {
+    expect(Object.keys(EXPECTED).sort()).toEqual(Object.keys(registry).sort());
+  });
+
+  for (const [name, expected] of Object.entries(EXPECTED)) {
+    it(`${name} occupies its expected bounding box`, () => {
+      const box = union(load(name));
+      const round = (v: number) => Math.round(v * 100) / 100;
+      expect([round(box.x0), round(box.y0), round(box.x1), round(box.y1)]).toEqual(expected);
+    });
+
+    it(`${name} keeps every element inside that box`, () => {
+      const els = load(name);
+      const box = union(els);
+      for (const el of els) {
+        expect(contains(box, bounds(el)), `${String(el.type)} ${String(el.id)} escapes`).toBe(true);
+      }
+    });
+  }
+});
+
+describe("fill bands stay inside a frame", () => {
+  // A fill band has no outline of its own, so it is only ever legible as the inside
+  // of some ink-outlined box. If one drifts, it has nothing left to sit in.
+  for (const name of ["slider", "table", "progress", "select", "dropdown-menu"]) {
+    it(`${name}: every fill band is enclosed by an ink-outlined rectangle`, () => {
+      const els = load(name);
+      const bands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
+      expect(bands.length).toBeGreaterThan(0);
+      const frames = els
+        .filter((e) => e.type === "rectangle" && e.strokeColor === color.ink)
+        .map(bounds);
+      for (const band of bands) {
+        const box = bounds(band);
+        const held = frames.some((frame) => contains(frame, box, 0));
+        expect(held, `band at ${box.x0},${box.y0} is not inside any frame`).toBe(true);
+      }
+    });
+  }
+});
+
+describe("avatar glyph", () => {
+  it("keeps the head and shoulders inside the avatar circle", () => {
+    const els = load("avatar");
+    const circle = els.find((e) => e.type === "ellipse" && e.backgroundColor === color.muted);
+    const glyph = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.mutedText);
+    expect(circle).toBeDefined();
+    expect(glyph).toHaveLength(2);
+    for (const part of glyph) {
+      expect(contains(bounds(circle!), bounds(part), 0)).toBe(true);
+    }
+  });
+});

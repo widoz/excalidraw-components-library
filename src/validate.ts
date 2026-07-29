@@ -49,11 +49,29 @@ function checkTypeFields(where: string, el: El, id: string, errors: string[]): v
       if (Array.isArray(first) && (first[0] !== 0 || first[1] !== 0)) {
         errors.push(`${where}/${id}: first point must be [0, 0]`);
       }
+
+      // A line whose points all coincide is invisible: it passes every check above
+      // (non-empty, pairs of numbers, first point [0, 0]) and still draws nothing.
+      const pairs = points.filter((p): p is number[] => Array.isArray(p) && typeof p[0] === "number" && typeof p[1] === "number");
+      if (pairs.length === points.length) {
+        const xs = pairs.map((p) => p[0]!);
+        const ys = pairs.map((p) => p[1]!);
+        const spanX = Math.max(...xs) - Math.min(...xs);
+        const spanY = Math.max(...ys) - Math.min(...ys);
+        if (spanX === 0 && spanY === 0) {
+          errors.push(`${where}/${id}: "points" span zero extent, so the line is invisible`);
+        }
+      }
     }
   }
 }
 
 function checkElements(where: string, elements: El[], errors: string[]): void {
+  if (!Array.isArray(elements)) {
+    errors.push(`${where}: "elements" must be an array`);
+    return;
+  }
+
   const ids = new Set<string>();
   const groupIds = new Set<string>();
   let previousIndex = "";
@@ -74,6 +92,9 @@ function checkElements(where: string, elements: El[], errors: string[]): void {
       const value = el[field];
       if (typeof value !== "number" || !Number.isFinite(value)) {
         errors.push(`${where}/${id}: "${field}" is not a finite number`);
+      } else if ((field === "width" || field === "height") && value < 0) {
+        // Excalidraw stores extents unsigned; a negative one flips the shape.
+        errors.push(`${where}/${id}: "${field}" must not be negative`);
       }
     }
 
@@ -149,6 +170,7 @@ export function validateAll(outDir: string = DEFAULT_OUT): string[] {
   ) as Record<string, unknown>;
   if (lib.type !== "excalidrawlib") errors.push("library: type is not \"excalidrawlib\"");
   if (lib.version !== 2) errors.push("library: version is not 2");
+  if (lib.source !== SOURCE) errors.push("library: unexpected source");
   const items = (lib.libraryItems ?? []) as Array<Record<string, unknown>>;
   if (items.length !== files.length) {
     errors.push(`library: has ${items.length} items but ${files.length} component files exist`);
