@@ -50,13 +50,18 @@ Each layer only knows the one below it.
 |---|---|---|
 | `tokens.ts` | Named constants. No logic. | — |
 | `element.ts` | Produce a single valid Excalidraw element of a given type. Handles ids, seeds, fractional `index`, and every mandatory field. | `tokens` |
-| `comic.ts` | The house style. `inkBox`, `hardShadow`, `label`, `bubble`, `burst`, `checkMark`, `scribble`. Everything visual funnels through here. | `element`, `tokens` |
-| `components/*.ts` | Compose comic helpers into one component. Export `default (): ExcalidrawElement[]`. | `comic`, `tokens` |
+| `comic.ts` | The house style. `inkBox`, `inkCircle`, `fillBand`, `label`, `rule`, `bubble`, `burst`, `checkMark`, `chevron`, `xMark`. | `element`, `tokens` |
+| `components/*.ts` | Compose comic helpers into one component. Export `default (): ExcalidrawElement[]`. | `comic`, `element`, `tokens` |
 | `scene.ts` | Serialise an element list into the two file formats. | — |
 | `build.ts` | Orchestration and file writes. | all |
 
-The key boundary: **components never construct raw elements.** They call `comic.ts`.
-Restyling the whole library is therefore a change to one file.
+The key boundary: **`element.ts` is the only module that writes raw element JSON.**
+`comic.ts` is where the house style lives — outlines, hard shadows, fills, tails —
+and most of what a component draws flows through it, so that is the first place to
+change when restyling. It is not the only place: a component may drop to a `Factory`
+primitive for a one-off shape (a caret, a tab header, an avatar glyph), and roughly
+half of them do. Those call sites carry their own rounding, opacity and inset
+decisions, so a restyle has to sweep them too.
 
 ## Visual style
 
@@ -162,12 +167,14 @@ Library (`.excalidrawlib`):
   "version": 2,
   "source": "excalidraw-comic-components",
   "libraryItems": [
-    { "id": "<uuid>", "status": "unpublished", "created": 0, "name": "Button", "elements": [] }
+    { "id": "Button", "status": "unpublished", "created": 0, "name": "Button", "elements": [] }
   ]
 }
 ```
 
-`created` is a fixed `0` rather than `Date.now()` so builds are byte-identical.
+`created` is a fixed `0` rather than `Date.now()` so builds are byte-identical. For the
+same reason `id` is the item's display name rather than a random uuid: Excalidraw only
+needs it to be unique within the file, and a name is both unique and stable.
 
 ## Element correctness
 

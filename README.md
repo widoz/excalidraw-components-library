@@ -36,6 +36,9 @@ npm test           # unit tests
 npm run check      # all three
 ```
 
-`src/tokens.ts` holds the palette and sizing. `src/comic.ts` holds the house style —
-change it and every component restyles. `src/components/*.ts` is one file per component.
+`src/tokens.ts` holds the palette and sizing. `src/comic.ts` holds the house style and is
+the first place to change when restyling — though components may still drop to a
+`src/element.ts` primitive for a one-off shape, so a restyle sweeps those too.
+`src/element.ts` is the only module that writes raw Excalidraw JSON.
+`src/components/*.ts` is one file per component.
 `dist/` is generated but committed, so the library works without a build.
