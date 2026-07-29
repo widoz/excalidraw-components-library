@@ -57,10 +57,10 @@ describe("registry", () => {
     "chart", "checkbox-group", "collapsible", "combobox", "command",
     "context-menu", "date-picker", "dialog", "drawer", "dropdown-menu",
     "empty", "field", "hover-card", "input", "input-group", "input-otp",
-    "item", "kbd", "label", "menubar", "navigation-menu", "pagination",
+    "item", "kbd", "label", "marker", "menubar", "message", "navigation-menu", "pagination",
     "popover", "progress", "radio-group", "resizable", "scroll-area",
     "select", "separator", "sheet", "sidebar", "skeleton",
-    "slider", "spinner", "switch", "table", "tabs", "textarea",
+    "slider", "spinner", "switch", "table", "tabs", "textarea", "toast",
     "toggle", "toggle-group", "tooltip",
   ];
 

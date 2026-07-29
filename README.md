@@ -8,7 +8,7 @@ Bold wobbly ink, flat fills, hard offset shadows. Colours are the shadcn **zinc*
 ## Use it
 
 **Whole library:** in Excalidraw open **Library → Load from file** and pick
-`dist/comic-ui.excalidrawlib`. All 20 components land in your library panel.
+`dist/comic-ui.excalidrawlib`. All 58 components land in your library panel.
 
 **One component:** open `dist/components/<name>.excalidraw` via **Menu → Open**,
 then copy what you need.
@@ -17,9 +17,14 @@ Each component is a single group — click once to select and drag the whole thi
 
 ## Components
 
-Alert, Avatar, Badge, Breadcrumb, Button, Card, Checkbox Group, Dialog,
-Dropdown Menu, Input, Pagination, Progress, Radio Group, Select, Slider,
-Switch, Table, Tabs, Textarea, Tooltip.
+Accordion, Alert, Alert Dialog, Aspect Ratio, Attachment, Avatar, Badge,
+Breadcrumb, Bubble, Button, Button Group, Calendar, Card, Carousel, Chart,
+Checkbox Group, Collapsible, Combobox, Command, Context Menu, Date Picker,
+Dialog, Drawer, Dropdown Menu, Empty, Field, Hover Card, Input, Input Group,
+Input OTP, Item, Kbd, Label, Marker, Menubar, Message, Navigation Menu,
+Pagination, Popover, Progress, Radio Group, Resizable, Scroll Area, Select,
+Separator, Sheet, Sidebar, Skeleton, Slider, Spinner, Switch, Table, Tabs,
+Textarea, Toast, Toggle, Toggle Group, Tooltip.
 
 ## Palette
 
