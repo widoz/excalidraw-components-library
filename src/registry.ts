@@ -10,7 +10,12 @@ import button from "./components/button.js";
 import buttonGroup from "./components/button-group.js";
 import calendar from "./components/calendar.js";
 import card from "./components/card.js";
+import carousel from "./components/carousel.js";
+import chart from "./components/chart.js";
 import checkboxGroup from "./components/checkbox-group.js";
+import collapsible from "./components/collapsible.js";
+import combobox from "./components/combobox.js";
+import command from "./components/command.js";
 import dialog from "./components/dialog.js";
 import dropdownMenu from "./components/dropdown-menu.js";
 import input from "./components/input.js";
@@ -45,7 +50,12 @@ export const registry: Record<string, ComponentEntry> = {
   "button-group": { title: "Button Group", build: buttonGroup },
   calendar: { title: "Calendar", build: calendar },
   card: { title: "Card", build: card },
+  carousel: { title: "Carousel", build: carousel },
+  chart: { title: "Chart", build: chart },
   "checkbox-group": { title: "Checkbox Group", build: checkboxGroup },
+  collapsible: { title: "Collapsible", build: collapsible },
+  combobox: { title: "Combobox", build: combobox },
+  command: { title: "Command", build: command },
   dialog: { title: "Dialog", build: dialog },
   "dropdown-menu": { title: "Dropdown Menu", build: dropdownMenu },
   input: { title: "Input", build: input },

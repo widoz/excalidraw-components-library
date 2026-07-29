@@ -260,6 +260,73 @@ describe("calendar", () => {
   });
 });
 
+describe("carousel", () => {
+  it("shows the slide index, three dot indicators and two chevrons", () => {
+    const els = load(out, "carousel");
+    expect(texts(els)).toContain("1 / 3");
+    const dots = els.filter((e) => e.type === "ellipse" && e.width === 12);
+    expect(dots).toHaveLength(3);
+    // Two "left"/"right" chevrons, one per nav button, each a single line.
+    expect(count(els, "line")).toBe(2);
+  });
+});
+
+describe("chart", () => {
+  it("has five month labels, five bars and one accent-filled bar", () => {
+    const els = load(out, "chart");
+    for (const month of ["Mar", "Apr", "May", "Jun", "Jul"]) {
+      expect(texts(els)).toContain(month);
+    }
+    const bars = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
+    expect(bars).toHaveLength(5);
+    const accentBars = bars.filter((e) => e.backgroundColor === color.accent);
+    expect(accentBars).toHaveLength(1);
+  });
+});
+
+describe("collapsible", () => {
+  it("shows the trigger text twice, two chevrons and three content rules", () => {
+    const els = load(out, "collapsible");
+    expect(texts(els).filter((t) => t === "Show 3 more")).toHaveLength(2);
+    expect(count(els, "line")).toBe(2 + 3);
+    // Content rules are drawn with the muted stroke, distinguishing them from the chevrons.
+    const contentRules = els.filter((e) => e.type === "line" && e.strokeColor === color.muted);
+    expect(contentRules).toHaveLength(3);
+  });
+});
+
+describe("combobox", () => {
+  it("shows the trigger, search row and items, with one selection", () => {
+    const els = load(out, "combobox");
+    for (const text of ["Excalifont", "Comic Shanns", "Nunito", "Search font..."]) {
+      expect(texts(els)).toContain(text);
+    }
+    // checkMark's tick is the only line whose path goes upward (a negative relative
+    // y): the trigger's chevron is also a 3-point line, so point count alone can't
+    // tell them apart.
+    const checks = els.filter(
+      (e) => e.type === "line" && (e.points as Array<[number, number]>).some((p) => p[1] < 0),
+    );
+    expect(checks).toHaveLength(1);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.muted);
+    expect(mutedBands).toHaveLength(1);
+  });
+});
+
+describe("command", () => {
+  it("shows the search and suggestion texts, three key caps and one highlighted row", () => {
+    const els = load(out, "command");
+    for (const text of ["Type a command...", "Suggestions", "New drawing", "Open library", "Export as PNG"]) {
+      expect(texts(els)).toContain(text);
+    }
+    for (const key of ["N", "L", "E"]) {
+      expect(texts(els)).toContain(key);
+    }
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.muted);
+    expect(mutedBands).toHaveLength(1);
+  });
+});
+
 describe("pagination", () => {
   it("has five page cells with one active, plus prev and next arrows", () => {
     const els = load(out, "pagination");
