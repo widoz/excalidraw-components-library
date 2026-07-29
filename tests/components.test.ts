@@ -416,3 +416,54 @@ describe("field", () => {
     expect(errorMessage?.fontFamily).toBe(7);
   });
 });
+
+describe("hover-card", () => {
+  it("shows the handle twice, the initials once, and one accent avatar", () => {
+    const els = load(out, "hover-card");
+    expect(texts(els).filter((t) => t === "@guido")).toHaveLength(2);
+    expect(texts(els)).toContain("GS");
+    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.accent);
+    expect(accentEllipses).toHaveLength(1);
+  });
+});
+
+describe("input-group", () => {
+  it("shows the prefix, value and action, with one accent segment and one shared shadow", () => {
+    const els = load(out, "input-group");
+    expect(texts(els)).toEqual(expect.arrayContaining(["@", "guido", "Copy"]));
+    const accentSegments = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(accentSegments).toHaveLength(1);
+    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
+    expect(shadowRects).toHaveLength(1);
+  });
+});
+
+describe("input-otp", () => {
+  it("has three filled digits, six shadowed cells and one caret", () => {
+    const els = load(out, "input-otp");
+    expect(texts(els)).toEqual(expect.arrayContaining(["4", "2", "7"]));
+    const shadowedCells = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.ink && e.strokeWidth === 1);
+    expect(shadowedCells).toHaveLength(6);
+    const caret = els.filter((e) => e.type === "line" && e.strokeWidth === 2);
+    expect(caret).toHaveLength(1);
+  });
+});
+
+describe("item", () => {
+  it("has a title, subtitle, glyph, one chevron and one muted icon circle", () => {
+    const els = load(out, "item");
+    expect(texts(els)).toEqual(expect.arrayContaining(["★", "Sketch Kit", "20 components"]));
+    expect(count(els, "line")).toBe(1);
+    const mutedEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.muted);
+    expect(mutedEllipses).toHaveLength(1);
+  });
+});
+
+describe("kbd", () => {
+  it("has five labels and four shadowed key caps", () => {
+    const els = load(out, "kbd");
+    expect(texts(els)).toEqual(expect.arrayContaining(["⌘", "K", "Shift", "↵", "+"]));
+    const shadowedCaps = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.ink && e.strokeWidth === 1);
+    expect(shadowedCaps).toHaveLength(4);
+  });
+});

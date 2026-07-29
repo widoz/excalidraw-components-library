@@ -56,7 +56,8 @@ describe("registry", () => {
     "breadcrumb", "button", "button-group", "calendar", "card", "carousel",
     "chart", "checkbox-group", "collapsible", "combobox", "command",
     "context-menu", "date-picker", "dialog", "drawer", "dropdown-menu",
-    "empty", "field", "input", "pagination", "progress", "radio-group",
+    "empty", "field", "hover-card", "input", "input-group", "input-otp",
+    "item", "kbd", "pagination", "progress", "radio-group",
     "select", "slider", "switch", "table", "tabs", "textarea", "tooltip",
   ];
 

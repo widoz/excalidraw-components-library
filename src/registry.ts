@@ -23,7 +23,12 @@ import drawer from "./components/drawer.js";
 import dropdownMenu from "./components/dropdown-menu.js";
 import empty from "./components/empty.js";
 import field from "./components/field.js";
+import hoverCard from "./components/hover-card.js";
 import input from "./components/input.js";
+import inputGroup from "./components/input-group.js";
+import inputOtp from "./components/input-otp.js";
+import item from "./components/item.js";
+import kbd from "./components/kbd.js";
 import pagination from "./components/pagination.js";
 import progress from "./components/progress.js";
 import radioGroup from "./components/radio-group.js";
@@ -68,7 +73,12 @@ export const registry: Record<string, ComponentEntry> = {
   "dropdown-menu": { title: "Dropdown Menu", build: dropdownMenu },
   empty: { title: "Empty", build: empty },
   field: { title: "Field", build: field },
+  "hover-card": { title: "Hover Card", build: hoverCard },
   input: { title: "Input", build: input },
+  "input-group": { title: "Input Group", build: inputGroup },
+  "input-otp": { title: "Input OTP", build: inputOtp },
+  item: { title: "Item", build: item },
+  kbd: { title: "Kbd", build: kbd },
   pagination: { title: "Pagination", build: pagination },
   progress: { title: "Progress", build: progress },
   "radio-group": { title: "Radio Group", build: radioGroup },
