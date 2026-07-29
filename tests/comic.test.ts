@@ -1,6 +1,20 @@
 import { describe, expect, it } from "vitest";
 import { Factory } from "../src/element.js";
-import { bubble, burst, checkMark, chevron, inkBox, inkCircle, label, rule, xMark } from "../src/comic.js";
+import {
+  arc,
+  bubble,
+  burst,
+  checkMark,
+  chevron,
+  dots,
+  fillBand,
+  inkBox,
+  inkCircle,
+  label,
+  rule,
+  swash,
+  xMark,
+} from "../src/comic.js";
 import { color, style } from "../src/tokens.js";
 
 describe("inkBox", () => {
@@ -137,5 +151,68 @@ describe("xMark", () => {
     const els = xMark(new Factory("demo"), { x: 0, y: 0, s: 16 });
     expect(els).toHaveLength(2);
     expect(els.every((e) => e.type === "line")).toBe(true);
+  });
+});
+
+describe("arc", () => {
+  it("emits one open line whose first point is [0,0]", () => {
+    const [el] = arc(new Factory("demo"), { cx: 100, cy: 100, r: 40, startDeg: 0, endDeg: 270 });
+    expect(el!.type).toBe("line");
+    const pts = el!.points as number[][];
+    expect(pts[0]).toEqual([0, 0]);
+    expect(pts.length).toBeGreaterThan(8);
+    // Open, not closed: last point must differ from the first.
+    expect(pts[pts.length - 1]).not.toEqual([0, 0]);
+    expect(el!.backgroundColor).toBe(color.transparent);
+  });
+
+  it("starts at the requested angle", () => {
+    const f = new Factory("demo");
+    const [el] = arc(f, { cx: 100, cy: 100, r: 40, startDeg: 0, endDeg: 90 });
+    // 0 degrees is the +x axis, so the arc begins at (cx + r, cy).
+    expect(el!.x).toBeCloseTo(140);
+    expect(el!.y).toBeCloseTo(100);
+  });
+
+  it("sweeps a wider angle into a wider bounding box", () => {
+    const quarter = arc(new Factory("a"), { cx: 0, cy: 0, r: 40, startDeg: 0, endDeg: 90 })[0]!;
+    const full = arc(new Factory("b"), { cx: 0, cy: 0, r: 40, startDeg: 0, endDeg: 350 })[0]!;
+    expect(Number(full.width)).toBeGreaterThan(Number(quarter.width));
+  });
+});
+
+describe("dots", () => {
+  it("emits one ellipse per dot, evenly spaced", () => {
+    const els = dots(new Factory("demo"), { x: 10, y: 50, count: 3, gap: 20, r: 5 });
+    expect(els).toHaveLength(3);
+    expect(els.every((e) => e.type === "ellipse")).toBe(true);
+    expect(els.map((e) => e.x)).toEqual([10, 30, 50]);
+    expect(els.every((e) => e.width === 10)).toBe(true);
+  });
+});
+
+describe("swash", () => {
+  it("emits one closed filled polygon whose first point is [0,0]", () => {
+    const [el] = swash(new Factory("demo"), { x: 0, y: 0, w: 120, h: 30 });
+    expect(el!.type).toBe("line");
+    const pts = el!.points as number[][];
+    expect(pts[0]).toEqual([0, 0]);
+    expect(pts[pts.length - 1]).toEqual([0, 0]);
+    expect(el!.backgroundColor).toBe(color.muted);
+  });
+});
+
+describe("strokeStyle passthrough", () => {
+  it("inkBox forwards a dashed stroke style to the surface", () => {
+    const els = inkBox(new Factory("demo"), { x: 0, y: 0, w: 100, h: 40, strokeStyle: "dashed" });
+    expect(els[els.length - 1]!.strokeStyle).toBe("dashed");
+  });
+
+  it("fillBand forwards a stroke style", () => {
+    const [el] = fillBand(
+      new Factory("demo"),
+      { x: 0, y: 0, w: 100, h: 40, fill: color.accent, rounded: false, strokeStyle: "dotted" },
+    );
+    expect(el!.strokeStyle).toBe("dotted");
   });
 });

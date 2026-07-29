@@ -8,6 +8,7 @@ export function inkBox(
     x: number; y: number; w: number; h: number;
     fill?: string; stroke?: string; rounded?: boolean;
     shadow?: boolean; strokeWidth?: number;
+    strokeStyle?: "solid" | "dashed" | "dotted";
   },
 ): ExcalidrawElement[] {
   const out: ExcalidrawElement[] = [];
@@ -32,6 +33,7 @@ export function inkBox(
     stroke: o.stroke ?? color.ink,
     strokeWidth: o.strokeWidth,
     rounded: o.rounded,
+    strokeStyle: o.strokeStyle,
   }));
   return out;
 }
@@ -48,6 +50,7 @@ export function fillBand(
   o: {
     x: number; y: number; w: number; h: number;
     fill: string; rounded: boolean; opacity?: number;
+    strokeStyle?: "solid" | "dashed" | "dotted";
   },
 ): ExcalidrawElement[] {
   return [f.rect({
@@ -60,6 +63,7 @@ export function fillBand(
     strokeWidth: 1,
     rounded: o.rounded,
     opacity: o.opacity,
+    strokeStyle: o.strokeStyle,
   })];
 }
 
@@ -221,6 +225,84 @@ export function xMark(
     f.line({ x: o.x, y: o.y, points: [[0, 0], [o.s, o.s]], stroke }),
     f.line({ x: o.x + o.s, y: o.y, points: [[0, 0], [-o.s, o.s]], stroke }),
   ];
+}
+
+/**
+ * An open circular arc, approximated by a polyline. Angles in degrees, 0 = +x axis,
+ * increasing clockwise in screen coordinates.
+ */
+export function arc(
+  f: Factory,
+  o: {
+    cx: number; cy: number; r: number;
+    startDeg: number; endDeg: number;
+    stroke?: string; strokeWidth?: number; segments?: number;
+  },
+): ExcalidrawElement[] {
+  const segments = o.segments ?? Math.max(8, Math.round(Math.abs(o.endDeg - o.startDeg) / 12));
+  const abs: Array<[number, number]> = [];
+  for (let i = 0; i <= segments; i++) {
+    const deg = o.startDeg + ((o.endDeg - o.startDeg) * i) / segments;
+    const rad = (deg * Math.PI) / 180;
+    abs.push([
+      Math.round((o.cx + Math.cos(rad) * o.r) * 100) / 100,
+      Math.round((o.cy + Math.sin(rad) * o.r) * 100) / 100,
+    ]);
+  }
+  // Re-origin so the first point is [0, 0], as Factory.line requires.
+  const [ox, oy] = abs[0]!;
+  return [f.line({
+    x: ox,
+    y: oy,
+    points: abs.map(([px, py]) => [px - ox, py - oy] as [number, number]),
+    stroke: o.stroke ?? color.ink,
+    strokeWidth: o.strokeWidth ?? style.strokeWidth,
+  })];
+}
+
+/** A row of small circles: carousel indicators, grip dots. `x`/`y` is the first dot's top-left. */
+export function dots(
+  f: Factory,
+  o: { x: number; y: number; count: number; gap: number; r: number; fill?: string; stroke?: string },
+): ExcalidrawElement[] {
+  const out: ExcalidrawElement[] = [];
+  for (let i = 0; i < o.count; i++) {
+    out.push(f.ellipse({
+      x: o.x + i * o.gap,
+      y: o.y,
+      w: o.r * 2,
+      h: o.r * 2,
+      fill: o.fill ?? color.ink,
+      stroke: o.stroke ?? color.ink,
+      strokeWidth: 2,
+    }));
+  }
+  return out;
+}
+
+/** A rough highlighter swash — a closed blob with uneven ends, for marking text. */
+export function swash(
+  f: Factory,
+  o: { x: number; y: number; w: number; h: number; fill?: string; stroke?: string },
+): ExcalidrawElement[] {
+  const h = o.h;
+  const w = o.w;
+  return [f.line({
+    x: o.x,
+    y: o.y,
+    points: [
+      [0, 0],
+      [w, -h * 0.12],
+      [w + h * 0.25, h * 0.5],
+      [w, h * 1.08],
+      [0, h],
+      [-h * 0.22, h * 0.5],
+      [0, 0],
+    ],
+    fill: o.fill ?? color.muted,
+    stroke: o.stroke ?? color.transparent,
+    strokeWidth: 2,
+  })];
 }
 
 /** Re-exported so component files import layout constants from one place. */
