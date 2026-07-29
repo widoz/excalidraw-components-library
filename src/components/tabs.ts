@@ -19,17 +19,19 @@ export default function tabs(): ExcalidrawElement[] {
   titles.forEach((title, i) => {
     const active = i === 0;
     const x = i * TAB_W;
+    // The active tab is taller, so each label is centred on its own tab's height.
+    const h = active ? TAB_H + 4 : TAB_H;
     els.push(f.rect({
       x,
       y: 0,
       w: TAB_W,
-      h: active ? TAB_H + 4 : TAB_H,
+      h,
       fill: active ? color.accent : color.muted,
       rounded: false,
     }));
     els.push(...label(f, {
       x: x + TAB_W / 2,
-      y: (TAB_H - size.fontSm * 1.25) / 2,
+      y: (h - size.fontSm * 1.25) / 2,
       text: title,
       fontSize: size.fontSm,
       fontFamily: font.comic,

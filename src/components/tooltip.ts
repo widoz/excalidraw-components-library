@@ -11,7 +11,8 @@ export default function tooltip(): ExcalidrawElement[] {
   const f = new Factory("tooltip");
   const els: ExcalidrawElement[] = [];
 
-  const btnY = BUBBLE_H + 60;
+  // The tail reaches 26px below the bubble, so this leaves a 4px gap above the button.
+  const btnY = BUBBLE_H + 30;
 
   els.push(...bubble(f, {
     x: 0,
@@ -19,8 +20,8 @@ export default function tooltip(): ExcalidrawElement[] {
     w: BUBBLE_W,
     h: BUBBLE_H,
     tailAt: "bottom",
-    // Apex sits 22px along the tail base, so aim the base so apex = button centre.
-    tailX: BTN_W / 2 - 22,
+    // Apex lands on the trigger button's centre.
+    apexX: BTN_W / 2,
   }));
   els.push(...label(f, {
     x: BUBBLE_W / 2,

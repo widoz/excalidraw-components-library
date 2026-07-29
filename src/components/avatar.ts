@@ -11,7 +11,9 @@ export default function avatar(): ExcalidrawElement[] {
   // 1. Image placeholder: a head-and-shoulders glyph built from two ellipses.
   els.push(...inkCircle(f, { cx: R, cy: R, r: R, fill: color.muted }));
   els.push(f.ellipse({ x: R - 10, y: R - 18, w: 20, h: 20, fill: color.mutedText, stroke: color.ink }));
-  els.push(f.ellipse({ x: R - 20, y: R + 6, w: 40, h: 34, fill: color.mutedText, stroke: color.ink }));
+  // Height 24 so the shoulders end at y = 60, the bottom of the avatar circle.
+  // Excalidraw does not clip, so anything taller simply hangs outside it.
+  els.push(f.ellipse({ x: R - 20, y: R + 6, w: 40, h: 24, fill: color.mutedText, stroke: color.ink }));
 
   // 2. Initials.
   const cx2 = R * 2 + 40 + R;

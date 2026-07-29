@@ -417,7 +417,7 @@
           "x": 10,
           "y": 36,
           "width": 40,
-          "height": 34,
+          "height": 24,
           "angle": 0,
           "strokeColor": "#18181b",
           "backgroundColor": "#71717a",
@@ -3108,7 +3108,7 @@
           "width": 52.800000000000004,
           "height": 20,
           "angle": 0,
-          "strokeColor": "#71717a",
+          "strokeColor": "#18181b",
           "backgroundColor": "transparent",
           "fillStyle": "solid",
           "strokeWidth": 4,
@@ -3132,7 +3132,7 @@
           "text": "Delete",
           "originalText": "Delete",
           "fontSize": 16,
-          "fontFamily": 1,
+          "fontFamily": 7,
           "textAlign": "left",
           "verticalAlign": "top",
           "containerId": null,
@@ -3388,7 +3388,7 @@
         {
           "id": "input-group-7-qpbh68",
           "type": "line",
-          "x": 132,
+          "x": 118.80000000000001,
           "y": 110,
           "width": 0,
           "height": 28,
@@ -3443,7 +3443,7 @@
         {
           "id": "pagination-group-0-o7p3hh",
           "type": "line",
-          "x": 19.6,
+          "x": 42,
           "y": 16,
           "width": 5.6,
           "height": 16,
@@ -6192,7 +6192,7 @@
           "id": "tabs-group-3-m4qkdc",
           "type": "text",
           "x": 29.199999999999996,
-          "y": 14,
+          "y": 16,
           "width": 61.60000000000001,
           "height": 20,
           "angle": 0,
@@ -6706,10 +6706,10 @@
         {
           "id": "textarea-group-7-xsifi1",
           "type": "line",
-          "x": 312,
+          "x": 304,
           "y": 172,
-          "width": 0,
-          "height": 0,
+          "width": 8,
+          "height": 8,
           "angle": 0,
           "strokeColor": "#a1a1aa",
           "backgroundColor": "transparent",
@@ -6740,8 +6740,8 @@
               0
             ],
             [
-              0,
-              0
+              8,
+              -8
             ]
           ],
           "lastCommittedPoint": null,
@@ -6753,10 +6753,10 @@
         {
           "id": "textarea-group-8-wekgcp",
           "type": "line",
-          "x": 304,
+          "x": 296,
           "y": 172,
-          "width": 8,
-          "height": 8,
+          "width": 16,
+          "height": 16,
           "angle": 0,
           "strokeColor": "#a1a1aa",
           "backgroundColor": "transparent",
@@ -6787,8 +6787,8 @@
               0
             ],
             [
-              8,
-              -8
+              16,
+              -16
             ]
           ],
           "lastCommittedPoint": null,
@@ -6800,10 +6800,10 @@
         {
           "id": "textarea-group-9-2bq2z",
           "type": "line",
-          "x": 296,
+          "x": 288,
           "y": 172,
-          "width": 16,
-          "height": 16,
+          "width": 24,
+          "height": 24,
           "angle": 0,
           "strokeColor": "#a1a1aa",
           "backgroundColor": "transparent",
@@ -6834,8 +6834,8 @@
               0
             ],
             [
-              16,
-              -16
+              24,
+              -24
             ]
           ],
           "lastCommittedPoint": null,
@@ -7014,7 +7014,7 @@
           "id": "tooltip-group-4-2fh9lq",
           "type": "rectangle",
           "x": 6,
-          "y": 126,
+          "y": 96,
           "width": 140,
           "height": 52,
           "angle": 0,
@@ -7046,7 +7046,7 @@
           "id": "tooltip-group-5-s2icd5",
           "type": "rectangle",
           "x": 0,
-          "y": 120,
+          "y": 90,
           "width": 140,
           "height": 52,
           "angle": 0,
@@ -7078,7 +7078,7 @@
           "id": "tooltip-group-6-xtbkhy",
           "type": "text",
           "x": 52.4,
-          "y": 136,
+          "y": 106,
           "width": 35.2,
           "height": 20,
           "angle": 0,

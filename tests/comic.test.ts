@@ -96,12 +96,30 @@ describe("chevron", () => {
 
 describe("bubble", () => {
   it("emits a rounded box with a shadow and a closed tail", () => {
-    const els = bubble(new Factory("demo"), { x: 0, y: 0, w: 120, h: 60, tailAt: "bottom", tailX: 30 });
+    const els = bubble(new Factory("demo"), { x: 0, y: 0, w: 120, h: 60, tailAt: "bottom", apexX: 60 });
     expect(els.length).toBe(3);
     const tail = els[2]!;
     expect(tail.type).toBe("line");
     expect((tail.points as number[][]).length).toBe(4);
     expect(tail.backgroundColor).toBe(color.surface);
+  });
+
+  it("puts the tail's point exactly at x + apexX", () => {
+    const els = bubble(new Factory("demo"), { x: 200, y: 0, w: 120, h: 60, tailAt: "bottom", apexX: 60 });
+    const tail = els[2]!;
+    const apex = (tail.points as number[][])[1]!;
+    expect((tail.x as number) + apex[0]!).toBe(260);
+    // The base straddles the apex, 22px before and 18px after.
+    expect(tail.x).toBe(238);
+  });
+
+  it("points the tail up and down from the matching edge", () => {
+    const down = bubble(new Factory("demo"), { x: 0, y: 0, w: 100, h: 40, tailAt: "bottom", apexX: 50 })[2]!;
+    const up = bubble(new Factory("demo"), { x: 0, y: 0, w: 100, h: 40, tailAt: "top", apexX: 50 })[2]!;
+    expect(down.y).toBe(40);
+    expect((down.points as number[][])[1]![1]).toBe(26);
+    expect(up.y).toBe(0);
+    expect((up.points as number[][])[1]![1]).toBe(-26);
   });
 });
 

@@ -4,6 +4,11 @@ import { chevron, color, font, inkBox, label, size } from "../comic.js";
 const CELL = 48;
 const GAP = 12;
 const ACTIVE = 2;
+const ICON_S = 8;
+/** A "left"/"right" chevron of size s is s * 0.7 wide. */
+const ICON_W = ICON_S * 0.7;
+/** Space between a chevron and the nearest page cell, the same on both sides. */
+const ICON_GAP = 18;
 
 /** Prev arrow, pages 1-5 with page 2 active, next arrow. */
 export default function pagination(): ExcalidrawElement[] {
@@ -14,7 +19,13 @@ export default function pagination(): ExcalidrawElement[] {
   const startX = CELL + GAP;
 
   // Prev chevron: points left, since it moves you backward through the pages.
-  els.push(...chevron(f, { x: 14, y: CELL / 2 - 8, s: 8, dir: "left", stroke: color.mutedText }));
+  els.push(...chevron(f, {
+    x: startX - ICON_GAP - ICON_W,
+    y: CELL / 2 - 8,
+    s: ICON_S,
+    dir: "left",
+    stroke: color.mutedText,
+  }));
 
   pages.forEach((page, i) => {
     const x = startX + i * (CELL + GAP);
@@ -38,9 +49,15 @@ export default function pagination(): ExcalidrawElement[] {
     }));
   });
 
-  // Next chevron.
-  const endX = startX + pages.length * (CELL + GAP) + 6;
-  els.push(...chevron(f, { x: endX, y: CELL / 2 - 8, s: 8, dir: "right", stroke: color.mutedText }));
+  // Next chevron, the same distance from the last cell as the prev one is from the first.
+  const lastCellEnd = startX + (pages.length - 1) * (CELL + GAP) + CELL;
+  els.push(...chevron(f, {
+    x: lastCellEnd + ICON_GAP,
+    y: CELL / 2 - 8,
+    s: ICON_S,
+    dir: "right",
+    stroke: color.mutedText,
+  }));
 
   return els;
 }

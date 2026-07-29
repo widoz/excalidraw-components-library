@@ -159,13 +159,21 @@ export function chevron(
 /** Speech bubble: box plus a closed triangular tail. */
 export function bubble(
   f: Factory,
-  o: { x: number; y: number; w: number; h: number; tailAt: "bottom" | "top"; tailX: number; fill?: string },
+  o: {
+    x: number; y: number; w: number; h: number;
+    tailAt: "bottom" | "top";
+    /** Where the tail's point should land, as an x offset from the bubble's own x. */
+    apexX: number;
+    fill?: string;
+  },
 ): ExcalidrawElement[] {
   const out = inkBox(f, { x: o.x, y: o.y, w: o.w, h: o.h, fill: o.fill ?? color.surface });
   const tailY = o.tailAt === "bottom" ? o.y + o.h : o.y;
   const dy = o.tailAt === "bottom" ? 26 : -26;
+  // The tail base spans 40px with the apex 22px along it, so back the base off by 22.
+  const baseX = o.apexX - 22;
   out.push(f.line({
-    x: o.x + o.tailX,
+    x: o.x + baseX,
     y: tailY,
     points: [[0, 0], [22, dy], [40, 0]],
     closed: true,

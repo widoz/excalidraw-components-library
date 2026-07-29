@@ -47,7 +47,10 @@ export default function dropdownMenu(): ExcalidrawElement[] {
       y: y + (ITEM_H - size.fontSm * 1.25) / 2,
       text: item.text,
       fontSize: size.fontSm,
-      stroke: item.danger ? color.mutedText : color.ink,
+      stroke: color.ink,
+      // The palette is grayscale, so the destructive item is emphasised by weight,
+      // not hue: full-ink in the heavier comic face.
+      fontFamily: item.danger ? font.comic : font.hand,
     }));
   });
 

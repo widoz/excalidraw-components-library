@@ -26,7 +26,9 @@ export default function textarea(): ExcalidrawElement[] {
 
   // Resize grip: three short diagonals in the bottom-right corner.
   for (let i = 0; i < 3; i++) {
-    const offset = 8 + i * 8;
+    // Starts at 16 so the shortest diagonal already has 8px of length; an offset
+    // of 8 would make the first stroke a zero-length, invisible line.
+    const offset = 16 + i * 8;
     els.push(f.line({
       x: W - offset,
       y: H - 8,
