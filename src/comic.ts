@@ -218,12 +218,12 @@ export function burst(
 /** Close icon: two crossing strokes in an `s` by `s` box. */
 export function xMark(
   f: Factory,
-  o: { x: number; y: number; s: number; stroke?: string },
+  o: { x: number; y: number; s: number; stroke?: string; strokeWidth?: number },
 ): ExcalidrawElement[] {
   const stroke = o.stroke ?? color.ink;
   return [
-    f.line({ x: o.x, y: o.y, points: [[0, 0], [o.s, o.s]], stroke }),
-    f.line({ x: o.x + o.s, y: o.y, points: [[0, 0], [-o.s, o.s]], stroke }),
+    f.line({ x: o.x, y: o.y, points: [[0, 0], [o.s, o.s]], stroke, strokeWidth: o.strokeWidth }),
+    f.line({ x: o.x + o.s, y: o.y, points: [[0, 0], [-o.s, o.s]], stroke, strokeWidth: o.strokeWidth }),
   ];
 }
 

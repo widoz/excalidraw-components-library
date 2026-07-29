@@ -656,3 +656,67 @@ describe("bubble", () => {
     expect(accentSurfaces).toHaveLength(1);
   });
 });
+
+describe("marker", () => {
+  it("has all three lines of copy and exactly two closed swashes", () => {
+    const els = load(out, "marker");
+    expect(texts(els)).toEqual([
+      "The quick brown fox",
+      "jumps over the lazy dog",
+      "and lands in the ink.",
+    ]);
+    // Each swash is a 7-point closed blob (the points array manually repeats its first point).
+    const swashes = els.filter((e) => e.type === "line" && (e.points as unknown[]).length === 7);
+    expect(swashes).toHaveLength(2);
+  });
+
+  it("emits each swash before the text line it highlights", () => {
+    const els = load(out, "marker");
+    const line1Text = els.find((e) => e.type === "text" && e.text === "The quick brown fox")!;
+    const line2Text = els.find((e) => e.type === "text" && e.text === "jumps over the lazy dog")!;
+    const swashes = els.filter((e) => e.type === "line" && (e.points as unknown[]).length === 7);
+    expect((swashes[0]!.index as string) < (line1Text.index as string)).toBe(true);
+    expect((swashes[1]!.index as string) < (line2Text.index as string)).toBe(true);
+  });
+});
+
+describe("message", () => {
+  it("has both timestamps and both initials", () => {
+    const els = load(out, "message");
+    expect(texts(els)).toEqual(expect.arrayContaining(["GS", "AI", "09:24", "09:25"]));
+  });
+
+  it("has exactly two tail lines, one accent-filled ellipse, one accent-filled bubble", () => {
+    const els = load(out, "message");
+    const tails = els.filter((e) => e.type === "line" && (e.points as unknown[]).length === 4);
+    expect(tails).toHaveLength(2);
+    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.accent);
+    expect(accentEllipses).toHaveLength(1);
+    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(accentSurfaces).toHaveLength(1);
+  });
+});
+
+describe("toast", () => {
+  it("has a title, body and an Undo button", () => {
+    const els = load(out, "toast");
+    expect(texts(els)).toEqual(expect.arrayContaining(["Drawing saved", "Your changes are on disk.", "Undo"]));
+  });
+
+  it("draws its shadow offset +10 from the surface, not the default 6", () => {
+    const els = load(out, "toast");
+    const cards = els.filter((e) => e.type === "rectangle" && e.width === 360 && e.height === 110) as Array<{ x: number; y: number }>;
+    expect(cards).toHaveLength(2);
+    const surface = cards.find((r) => r.x === 0 && r.y === 0)!;
+    const shadow = cards.find((r) => r.x === 10 && r.y === 10)!;
+    expect(surface).toBeDefined();
+    expect(shadow).toBeDefined();
+    expect(shadow.x - surface.x).toBe(10);
+    expect(shadow.y - surface.y).toBe(10);
+  });
+
+  it("has exactly two lines forming the X", () => {
+    const els = load(out, "toast");
+    expect(count(els, "line")).toBe(2);
+  });
+});

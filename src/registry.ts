@@ -32,7 +32,9 @@ import inputOtp from "./components/input-otp.js";
 import item from "./components/item.js";
 import kbd from "./components/kbd.js";
 import labelComponent from "./components/label.js";
+import marker from "./components/marker.js";
 import menubar from "./components/menubar.js";
+import message from "./components/message.js";
 import navigationMenu from "./components/navigation-menu.js";
 import pagination from "./components/pagination.js";
 import popover from "./components/popover.js";
@@ -51,6 +53,7 @@ import switchComponent from "./components/switch.js";
 import table from "./components/table.js";
 import tabs from "./components/tabs.js";
 import textarea from "./components/textarea.js";
+import toast from "./components/toast.js";
 import toggle from "./components/toggle.js";
 import toggleGroup from "./components/toggle-group.js";
 import tooltip from "./components/tooltip.js";
@@ -97,7 +100,9 @@ export const registry: Record<string, ComponentEntry> = {
   item: { title: "Item", build: item },
   kbd: { title: "Kbd", build: kbd },
   label: { title: "Label", build: labelComponent },
+  marker: { title: "Marker", build: marker },
   menubar: { title: "Menubar", build: menubar },
+  message: { title: "Message", build: message },
   "navigation-menu": { title: "Navigation Menu", build: navigationMenu },
   pagination: { title: "Pagination", build: pagination },
   popover: { title: "Popover", build: popover },
@@ -116,6 +121,7 @@ export const registry: Record<string, ComponentEntry> = {
   table: { title: "Table", build: table },
   tabs: { title: "Tabs", build: tabs },
   textarea: { title: "Textarea", build: textarea },
+  toast: { title: "Toast", build: toast },
   toggle: { title: "Toggle", build: toggle },
   "toggle-group": { title: "Toggle Group", build: toggleGroup },
   tooltip: { title: "Tooltip", build: tooltip },

@@ -1,5 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { arc, color, font, label, size } from "../comic.js";
+import { arc, color, label, size } from "../comic.js";
 
 const PITCH = 90;
 const R = 26;
