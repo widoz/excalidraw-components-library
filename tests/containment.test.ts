@@ -60,11 +60,16 @@ function contains(outer: Box, inner: Box, tolerance = 1): boolean {
  * below the avatar circle, reached y = 70 rather than 66.
  */
 const EXPECTED: Record<string, [number, number, number, number]> = {
+  "accordion": [0, 0, 326, 266],
   "alert": [0, 0, 386, 126],
+  "alert-dialog": [0, 0, 426, 256],
+  "aspect-ratio": [0, 0, 320, 180],
   "avatar": [0, 0, 364, 66],
   "badge": [0, 0, 324, 38],
   "breadcrumb": [0, 0, 278.2, 25],
   "button": [0, 0, 206, 224],
+  "button-group": [0, 0, 336, 62],
+  "calendar": [8, 11.5, 312, 266],
   "card": [0, 0, 346, 236],
   "checkbox-group": [0, 0, 199, 152],
   "dialog": [0, 0, 426, 256],

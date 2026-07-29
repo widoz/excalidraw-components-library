@@ -197,6 +197,69 @@ describe("breadcrumb", () => {
   });
 });
 
+describe("accordion", () => {
+  it("shows three triggers with one expanded body", () => {
+    const els = load(out, "accordion");
+    expect(texts(els)).toEqual(expect.arrayContaining([
+      "What is this?",
+      "How does it work?",
+      "Can I edit it?",
+    ]));
+    // 3 chevrons + 2 body rules + 2 divider rules.
+    expect(count(els, "line")).toBe(7);
+  });
+});
+
+describe("alert-dialog", () => {
+  it("has a title, an icon burst, and two footer buttons", () => {
+    const els = load(out, "alert-dialog");
+    expect(texts(els)).toEqual(expect.arrayContaining(["Delete everything?", "Cancel", "Yes, delete"]));
+    const bursts = els.filter((e) => e.type === "line" && Array.isArray(e.points) && (e.points as unknown[]).length > 10);
+    expect(bursts).toHaveLength(1);
+    const shadowedFooterBoxes = els.filter(
+      (e) => e.type === "rectangle" && e.backgroundColor === color.ink && e.width === 130,
+    );
+    expect(shadowedFooterBoxes).toHaveLength(2);
+  });
+});
+
+describe("aspect-ratio", () => {
+  it("has a dashed frame, crossed diagonals and a ratio label", () => {
+    const els = load(out, "aspect-ratio");
+    expect(texts(els)).toContain("16 : 9");
+    expect(count(els, "line")).toBe(2);
+    const surface = els.find((e) => e.type === "rectangle");
+    expect(surface?.strokeStyle).toBe("dashed");
+  });
+});
+
+describe("button-group", () => {
+  it("has three labelled cells with one pressed and one shared shadow", () => {
+    const els = load(out, "button-group");
+    expect(texts(els)).toEqual(expect.arrayContaining(["Day", "Week", "Month"]));
+    const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(accentRects).toHaveLength(1);
+    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
+    expect(shadowRects).toHaveLength(1);
+  });
+});
+
+describe("calendar", () => {
+  it("has a header, a full weekday row, and both marked days", () => {
+    const els = load(out, "calendar");
+    expect(texts(els)).toContain("July 2026");
+    for (const initial of ["S", "M", "T", "W", "T", "F", "S"]) {
+      expect(texts(els)).toContain(initial);
+    }
+    expect(texts(els)).toContain("17");
+    expect(texts(els)).toContain("24");
+    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.accent);
+    expect(accentEllipses).toHaveLength(1);
+    // Header's left/right chevrons.
+    expect(count(els, "line")).toBe(2);
+  });
+});
+
 describe("pagination", () => {
   it("has five page cells with one active, plus prev and next arrows", () => {
     const els = load(out, "pagination");

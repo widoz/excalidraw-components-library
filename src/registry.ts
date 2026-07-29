@@ -1,9 +1,14 @@
 import type { ExcalidrawElement } from "./element.js";
+import accordion from "./components/accordion.js";
 import alert from "./components/alert.js";
+import alertDialog from "./components/alert-dialog.js";
+import aspectRatio from "./components/aspect-ratio.js";
 import avatar from "./components/avatar.js";
 import badge from "./components/badge.js";
 import breadcrumb from "./components/breadcrumb.js";
 import button from "./components/button.js";
+import buttonGroup from "./components/button-group.js";
+import calendar from "./components/calendar.js";
 import card from "./components/card.js";
 import checkboxGroup from "./components/checkbox-group.js";
 import dialog from "./components/dialog.js";
@@ -29,11 +34,16 @@ export interface ComponentEntry {
 }
 
 export const registry: Record<string, ComponentEntry> = {
+  accordion: { title: "Accordion", build: accordion },
   alert: { title: "Alert", build: alert },
+  "alert-dialog": { title: "Alert Dialog", build: alertDialog },
+  "aspect-ratio": { title: "Aspect Ratio", build: aspectRatio },
   avatar: { title: "Avatar", build: avatar },
   badge: { title: "Badge", build: badge },
   breadcrumb: { title: "Breadcrumb", build: breadcrumb },
   button: { title: "Button", build: button },
+  "button-group": { title: "Button Group", build: buttonGroup },
+  calendar: { title: "Calendar", build: calendar },
   card: { title: "Card", build: card },
   "checkbox-group": { title: "Checkbox Group", build: checkboxGroup },
   dialog: { title: "Dialog", build: dialog },

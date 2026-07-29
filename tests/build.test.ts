@@ -52,12 +52,13 @@ describe("button", () => {
 
 describe("registry", () => {
   const EXPECTED = [
-    "alert", "avatar", "badge", "breadcrumb", "button", "card", "checkbox-group",
+    "accordion", "alert", "alert-dialog", "aspect-ratio", "avatar", "badge",
+    "breadcrumb", "button", "button-group", "calendar", "card", "checkbox-group",
     "dialog", "dropdown-menu", "input", "pagination", "progress", "radio-group",
     "select", "slider", "switch", "table", "tabs", "textarea", "tooltip",
   ];
 
-  it("contains exactly the 20 planned components", () => {
+  it("contains exactly the 25 planned components", () => {
     expect(Object.keys(registry).sort()).toEqual(EXPECTED);
   });
 
