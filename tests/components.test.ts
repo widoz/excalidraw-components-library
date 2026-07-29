@@ -598,3 +598,61 @@ describe("skeleton", () => {
     expect(count(els, "ellipse")).toBe(1);
   });
 });
+
+describe("spinner", () => {
+  it("has three arc lines and a loading label, zero rectangles", () => {
+    const els = load(out, "spinner");
+    expect(texts(els)).toContain("Loading...");
+    expect(count(els, "rectangle")).toBe(0);
+    const arcs = els.filter((e) => e.type === "line");
+    expect(arcs).toHaveLength(3);
+    for (const a of arcs) {
+      expect((a.points as unknown[]).length).toBeGreaterThan(8);
+    }
+  });
+});
+
+describe("toggle", () => {
+  it("has one pressed toggle with no shadow and one at rest with a shadow", () => {
+    const els = load(out, "toggle");
+    expect(texts(els)).toEqual(expect.arrayContaining(["B", "I", "Bold", "Italic"]));
+    const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(accentRects).toHaveLength(1);
+    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
+    expect(shadowRects).toHaveLength(1);
+  });
+});
+
+describe("toggle-group", () => {
+  it("has zero text, nine alignment marks, one pressed cell and one shared shadow", () => {
+    const els = load(out, "toggle-group");
+    expect(count(els, "text")).toBe(0);
+    const marks = els.filter((e) => e.type === "line" && e.strokeWidth === 3);
+    expect(marks).toHaveLength(9);
+    const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(accentRects).toHaveLength(1);
+    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
+    expect(shadowRects).toHaveLength(1);
+  });
+});
+
+describe("attachment", () => {
+  it("has a filename and size, four lines, and one muted band", () => {
+    const els = load(out, "attachment");
+    expect(texts(els)).toEqual(expect.arrayContaining(["sketch-kit.excalidraw", "48 KB"]));
+    expect(count(els, "line")).toBe(4);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.muted);
+    expect(mutedBands).toHaveLength(1);
+  });
+});
+
+describe("bubble", () => {
+  it("has zero text, two closed tails, and one accent-filled bubble", () => {
+    const els = load(out, "bubble");
+    expect(count(els, "text")).toBe(0);
+    const tails = els.filter((e) => e.type === "line" && (e.points as unknown[]).length === 4);
+    expect(tails).toHaveLength(2);
+    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(accentSurfaces).toHaveLength(1);
+  });
+});

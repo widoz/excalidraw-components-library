@@ -3,9 +3,11 @@ import accordion from "./components/accordion.js";
 import alert from "./components/alert.js";
 import alertDialog from "./components/alert-dialog.js";
 import aspectRatio from "./components/aspect-ratio.js";
+import attachment from "./components/attachment.js";
 import avatar from "./components/avatar.js";
 import badge from "./components/badge.js";
 import breadcrumb from "./components/breadcrumb.js";
+import bubble from "./components/bubble.js";
 import button from "./components/button.js";
 import buttonGroup from "./components/button-group.js";
 import calendar from "./components/calendar.js";
@@ -44,10 +46,13 @@ import sheet from "./components/sheet.js";
 import sidebar from "./components/sidebar.js";
 import skeleton from "./components/skeleton.js";
 import slider from "./components/slider.js";
+import spinner from "./components/spinner.js";
 import switchComponent from "./components/switch.js";
 import table from "./components/table.js";
 import tabs from "./components/tabs.js";
 import textarea from "./components/textarea.js";
+import toggle from "./components/toggle.js";
+import toggleGroup from "./components/toggle-group.js";
 import tooltip from "./components/tooltip.js";
 
 export type ComponentBuilder = () => ExcalidrawElement[];
@@ -63,9 +68,11 @@ export const registry: Record<string, ComponentEntry> = {
   alert: { title: "Alert", build: alert },
   "alert-dialog": { title: "Alert Dialog", build: alertDialog },
   "aspect-ratio": { title: "Aspect Ratio", build: aspectRatio },
+  attachment: { title: "Attachment", build: attachment },
   avatar: { title: "Avatar", build: avatar },
   badge: { title: "Badge", build: badge },
   breadcrumb: { title: "Breadcrumb", build: breadcrumb },
+  bubble: { title: "Bubble", build: bubble },
   button: { title: "Button", build: button },
   "button-group": { title: "Button Group", build: buttonGroup },
   calendar: { title: "Calendar", build: calendar },
@@ -104,9 +111,12 @@ export const registry: Record<string, ComponentEntry> = {
   sidebar: { title: "Sidebar", build: sidebar },
   skeleton: { title: "Skeleton", build: skeleton },
   slider: { title: "Slider", build: slider },
+  spinner: { title: "Spinner", build: spinner },
   switch: { title: "Switch", build: switchComponent },
   table: { title: "Table", build: table },
   tabs: { title: "Tabs", build: tabs },
   textarea: { title: "Textarea", build: textarea },
+  toggle: { title: "Toggle", build: toggle },
+  "toggle-group": { title: "Toggle Group", build: toggleGroup },
   tooltip: { title: "Tooltip", build: tooltip },
 };

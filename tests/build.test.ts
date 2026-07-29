@@ -52,15 +52,16 @@ describe("button", () => {
 
 describe("registry", () => {
   const EXPECTED = [
-    "accordion", "alert", "alert-dialog", "aspect-ratio", "avatar", "badge",
-    "breadcrumb", "button", "button-group", "calendar", "card", "carousel",
+    "accordion", "alert", "alert-dialog", "aspect-ratio", "attachment", "avatar", "badge",
+    "breadcrumb", "bubble", "button", "button-group", "calendar", "card", "carousel",
     "chart", "checkbox-group", "collapsible", "combobox", "command",
     "context-menu", "date-picker", "dialog", "drawer", "dropdown-menu",
     "empty", "field", "hover-card", "input", "input-group", "input-otp",
     "item", "kbd", "label", "menubar", "navigation-menu", "pagination",
     "popover", "progress", "radio-group", "resizable", "scroll-area",
     "select", "separator", "sheet", "sidebar", "skeleton",
-    "slider", "switch", "table", "tabs", "textarea", "tooltip",
+    "slider", "spinner", "switch", "table", "tabs", "textarea",
+    "toggle", "toggle-group", "tooltip",
   ];
 
   it("contains exactly the planned components", () => {
