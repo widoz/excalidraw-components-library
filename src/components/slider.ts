@@ -27,7 +27,8 @@ export default function slider(): ExcalidrawElement[] {
     w: BUBBLE_W,
     h: BUBBLE_H,
     tailAt: "bottom",
-    tailX: BUBBLE_W / 2 - 20,
+    // Apex sits 22px along the tail base, so aim the base so apex = knob centre.
+    tailX: BUBBLE_W / 2 - 22,
   }));
   els.push(...label(f, {
     x: knobX,
