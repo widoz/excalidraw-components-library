@@ -115,3 +115,57 @@ CONTROLLER VISUAL VERIFICATION IN REAL EXCALIDRAW — done twice, before and aft
   header/stripe, dropdown hover and select highlight rendered as outlined boxes. After: all read as
   clean fills; textarea grip draws three strokes; avatar glyph sits inside its circle. Confirmed.
 BRANCH COMPLETE.
+# SDD ledger — plan: docs/superpowers/plans/2026-07-29-excalidraw-comic-components-batch-2.md
+Task 1: complete (commit ee6563d, review clean via controller — dist unchanged as required)
+Task 2: complete (commit c02ac5b, review approved). 5 judgement calls all sound. Calendar grid
+  centred at x=6 (left-flush at 22 would overflow by 4px); aspect-ratio shadow suppressed.
+Task 2: minor (deferred): accordion/calendar/button-group tests assert total line counts rather
+  than the shape breakdown; a wrong mix summing to the same total would pass. Also button-group
+  does not tie the accent fill to the "Week" label specifically.
+Task 3: complete (commit 38220fa, review approved). 13 judgement calls, all sound. Chart no-overflow
+  and magnifier edge-touch verified numerically by the reviewer. Combobox checkMark test rework
+  confirmed genuinely discriminating.
+Task 3: adjudicated — reviewer's minor suggested deriving build.test.ts's EXPECTED from
+  Object.keys(registry).length. REJECTED: that makes the test vacuous (always true). Pinning the
+  exact literal key set is the entire point of that test. Task 10 updates it to all 58 keys.
+Task 4: complete (commit bfb90cf, review approved, zero issues at any severity). 13 judgement calls
+  all sound. Controller spec error found: context-menu's Test line said "all five texts" but the
+  spec names only four. Implementer built the four and flagged it — correct call.
+Task 5: complete (commit ded1557). NOT individually reviewed — see decision below.
+CONTROLLER DECISION after two session-limit interruptions: batches 5-9 ship without a per-task
+  review subagent. Rationale: every task still passes validate + components tests + containment
+  tests + tsc before commit, and the highest-value checks (whole-branch review, real-Excalidraw
+  visual pass) are run once at the end where they cover everything. This trades per-task gating
+  for finishing the deliverable. Tasks 1-4 were individually reviewed and all approved.
+Tasks 6,7,8,9,10: complete (commits 3a55ea8, 80f987b, 289d29b, 6fb8a67, baffd5a, c075faa).
+  Task 6 self-review caught a real nested-rounded-corner violation (popover's px chip) and fixed it.
+  Task 7 self-review caught an inverted sidebar avatar-row/rule ordering and fixed it.
+  Task 9/10 added an optional strokeWidth to the shared xMark helper (backward-compatible).
+CONTROLLER VISUAL PASS ON BATCH 2 — done, two ways:
+  (a) All 58 rendered to plain SVG + headless-Chrome screenshot (contact sheet).
+  (b) The nine least-reviewed components (marker, spinner, toggle-group, skeleton, separator,
+      resizable, scroll-area, sidebar, sheet) loaded into REAL Excalidraw via clipboard format.
+  FALSE ALARM WORTH RECORDING: the SVG contact sheet appeared to show marker's highlight swashes
+  landing AFTER their phrases instead of behind them. Real Excalidraw shows them correctly placed.
+  Cause: the SVG proxy renders with Comic Sans, which is wider than Excalifont, so text ran past
+  the swash. The swash x-positions derive from estimateTextWidth and are correct. NO FIX NEEDED —
+  and the proxy must not be trusted for anything text-metric-dependent.
+  Everything else checked reads correctly. Only nit: sidebar's 4-wide accent edge marker on the
+  active row is barely distinguishable from the muted row band at normal zoom.
+WHOLE-BRANCH REVIEW (batch 2) + FIX WAVE (commits 527bdff, 0d0cea4): 13 findings, all fixed.
+  THE IMPORTANT ONE: tests/containment.test.ts built each component's bounding box from
+  union(load(name)) — the union of the very elements it then checked — so all 58 of its
+  escape-detection assertions were incapable of failing. That was the automated guard the
+  controller cited when dropping per-task review for batches 5-9. It was guarding nothing.
+  Now built from the EXPECTED literal, and the fixer PROVED the difference empirically: against a
+  deliberately-perturbed build the new form fails and the old form passes.
+  Also fixed: scroll-area's last content rule painted over the frame's bottom border; chart's bars
+  had no ink outline (read as a different design language); context-menu's caption was 70% hidden
+  behind the menu; sidebar's active band repainted the panel border; menubar/navigation-menu band
+  widths were magic numbers instead of estimateTextWidth; spinner's three sweeps were nearly
+  identical; toggle-group used a fourth stroke width; toggle's legend was ambiguous; missing tests
+  for arc's past-360 wrap, swash's side lobes, registry alphabetical order, and band-before-label
+  z-order on four components. Tests 255 -> 272.
+CONTROLLER VISUAL RE-CHECK after the fix wave: all nine changed components loaded into real
+  Excalidraw and confirmed correct.
+BATCH 2 COMPLETE. 58 components.
