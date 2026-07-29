@@ -59,9 +59,10 @@ The key boundary: **`element.ts` is the only module that writes raw element JSON
 `comic.ts` is where the house style lives — outlines, hard shadows, fills, tails —
 and most of what a component draws flows through it, so that is the first place to
 change when restyling. It is not the only place: a component may drop to a `Factory`
-primitive for a one-off shape (a caret, a tab header, an avatar glyph), and roughly
-half of them do. Those call sites carry their own rounding, opacity and inset
-decisions, so a restyle has to sweep them too.
+primitive for a one-off shape (a caret, a tab header, an avatar glyph). Six of the
+twenty do — `avatar`, `dialog`, `input`, `radio-group`, `tabs`, `textarea`. Those call
+sites carry their own rounding, opacity and inset decisions, so a restyle has to sweep
+them too.
 
 ## Visual style
 
