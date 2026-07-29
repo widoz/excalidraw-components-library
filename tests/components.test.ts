@@ -338,3 +338,81 @@ describe("pagination", () => {
     expect(count(els, "line")).toBe(2);
   });
 });
+
+describe("context-menu", () => {
+  it("shows the drop label, all three menu items, one hover row and one separator", () => {
+    const els = load(out, "context-menu");
+    // "Right-click here" + "Back" + "Reload" + "Inspect". The brief's own checklist
+    // says "all five texts present" but only names four; the component draws the
+    // four it names and this test pins that count explicitly.
+    expect(texts(els)).toEqual(expect.arrayContaining(["Right-click here", "Back", "Reload", "Inspect"]));
+    expect(count(els, "text")).toBe(4);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.muted);
+    expect(mutedBands).toHaveLength(1);
+    // One separator rule.
+    expect(count(els, "line")).toBe(1);
+  });
+
+  it("draws the drop target as a dashed rectangle", () => {
+    const els = load(out, "context-menu");
+    const dashed = els.filter((e) => e.type === "rectangle" && e.strokeStyle === "dashed");
+    expect(dashed).toHaveLength(1);
+  });
+});
+
+describe("date-picker", () => {
+  it("shows the trigger date, the popover header and one accent-filled day", () => {
+    const els = load(out, "date-picker");
+    expect(texts(els)).toContain("17 July 2026");
+    expect(texts(els)).toContain("July 2026");
+    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.accent);
+    expect(accentEllipses).toHaveLength(1);
+    // Header left/right chevrons are 3-point lines; the glyph's two binding
+    // strokes are 2-point lines, so filtering by point count isolates the chevrons.
+    const chevrons = els.filter((e) => e.type === "line" && (e.points as unknown[]).length === 3);
+    expect(chevrons).toHaveLength(2);
+  });
+});
+
+describe("drawer", () => {
+  it("has a title, a copy-link button and a 60-wide grabber bar", () => {
+    const els = load(out, "drawer");
+    expect(texts(els)).toContain("Share drawing");
+    expect(texts(els)).toContain("Copy link");
+    const grabber = els.find((e) => e.type === "rectangle" && e.backgroundColor === color.border && e.strokeColor === color.transparent);
+    expect(grabber).toBeDefined();
+    expect(grabber?.width).toBe(60);
+    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(accentSurfaces).toHaveLength(1);
+  });
+});
+
+describe("empty", () => {
+  it("has a burst glyph, a title, body copy and a call-to-action, inside a dashed frame", () => {
+    const els = load(out, "empty");
+    expect(texts(els)).toContain("?");
+    expect(texts(els)).toContain("Nothing here yet");
+    expect(texts(els)).toContain("Draw something to get started.");
+    expect(texts(els)).toContain("New drawing");
+    const bursts = els.filter((e) => e.type === "line" && Array.isArray(e.points) && (e.points as unknown[]).length > 10);
+    expect(bursts).toHaveLength(1);
+    const outer = els.find((e) => e.type === "rectangle");
+    expect(outer?.strokeStyle).toBe("dashed");
+  });
+});
+
+describe("field", () => {
+  it("has two labelled groups, one valid and one in error", () => {
+    const els = load(out, "field");
+    expect(texts(els)).toEqual(expect.arrayContaining([
+      "Email", "ada@example.com", "We'll never share it.",
+      "Password", "•••", "Too short.",
+    ]));
+    // Each input is an inkBox, which draws exactly one shadow rect (fill = ink,
+    // strokeWidth 1) behind its surface rect.
+    const shadowed = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.ink && e.strokeWidth === 1);
+    expect(shadowed).toHaveLength(2);
+    const errorMessage = els.find((e) => e.type === "text" && e.text === "Too short.");
+    expect(errorMessage?.fontFamily).toBe(7);
+  });
+});

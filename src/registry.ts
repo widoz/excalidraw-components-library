@@ -16,8 +16,13 @@ import checkboxGroup from "./components/checkbox-group.js";
 import collapsible from "./components/collapsible.js";
 import combobox from "./components/combobox.js";
 import command from "./components/command.js";
+import contextMenu from "./components/context-menu.js";
+import datePicker from "./components/date-picker.js";
 import dialog from "./components/dialog.js";
+import drawer from "./components/drawer.js";
 import dropdownMenu from "./components/dropdown-menu.js";
+import empty from "./components/empty.js";
+import field from "./components/field.js";
 import input from "./components/input.js";
 import pagination from "./components/pagination.js";
 import progress from "./components/progress.js";
@@ -56,8 +61,13 @@ export const registry: Record<string, ComponentEntry> = {
   collapsible: { title: "Collapsible", build: collapsible },
   combobox: { title: "Combobox", build: combobox },
   command: { title: "Command", build: command },
+  "context-menu": { title: "Context Menu", build: contextMenu },
+  "date-picker": { title: "Date Picker", build: datePicker },
   dialog: { title: "Dialog", build: dialog },
+  drawer: { title: "Drawer", build: drawer },
   "dropdown-menu": { title: "Dropdown Menu", build: dropdownMenu },
+  empty: { title: "Empty", build: empty },
+  field: { title: "Field", build: field },
   input: { title: "Input", build: input },
   pagination: { title: "Pagination", build: pagination },
   progress: { title: "Progress", build: progress },
