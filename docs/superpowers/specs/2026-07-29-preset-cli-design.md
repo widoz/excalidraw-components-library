@@ -55,7 +55,12 @@ roundness:   theme.edges === "sharp" ? null : (o.rounded ?? true ? { type: 3 } :
 ```
 
 Component files keep speaking in roles, so **no component's layout, geometry or logic changes**.
-Two mechanical renames do reach into them, and neither alters what is drawn:
+Three mechanical edits do reach into them, and none alters what is drawn:
+
+- every builder takes the theme and hands it to its factory — `default (theme: Theme)` and
+  `new Factory("name", theme)` (58 files, two lines each). This is unavoidable: the per-font
+  advance factor below changes text-derived geometry, so the theme has to be known while a
+  component is being built, not applied afterwards.
 
 - `font.hand` → `font.body` and `font.comic` → `font.heading` (42 files). The old names describe
   a face; the new ones describe a role, which is what they have to mean once the face is a
