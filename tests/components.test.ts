@@ -467,3 +467,63 @@ describe("kbd", () => {
     expect(shadowedCaps).toHaveLength(4);
   });
 });
+
+describe("label", () => {
+  it("shows the input pairing and the checkbox pairing", () => {
+    const els = load(out, "label");
+    // The brief's own prose names three texts: "Email address", "ada@example.com"
+    // and "Accept terms" — there is no fourth. See task-6-report.md.
+    expect(texts(els)).toEqual(["Email address", "ada@example.com", "Accept terms"]);
+    // One check mark, drawn as a single line.
+    expect(count(els, "line")).toBe(1);
+    const accentBoxes = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(accentBoxes).toHaveLength(1);
+  });
+});
+
+describe("menubar", () => {
+  it("shows four titles and Edit's open menu of three items", () => {
+    const els = load(out, "menubar");
+    expect(texts(els)).toEqual(["File", "Edit", "View", "Help", "Undo", "Redo", "Preferences"]);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.muted);
+    expect(mutedBands).toHaveLength(1);
+    // One separator rule.
+    expect(count(els, "line")).toBe(1);
+  });
+});
+
+describe("navigation-menu", () => {
+  it("shows three nav items with chevrons and a mega-panel of four subtitled items", () => {
+    const els = load(out, "navigation-menu");
+    expect(texts(els)).toEqual([
+      "Product", "Docs", "Pricing",
+      "Getting started", "Components", "Theming", "Examples",
+    ]);
+    // 3 down chevrons + 4 subtitle rules = 7 lines.
+    expect(count(els, "line")).toBe(7);
+  });
+});
+
+describe("popover", () => {
+  it("shows the trigger and a bubble whose tail apex aims at the trigger's centre", () => {
+    const els = load(out, "popover");
+    expect(texts(els)).toEqual(expect.arrayContaining(["Options", "Dimensions", "px"]));
+    const tails = els.filter((e) => e.type === "line" && (e.points as unknown[]).length === 4);
+    expect(tails).toHaveLength(1);
+    const tail = tails[0] as { x: number; points: Array<[number, number]> };
+    const trigger = els.find((e) => e.type === "text" && e.text === "Options") as { x: number; width: number };
+    const apexX = tail.x + tail.points[1]![0];
+    const triggerCenterX = trigger.x + trigger.width / 2;
+    expect(apexX).toBeCloseTo(triggerCenterX, 5);
+  });
+});
+
+describe("resizable", () => {
+  it("shows two panels and a handle with a three-dot vertical grip", () => {
+    const els = load(out, "resizable");
+    expect(texts(els)).toEqual(["Left", "Right"]);
+    expect(count(els, "ellipse")).toBe(3);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.muted);
+    expect(mutedBands).toHaveLength(1);
+  });
+});

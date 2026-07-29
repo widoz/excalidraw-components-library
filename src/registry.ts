@@ -29,9 +29,14 @@ import inputGroup from "./components/input-group.js";
 import inputOtp from "./components/input-otp.js";
 import item from "./components/item.js";
 import kbd from "./components/kbd.js";
+import labelComponent from "./components/label.js";
+import menubar from "./components/menubar.js";
+import navigationMenu from "./components/navigation-menu.js";
 import pagination from "./components/pagination.js";
+import popover from "./components/popover.js";
 import progress from "./components/progress.js";
 import radioGroup from "./components/radio-group.js";
+import resizable from "./components/resizable.js";
 import select from "./components/select.js";
 import slider from "./components/slider.js";
 import switchComponent from "./components/switch.js";
@@ -79,9 +84,14 @@ export const registry: Record<string, ComponentEntry> = {
   "input-otp": { title: "Input OTP", build: inputOtp },
   item: { title: "Item", build: item },
   kbd: { title: "Kbd", build: kbd },
+  label: { title: "Label", build: labelComponent },
+  menubar: { title: "Menubar", build: menubar },
+  "navigation-menu": { title: "Navigation Menu", build: navigationMenu },
   pagination: { title: "Pagination", build: pagination },
+  popover: { title: "Popover", build: popover },
   progress: { title: "Progress", build: progress },
   "radio-group": { title: "Radio Group", build: radioGroup },
+  resizable: { title: "Resizable", build: resizable },
   select: { title: "Select", build: select },
   slider: { title: "Slider", build: slider },
   switch: { title: "Switch", build: switchComponent },
