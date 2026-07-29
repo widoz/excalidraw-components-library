@@ -58,8 +58,9 @@ describe("registry", () => {
     "context-menu", "date-picker", "dialog", "drawer", "dropdown-menu",
     "empty", "field", "hover-card", "input", "input-group", "input-otp",
     "item", "kbd", "label", "menubar", "navigation-menu", "pagination",
-    "popover", "progress", "radio-group", "resizable",
-    "select", "slider", "switch", "table", "tabs", "textarea", "tooltip",
+    "popover", "progress", "radio-group", "resizable", "scroll-area",
+    "select", "separator", "sheet", "sidebar", "skeleton",
+    "slider", "switch", "table", "tabs", "textarea", "tooltip",
   ];
 
   it("contains exactly the planned components", () => {

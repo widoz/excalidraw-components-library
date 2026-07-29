@@ -37,7 +37,12 @@ import popover from "./components/popover.js";
 import progress from "./components/progress.js";
 import radioGroup from "./components/radio-group.js";
 import resizable from "./components/resizable.js";
+import scrollArea from "./components/scroll-area.js";
 import select from "./components/select.js";
+import separator from "./components/separator.js";
+import sheet from "./components/sheet.js";
+import sidebar from "./components/sidebar.js";
+import skeleton from "./components/skeleton.js";
 import slider from "./components/slider.js";
 import switchComponent from "./components/switch.js";
 import table from "./components/table.js";
@@ -92,7 +97,12 @@ export const registry: Record<string, ComponentEntry> = {
   progress: { title: "Progress", build: progress },
   "radio-group": { title: "Radio Group", build: radioGroup },
   resizable: { title: "Resizable", build: resizable },
+  "scroll-area": { title: "Scroll Area", build: scrollArea },
   select: { title: "Select", build: select },
+  separator: { title: "Separator", build: separator },
+  sheet: { title: "Sheet", build: sheet },
+  sidebar: { title: "Sidebar", build: sidebar },
+  skeleton: { title: "Skeleton", build: skeleton },
   slider: { title: "Slider", build: slider },
   switch: { title: "Switch", build: switchComponent },
   table: { title: "Table", build: table },

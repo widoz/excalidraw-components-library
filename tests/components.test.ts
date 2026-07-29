@@ -527,3 +527,74 @@ describe("resizable", () => {
     expect(mutedBands).toHaveLength(1);
   });
 });
+
+describe("scroll-area", () => {
+  it("has eight content rules and a two-piece scrollbar with a shorter thumb", () => {
+    const els = load(out, "scroll-area");
+    expect(count(els, "line")).toBe(8);
+    const scrollbarBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
+    expect(scrollbarBands).toHaveLength(2);
+    const [track, thumb] = scrollbarBands.sort((a, b) => (b.height as number) - (a.height as number));
+    expect((thumb!.height as number)).toBeLessThan(track!.height as number);
+  });
+});
+
+describe("separator", () => {
+  it("has all five texts and three rules, one horizontal and two vertical", () => {
+    const els = load(out, "separator");
+    expect(texts(els)).toEqual(expect.arrayContaining([
+      "Radix Primitives", "An open-source UI component library.", "Blog", "Docs", "Source",
+    ]));
+    const lines = els.filter((e) => e.type === "line") as Array<{ width: number; height: number }>;
+    expect(lines).toHaveLength(3);
+    const horizontal = lines.filter((l) => l.width > l.height);
+    const vertical = lines.filter((l) => l.height > l.width);
+    expect(horizontal).toHaveLength(1);
+    expect(vertical).toHaveLength(2);
+  });
+});
+
+describe("sheet", () => {
+  it("has all five texts, a two-line X, and one accent button surface", () => {
+    const els = load(out, "sheet");
+    expect(texts(els)).toEqual(expect.arrayContaining([
+      "Edit drawing", "Name", "Tags", "Notes", "Save changes",
+    ]));
+    expect(count(els, "line")).toBe(2);
+    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    expect(accentSurfaces).toHaveLength(1);
+  });
+
+  it("draws its hard shadow to the left, behind the surface", () => {
+    const els = load(out, "sheet");
+    const rects = els.filter((e) => e.type === "rectangle");
+    const shadow = rects[0] as { x: number; y: number; backgroundColor: string };
+    const surface = rects[1] as { x: number; y: number; backgroundColor: string };
+    expect(shadow.backgroundColor).toBe(color.ink);
+    expect(shadow.x).toBeLessThan(surface.x);
+    expect(shadow.y).toBeGreaterThan(surface.y);
+  });
+});
+
+describe("sidebar", () => {
+  it("has all seven texts, one muted row band and one accent edge marker", () => {
+    const els = load(out, "sidebar");
+    expect(texts(els)).toEqual(expect.arrayContaining([
+      "Sketch Kit", "Overview", "Components", "Palette", "Settings", "GS", "guido",
+    ]));
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.muted);
+    expect(mutedBands).toHaveLength(1);
+    const accentEdges = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.accent && e.width === 4);
+    expect(accentEdges).toHaveLength(1);
+  });
+});
+
+describe("skeleton", () => {
+  it("has zero text, exactly three bars and one ellipse", () => {
+    const els = load(out, "skeleton");
+    expect(count(els, "text")).toBe(0);
+    const bars = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
+    expect(bars).toHaveLength(3);
+    expect(count(els, "ellipse")).toBe(1);
+  });
+});
