@@ -39,7 +39,8 @@ export default function popover(): ExcalidrawElement[] {
   els.push(...rule(f, { x: PAD, y: rule2Y, w: BUBBLE_W - PAD * 2, stroke: color.border }));
 
   const chipY = rule2Y + 24;
-  els.push(...inkBox(f, { x: PAD, y: chipY, w: 40, h: 24, fill: color.accent }));
+  // Square: it sits nested inside the bubble's own rounded corners.
+  els.push(...inkBox(f, { x: PAD, y: chipY, w: 40, h: 24, fill: color.accent, rounded: false }));
   els.push(...label(f, {
     x: PAD + 20,
     y: chipY + (24 - size.fontSm * 1.25) / 2,

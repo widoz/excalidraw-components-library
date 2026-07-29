@@ -16489,9 +16489,7 @@
           ],
           "frameId": null,
           "index": "a00006V",
-          "roundness": {
-            "type": 3
-          },
+          "roundness": null,
           "seed": 1751879176,
           "version": 1,
           "versionNonce": 1531534910,
@@ -16521,9 +16519,7 @@
           ],
           "frameId": null,
           "index": "a00007V",
-          "roundness": {
-            "type": 3
-          },
+          "roundness": null,
           "seed": 781053963,
           "version": 1,
           "versionNonce": 897911204,
