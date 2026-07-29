@@ -1,5 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, inkBox, label, size } from "../comic.js";
+import { color, fillBand, inkBox, label, size } from "../comic.js";
 
 const W = size.control;
 const H = 32;
@@ -14,12 +14,13 @@ export default function progress(): ExcalidrawElement[] {
     const y = i * ROW;
     els.push(...inkBox(f, { x: 0, y, w: W, h: H, fill: color.muted }));
     // Inset by 5px so the fill sits inside the wobbly outline.
-    els.push(f.rect({
+    els.push(...fillBand(f, {
       x: 5,
       y: y + 5,
       w: ((W - 10) * pct) / 100,
       h: H - 10,
       fill: color.accent,
+      rounded: false,
     }));
     els.push(...label(f, {
       x: W + 20,

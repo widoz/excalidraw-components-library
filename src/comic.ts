@@ -36,6 +36,33 @@ export function inkBox(
   return out;
 }
 
+/**
+ * A rectangle that exists only to carry a fill — a progress bar's accent portion,
+ * a table stripe, a hovered menu row. It gets no outline of its own: `Factory.rect`
+ * would otherwise centre a 4px ink stroke on its path and eat the band from both
+ * sides. `rounded` is explicit because a band inside a rounded container must
+ * usually be square, so its corners cannot poke through the container's fill path.
+ */
+export function fillBand(
+  f: Factory,
+  o: {
+    x: number; y: number; w: number; h: number;
+    fill: string; rounded: boolean; opacity?: number;
+  },
+): ExcalidrawElement[] {
+  return [f.rect({
+    x: o.x,
+    y: o.y,
+    w: o.w,
+    h: o.h,
+    fill: o.fill,
+    stroke: color.transparent,
+    strokeWidth: 1,
+    rounded: o.rounded,
+    opacity: o.opacity,
+  })];
+}
+
 /** Circular counterpart of inkBox, positioned by its centre. */
 export function inkCircle(
   f: Factory,

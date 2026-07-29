@@ -2953,10 +2953,10 @@
           "width": 244,
           "height": 46,
           "angle": 0,
-          "strokeColor": "#18181b",
+          "strokeColor": "transparent",
           "backgroundColor": "#e4e4e7",
           "fillStyle": "solid",
-          "strokeWidth": 4,
+          "strokeWidth": 1,
           "strokeStyle": "solid",
           "roughness": 2,
           "opacity": 100,
@@ -2965,9 +2965,7 @@
           ],
           "frameId": null,
           "index": "a00006V",
-          "roundness": {
-            "type": 3
-          },
+          "roundness": null,
           "seed": 1553952637,
           "version": 1,
           "versionNonce": 1062105114,
@@ -4011,10 +4009,10 @@
           "width": 108.5,
           "height": 22,
           "angle": 0,
-          "strokeColor": "#18181b",
+          "strokeColor": "transparent",
           "backgroundColor": "#3f3f46",
           "fillStyle": "solid",
-          "strokeWidth": 4,
+          "strokeWidth": 1,
           "strokeStyle": "solid",
           "roughness": 2,
           "opacity": 100,
@@ -4023,9 +4021,7 @@
           ],
           "frameId": null,
           "index": "a00002V",
-          "roundness": {
-            "type": 3
-          },
+          "roundness": null,
           "seed": 1930346541,
           "version": 1,
           "versionNonce": 19662305,
@@ -4146,10 +4142,10 @@
           "width": 248,
           "height": 22,
           "angle": 0,
-          "strokeColor": "#18181b",
+          "strokeColor": "transparent",
           "backgroundColor": "#3f3f46",
           "fillStyle": "solid",
-          "strokeWidth": 4,
+          "strokeWidth": 1,
           "strokeStyle": "solid",
           "roughness": 2,
           "opacity": 100,
@@ -4158,9 +4154,7 @@
           ],
           "frameId": null,
           "index": "a00006V",
-          "roundness": {
-            "type": 3
-          },
+          "roundness": null,
           "seed": 68772177,
           "version": 1,
           "versionNonce": 397276760,
@@ -4817,10 +4811,10 @@
           "width": 304,
           "height": 46,
           "angle": 0,
-          "strokeColor": "#18181b",
+          "strokeColor": "transparent",
           "backgroundColor": "#3f3f46",
           "fillStyle": "solid",
-          "strokeWidth": 4,
+          "strokeWidth": 1,
           "strokeStyle": "solid",
           "roughness": 2,
           "opacity": 100,
@@ -4829,9 +4823,7 @@
           ],
           "frameId": null,
           "index": "a00007V",
-          "roundness": {
-            "type": 3
-          },
+          "roundness": null,
           "seed": 130721033,
           "version": 1,
           "versionNonce": 1099545214,
@@ -4999,10 +4991,10 @@
           "width": 200.8,
           "height": 8,
           "angle": 0,
-          "strokeColor": "#18181b",
+          "strokeColor": "transparent",
           "backgroundColor": "#3f3f46",
           "fillStyle": "solid",
-          "strokeWidth": 4,
+          "strokeWidth": 1,
           "strokeStyle": "solid",
           "roughness": 2,
           "opacity": 100,
@@ -5011,9 +5003,7 @@
           ],
           "frameId": null,
           "index": "a00002V",
-          "roundness": {
-            "type": 3
-          },
+          "roundness": null,
           "seed": 959346407,
           "version": 1,
           "versionNonce": 1363601854,
@@ -5590,15 +5580,15 @@
         {
           "id": "table-group-2-ffp2cc",
           "type": "rectangle",
-          "x": 5,
-          "y": 5,
-          "width": 370,
-          "height": 45,
+          "x": 10,
+          "y": 10,
+          "width": 360,
+          "height": 40,
           "angle": 0,
-          "strokeColor": "#18181b",
+          "strokeColor": "transparent",
           "backgroundColor": "#e4e4e7",
           "fillStyle": "solid",
-          "strokeWidth": 4,
+          "strokeWidth": 1,
           "strokeStyle": "solid",
           "roughness": 2,
           "opacity": 100,
@@ -5607,9 +5597,7 @@
           ],
           "frameId": null,
           "index": "a00002V",
-          "roundness": {
-            "type": 3
-          },
+          "roundness": null,
           "seed": 886148470,
           "version": 1,
           "versionNonce": 982754676,
@@ -5700,9 +5688,9 @@
         {
           "id": "table-group-5-eq9o4b",
           "type": "line",
-          "x": 5,
+          "x": 10,
           "y": 50,
-          "width": 370,
+          "width": 360,
           "height": 0,
           "angle": 0,
           "strokeColor": "#d4d4d8",
@@ -5734,7 +5722,7 @@
               0
             ],
             [
-              370,
+              360,
               0
             ]
           ],
@@ -5825,15 +5813,15 @@
         {
           "id": "table-group-8-n1388d",
           "type": "rectangle",
-          "x": 5,
+          "x": 10,
           "y": 100,
-          "width": 370,
+          "width": 360,
           "height": 50,
           "angle": 0,
-          "strokeColor": "#18181b",
+          "strokeColor": "transparent",
           "backgroundColor": "#e4e4e7",
           "fillStyle": "solid",
-          "strokeWidth": 4,
+          "strokeWidth": 1,
           "strokeStyle": "solid",
           "roughness": 2,
           "opacity": 60,
@@ -5855,9 +5843,9 @@
         {
           "id": "table-group-9-9o2fck",
           "type": "line",
-          "x": 5,
+          "x": 10,
           "y": 100,
-          "width": 370,
+          "width": 360,
           "height": 0,
           "angle": 0,
           "strokeColor": "#d4d4d8",
@@ -5889,7 +5877,7 @@
               0
             ],
             [
-              370,
+              360,
               0
             ]
           ],
@@ -5980,9 +5968,9 @@
         {
           "id": "table-group-c-iberpq",
           "type": "line",
-          "x": 5,
+          "x": 10,
           "y": 150,
-          "width": 370,
+          "width": 360,
           "height": 0,
           "angle": 0,
           "strokeColor": "#d4d4d8",
@@ -6014,7 +6002,7 @@
               0
             ],
             [
-              370,
+              360,
               0
             ]
           ],

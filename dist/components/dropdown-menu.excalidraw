@@ -217,10 +217,10 @@
       "width": 244,
       "height": 46,
       "angle": 0,
-      "strokeColor": "#18181b",
+      "strokeColor": "transparent",
       "backgroundColor": "#e4e4e7",
       "fillStyle": "solid",
-      "strokeWidth": 4,
+      "strokeWidth": 1,
       "strokeStyle": "solid",
       "roughness": 2,
       "opacity": 100,
@@ -229,9 +229,7 @@
       ],
       "frameId": null,
       "index": "a00006V",
-      "roundness": {
-        "type": 3
-      },
+      "roundness": null,
       "seed": 1553952637,
       "version": 1,
       "versionNonce": 1062105114,

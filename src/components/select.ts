@@ -1,5 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { chevron, color, inkBox, label, size } from "../comic.js";
+import { chevron, color, fillBand, inkBox, label, size } from "../comic.js";
 
 const W = size.control;
 const TRIGGER_H = 56;
@@ -29,7 +29,7 @@ export default function select(): ExcalidrawElement[] {
     const y = menuY + 8 + i * ITEM_H;
     const highlighted = text === "Comic";
     if (highlighted) {
-      els.push(f.rect({ x: 8, y, w: W - 16, h: ITEM_H, fill: color.accent }));
+      els.push(...fillBand(f, { x: 8, y, w: W - 16, h: ITEM_H, fill: color.accent, rounded: false }));
     }
     els.push(...label(f, {
       x: 22,

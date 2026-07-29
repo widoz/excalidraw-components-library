@@ -1,5 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, font, inkBox, label, rule, size } from "../comic.js";
+import { color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 260;
 const TRIGGER_W = 150;
@@ -40,7 +40,7 @@ export default function dropdownMenu(): ExcalidrawElement[] {
       els.push(...rule(f, { x: 12, y: y - 6, w: W - 24, stroke: color.border }));
     }
     if (item.hovered) {
-      els.push(f.rect({ x: 8, y, w: W - 16, h: ITEM_H, fill: color.muted }));
+      els.push(...fillBand(f, { x: 8, y, w: W - 16, h: ITEM_H, fill: color.muted, rounded: false }));
     }
     els.push(...label(f, {
       x: 22,

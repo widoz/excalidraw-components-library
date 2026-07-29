@@ -1,5 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { bubble, color, font, inkBox, inkCircle, label, size } from "../comic.js";
+import { bubble, color, fillBand, font, inkBox, inkCircle, label, size } from "../comic.js";
 
 const W = size.control;
 const TRACK_H = 16;
@@ -16,7 +16,14 @@ export default function slider(): ExcalidrawElement[] {
   const knobX = (W * VALUE) / 100;
 
   els.push(...inkBox(f, { x: 0, y: trackY, w: W, h: TRACK_H, fill: color.muted }));
-  els.push(f.rect({ x: 4, y: trackY + 4, w: knobX - 4, h: TRACK_H - 8, fill: color.accent }));
+  els.push(...fillBand(f, {
+    x: 4,
+    y: trackY + 4,
+    w: knobX - 4,
+    h: TRACK_H - 8,
+    fill: color.accent,
+    rounded: false,
+  }));
   els.push(...inkCircle(f, { cx: knobX, cy: trackY + TRACK_H / 2, r: 20 }));
 
   // Value bubble, tail pointing down at the knob.
