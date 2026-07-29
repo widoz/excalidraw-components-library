@@ -49,3 +49,25 @@ describe("button", () => {
     expect(els.filter((e) => e.type === "rectangle")).toHaveLength(5);
   });
 });
+
+describe("registry", () => {
+  const EXPECTED = [
+    "alert", "avatar", "badge", "breadcrumb", "button", "card", "checkbox-group",
+    "dialog", "dropdown-menu", "input", "pagination", "progress", "radio-group",
+    "select", "slider", "switch", "table", "tabs", "textarea", "tooltip",
+  ];
+
+  it("contains exactly the 20 planned components", () => {
+    expect(Object.keys(registry).sort()).toEqual(EXPECTED);
+  });
+
+  it("gives every component a distinct title", () => {
+    const titles = Object.values(registry).map((e) => e.title);
+    expect(new Set(titles).size).toBe(titles.length);
+  });
+
+  it("appears in the library bundle once per component", () => {
+    const lib = JSON.parse(readFileSync(join(out, "comic-ui.excalidrawlib"), "utf8"));
+    expect(lib.libraryItems).toHaveLength(EXPECTED.length);
+  });
+});
