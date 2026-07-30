@@ -318,7 +318,7 @@ describe("DEFAULT_PRESET", () => {
       strokeWidth: "bold",
       sloppiness: "cartoonist",
       edges: "round",
-      font: "comic-shanns",
+      font: "excalifont",
       palette: "zinc",
     });
   });
@@ -372,7 +372,7 @@ export const DEFAULT_PRESET: Required<Preset> = {
   strokeWidth: "bold",
   sloppiness: "cartoonist",
   edges: "round",
-  font: "comic-shanns",
+  font: "excalifont",
   palette: "zinc",
 };
 
@@ -1049,7 +1049,7 @@ git commit -m "feat: validate output against the theme it was built with"
   "strokeWidth": "bold",
   "sloppiness": "cartoonist",
   "edges": "round",
-  "font": "comic-shanns",
+  "font": "excalifont",
   "palette": "zinc"
 }
 ```
@@ -1543,7 +1543,7 @@ picks five things:
 | `strokeWidth` | `bold` (4/2/1) · `medium` (2/1/1) · `thin` (1/1/1) |
 | `sloppiness` | `architect` (0) · `artist` (1) · `cartoonist` (2) |
 | `edges` | `sharp` · `round` |
-| `font` | `comic-shanns` · `excalifont` · `nunito` — body text only; headings stay Comic Shanns |
+| `font` | `excalifont` (default) · `comic-shanns` · `nunito` — body text only; headings stay Comic Shanns |
 | `palette` | `neutral` · `stone` · `zinc` · `mauve` · `olive` · `mist` · `taupe` |
 
 ```bash

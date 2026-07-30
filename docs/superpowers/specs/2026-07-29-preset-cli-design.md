@@ -108,7 +108,7 @@ a partial preset file resolves to a complete theme.
 }
 ```
 
-`presets/default.json` is today's look: `bold` / `cartoonist` / `round` / `comic-shanns` /
+`presets/default.json` is today's look: `bold` / `cartoonist` / `round` / `excalifont` /
 `zinc`. Any field may be omitted and falls back to the default's value.
 
 An unknown value for any field is a hard error naming the field and listing the legal values.
@@ -155,11 +155,17 @@ Shanns in every preset.
 
 | value | body id | heading id |
 |---|---|---|
-| `comic-shanns` (default) | 7 | 7 |
-| `excalifont` | 1 | 7 |
+| `excalifont` (default) | 1 | 7 |
+| `comic-shanns` | 7 | 7 |
 | `nunito` | 6 | 7 |
 
-At `comic-shanns` there is no body/heading contrast. That is a legitimate preset, not a bug.
+The default is `excalifont`, because that is what the library already emits: today's `dist/` carries
+150 text elements at `fontFamily: 1` (Excalifont body) and 95 at `7` (Comic Shanns headings). An
+earlier draft of this spec named `comic-shanns` as the default, which would have silently restyled
+every body label the moment fonts were wired up.
+
+At `comic-shanns` there is no body/heading contrast, since both roles resolve to 7. That is a
+legitimate preset, not a bug.
 
 Font id 1 is Excalidraw's legacy Virgil slot, which resolves to Excalifont and is what the
 library already emits. It is kept rather than switching to 5 so the default preset's output is
