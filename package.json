@@ -6,6 +6,7 @@
   "description": "Comic-styled shadcn-inspired UI components for Excalidraw",
   "scripts": {
     "build": "tsx src/build.ts",
+    "preset": "tsx src/preset.ts",
     "validate": "tsx src/validate.ts",
     "test": "vitest run",
     "check": "npm run build && npm run validate && npm test"
