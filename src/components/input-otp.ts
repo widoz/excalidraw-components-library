@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, inkBox, label, size } from "../comic.js";
+import { color, font, inkBox, label, size, stroke } from "../comic.js";
 
 const CELL_W = 52;
 const CELL_H = 64;
@@ -56,7 +56,7 @@ export default function inputOtp(theme: Theme): ExcalidrawElement[] {
         x: x + CELL_W / 2,
         y: 16,
         points: [[0, 0], [0, CELL_H - 32]],
-        strokeWidth: 2,
+        strokeWidth: stroke.hairline,
       }));
     }
   });

@@ -1,13 +1,11 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, rule, style } from "../comic.js";
+import { color, rule, stroke, style } from "../comic.js";
 
 const CELL_W = 70;
 const CELL_H = 60;
 const W = CELL_W * 3;
 const PAD = 8;
-/** The library's incidental-stroke weight. 4 / 2 / 1 are the only widths in use. */
-const MARK_STROKE = 2;
 const WIDTHS = [30, 20, 26];
 const MARK_YS = [16, 28, 40];
 
@@ -24,7 +22,7 @@ export default function toggleGroup(theme: Theme): ExcalidrawElement[] {
     h: CELL_H,
     fill: color.ink,
     stroke: color.ink,
-    strokeWidth: 1,
+    strokeWidth: stroke.shadow,
     rounded: false,
   }));
 
@@ -57,7 +55,7 @@ export default function toggleGroup(theme: Theme): ExcalidrawElement[] {
         y: MARK_YS[j]!,
         w,
         stroke: fg,
-        strokeWidth: MARK_STROKE,
+        strokeWidth: stroke.hairline,
       }));
     });
   });

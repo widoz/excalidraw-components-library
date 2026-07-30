@@ -1,6 +1,6 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, inkBox, label, size } from "../comic.js";
+import { color, inkBox, label, size, stroke } from "../comic.js";
 
 const W = size.control;
 const H = 56;
@@ -34,7 +34,7 @@ export default function input(theme: Theme): ExcalidrawElement[] {
   }));
   // Caret, parked just past the end of the typed text.
   const caretX = PAD_X + estimateTextWidth(TYPED, size.fontSm) + 4;
-  els.push(f.line({ x: caretX, y: y2 + 14, points: [[0, 0], [0, H - 28]], strokeWidth: 2 }));
+  els.push(f.line({ x: caretX, y: y2 + 14, points: [[0, 0], [0, H - 28]], strokeWidth: stroke.hairline }));
 
   return els;
 }

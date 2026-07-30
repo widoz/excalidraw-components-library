@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, fillBand, font, inkBox, inkCircle, label, rule, size } from "../comic.js";
+import { color, fillBand, font, inkBox, inkCircle, label, rule, size, stroke } from "../comic.js";
 
 const W = 340;
 const PANEL_H = 300;
@@ -68,7 +68,7 @@ export default function command(theme: Theme): ExcalidrawElement[] {
 
     const keyX = W - 24 - KEY_W;
     const keyY = y + (ITEM_H - KEY_H) / 2;
-    els.push(...inkBox(f, { x: keyX, y: keyY, w: KEY_W, h: KEY_H, strokeWidth: 2, shadow: false }));
+    els.push(...inkBox(f, { x: keyX, y: keyY, w: KEY_W, h: KEY_H, strokeWidth: stroke.hairline, shadow: false }));
     els.push(...label(f, {
       x: keyX + KEY_W / 2,
       y: keyY + (KEY_H - size.fontSm * 1.25) / 2,

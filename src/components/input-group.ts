@@ -1,6 +1,6 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, label, size, style } from "../comic.js";
+import { color, font, label, size, stroke, style } from "../comic.js";
 
 const LEAD_W = 50;
 const TRAIL_W = 90;
@@ -30,7 +30,7 @@ export default function inputGroup(theme: Theme): ExcalidrawElement[] {
     h: H,
     fill: color.ink,
     stroke: color.ink,
-    strokeWidth: 1,
+    strokeWidth: stroke.shadow,
     rounded: false,
   }));
 
@@ -55,7 +55,7 @@ export default function inputGroup(theme: Theme): ExcalidrawElement[] {
     fontSize: size.fontSm,
   }));
   const caretX = textX + estimateTextWidth(TYPED, size.fontSm) + 4;
-  els.push(f.line({ x: caretX, y: 14, points: [[0, 0], [0, H - 28]], strokeWidth: 2 }));
+  els.push(f.line({ x: caretX, y: 14, points: [[0, 0], [0, H - 28]], strokeWidth: stroke.hairline }));
 
   // Trailing accent segment.
   els.push(f.rect({ x: LEAD_W + MID_W, y: 0, w: TRAIL_W, h: H, fill: color.accent, rounded: false }));
@@ -70,8 +70,8 @@ export default function inputGroup(theme: Theme): ExcalidrawElement[] {
   }));
 
   // Seams: full-height ink rules landing exactly on the segment boundaries.
-  els.push(f.line({ x: SEAM_1_X, y: 0, points: [[0, 0], [0, H]], strokeWidth: 4 }));
-  els.push(f.line({ x: SEAM_2_X, y: 0, points: [[0, 0], [0, H]], strokeWidth: 4 }));
+  els.push(f.line({ x: SEAM_1_X, y: 0, points: [[0, 0], [0, H]], strokeWidth: stroke.outline }));
+  els.push(f.line({ x: SEAM_2_X, y: 0, points: [[0, 0], [0, H]], strokeWidth: stroke.outline }));
 
   return els;
 }

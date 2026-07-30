@@ -1,5 +1,6 @@
 import type { ExcalidrawElement, Factory } from "./element.js";
-import { color, font, size, style } from "./tokens.js";
+import { color, font, size, stroke, style } from "./tokens.js";
+import type { StrokeRung } from "./theme.js";
 
 /** A filled box with a bold ink outline and a hard offset shadow. */
 export function inkBox(
@@ -7,7 +8,7 @@ export function inkBox(
   o: {
     x: number; y: number; w: number; h: number;
     fill?: string; stroke?: string; rounded?: boolean;
-    shadow?: boolean; strokeWidth?: number;
+    shadow?: boolean; strokeWidth?: StrokeRung;
     strokeStyle?: "solid" | "dashed" | "dotted";
   },
 ): ExcalidrawElement[] {
@@ -20,7 +21,7 @@ export function inkBox(
       h: o.h,
       fill: color.ink,
       stroke: color.ink,
-      strokeWidth: 1,
+      strokeWidth: stroke.shadow,
       rounded: o.rounded,
     }));
   }
@@ -60,7 +61,7 @@ export function fillBand(
     h: o.h,
     fill: o.fill,
     stroke: color.transparent,
-    strokeWidth: 1,
+    strokeWidth: stroke.shadow,
     rounded: o.rounded,
     opacity: o.opacity,
     strokeStyle: o.strokeStyle,
@@ -82,7 +83,7 @@ export function inkCircle(
       h: d,
       fill: color.ink,
       stroke: color.ink,
-      strokeWidth: 1,
+      strokeWidth: stroke.shadow,
     }));
   }
   out.push(f.ellipse({
@@ -109,14 +110,14 @@ export function label(
 
 export function rule(
   f: Factory,
-  o: { x: number; y: number; w: number; stroke?: string; strokeWidth?: number },
+  o: { x: number; y: number; w: number; stroke?: string; strokeWidth?: StrokeRung },
 ): ExcalidrawElement[] {
   return [f.line({
     x: o.x,
     y: o.y,
     points: [[0, 0], [o.w, 0]],
     stroke: o.stroke ?? color.border,
-    strokeWidth: o.strokeWidth ?? 2,
+    strokeWidth: o.strokeWidth ?? stroke.hairline,
   })];
 }
 
@@ -218,12 +219,12 @@ export function burst(
 /** Close icon: two crossing strokes in an `s` by `s` box. */
 export function xMark(
   f: Factory,
-  o: { x: number; y: number; s: number; stroke?: string; strokeWidth?: number },
+  o: { x: number; y: number; s: number; stroke?: string; strokeWidth?: StrokeRung },
 ): ExcalidrawElement[] {
-  const stroke = o.stroke ?? color.ink;
+  const strokeColor = o.stroke ?? color.ink;
   return [
-    f.line({ x: o.x, y: o.y, points: [[0, 0], [o.s, o.s]], stroke, strokeWidth: o.strokeWidth }),
-    f.line({ x: o.x + o.s, y: o.y, points: [[0, 0], [-o.s, o.s]], stroke, strokeWidth: o.strokeWidth }),
+    f.line({ x: o.x, y: o.y, points: [[0, 0], [o.s, o.s]], stroke: strokeColor, strokeWidth: o.strokeWidth }),
+    f.line({ x: o.x + o.s, y: o.y, points: [[0, 0], [-o.s, o.s]], stroke: strokeColor, strokeWidth: o.strokeWidth }),
   ];
 }
 
@@ -236,7 +237,7 @@ export function arc(
   o: {
     cx: number; cy: number; r: number;
     startDeg: number; endDeg: number;
-    stroke?: string; strokeWidth?: number; segments?: number;
+    stroke?: string; strokeWidth?: StrokeRung; segments?: number;
   },
 ): ExcalidrawElement[] {
   const segments = o.segments ?? Math.max(8, Math.round(Math.abs(o.endDeg - o.startDeg) / 12));
@@ -256,7 +257,7 @@ export function arc(
     y: oy,
     points: abs.map(([px, py]) => [px - ox, py - oy] as [number, number]),
     stroke: o.stroke ?? color.ink,
-    strokeWidth: o.strokeWidth ?? style.strokeWidth,
+    strokeWidth: o.strokeWidth ?? stroke.outline,
   })];
 }
 
@@ -274,7 +275,7 @@ export function dots(
       h: o.r * 2,
       fill: o.fill ?? color.ink,
       stroke: o.stroke ?? color.ink,
-      strokeWidth: 2,
+      strokeWidth: stroke.hairline,
     }));
   }
   return out;
@@ -301,9 +302,9 @@ export function swash(
     ],
     fill: o.fill ?? color.muted,
     stroke: o.stroke ?? color.transparent,
-    strokeWidth: 2,
+    strokeWidth: stroke.hairline,
   })];
 }
 
 /** Re-exported so component files import layout constants from one place. */
-export { color, font, size, style };
+export { color, font, size, stroke, style };

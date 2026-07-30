@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, inkBox, label, size } from "../comic.js";
+import { color, font, inkBox, label, size, stroke } from "../comic.js";
 
 const W = 320;
 const H = 180;
@@ -25,14 +25,14 @@ export default function aspectRatio(theme: Theme): ExcalidrawElement[] {
     y: 0,
     points: [[0, 0], [W, H]],
     stroke: color.border,
-    strokeWidth: 2,
+    strokeWidth: stroke.hairline,
   }));
   els.push(f.line({
     x: 0,
     y: H,
     points: [[0, 0], [W, -H]],
     stroke: color.border,
-    strokeWidth: 2,
+    strokeWidth: stroke.hairline,
   }));
 
   els.push(...label(f, {

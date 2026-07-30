@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, fillBand, font, inkBox, label, size, xMark } from "../comic.js";
+import { color, fillBand, font, inkBox, label, size, stroke, xMark } from "../comic.js";
 
 const W = 300;
 const H = 72;
@@ -26,14 +26,14 @@ export default function attachment(theme: Theme): ExcalidrawElement[] {
     y: BAND_Y,
     points: [[0, 0], [FOLD, FOLD]],
     stroke: color.ink,
-    strokeWidth: 2,
+    strokeWidth: stroke.hairline,
   }));
   els.push(f.line({
     x: cornerX - FOLD + 5,
     y: BAND_Y + 5,
     points: [[0, 0], [FOLD - 5, FOLD - 5]],
     stroke: color.ink,
-    strokeWidth: 2,
+    strokeWidth: stroke.hairline,
   }));
 
   const textX = BAND_X + BAND_W + 16;

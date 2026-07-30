@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, label, size, style } from "../comic.js";
+import { color, font, label, size, stroke, style } from "../comic.js";
 
 const CELL_W = 110;
 const CELL_H = 56;
@@ -19,7 +19,7 @@ export default function buttonGroup(theme: Theme): ExcalidrawElement[] {
     h: CELL_H,
     fill: color.ink,
     stroke: color.ink,
-    strokeWidth: 1,
+    strokeWidth: stroke.shadow,
     rounded: false,
   }));
 

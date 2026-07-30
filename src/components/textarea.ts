@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, inkBox, label, rule, size } from "../comic.js";
+import { color, inkBox, label, rule, size, stroke } from "../comic.js";
 
 const W = size.control;
 const H = 180;
@@ -22,7 +22,7 @@ export default function textarea(theme: Theme): ExcalidrawElement[] {
   // Ruled lines suggesting wrapped text.
   const widths = [W - 52, W - 36, W - 90, W - 140];
   widths.forEach((w, i) => {
-    els.push(...rule(f, { x: 18, y: 62 + i * 24, w, stroke: color.muted, strokeWidth: 2 }));
+    els.push(...rule(f, { x: 18, y: 62 + i * 24, w, stroke: color.muted, strokeWidth: stroke.hairline }));
   });
 
   // Resize grip: three short diagonals in the bottom-right corner.
@@ -35,7 +35,7 @@ export default function textarea(theme: Theme): ExcalidrawElement[] {
       y: H - 8,
       points: [[0, 0], [offset - 8, -(offset - 8)]],
       stroke: color.subtle,
-      strokeWidth: 2,
+      strokeWidth: stroke.hairline,
     }));
   }
 

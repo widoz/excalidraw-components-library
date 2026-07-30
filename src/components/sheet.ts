@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, inkBox, label, size, style, xMark } from "../comic.js";
+import { color, font, inkBox, label, size, stroke, style, xMark } from "../comic.js";
 
 const W = 320;
 const H = 420;
@@ -26,7 +26,7 @@ export default function sheet(theme: Theme): ExcalidrawElement[] {
     h: H,
     fill: color.ink,
     stroke: color.ink,
-    strokeWidth: 1,
+    strokeWidth: stroke.shadow,
     rounded: false,
   }));
   els.push(f.rect({
@@ -36,7 +36,7 @@ export default function sheet(theme: Theme): ExcalidrawElement[] {
     h: H,
     fill: color.surface,
     stroke: color.ink,
-    strokeWidth: style.strokeWidth,
+    strokeWidth: stroke.outline,
     rounded: false,
   }));
 

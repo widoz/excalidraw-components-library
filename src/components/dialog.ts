@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, inkBox, label, rule, size, xMark } from "../comic.js";
+import { color, font, inkBox, label, rule, size, stroke, xMark } from "../comic.js";
 
 const W = 420;
 const H = 250;
@@ -21,7 +21,7 @@ export default function dialog(theme: Theme): ExcalidrawElement[] {
     w: W - 20,
     h: H - 20,
     fill: color.transparent,
-    strokeWidth: 2,
+    strokeWidth: stroke.hairline,
     rounded: false,
   }));
 

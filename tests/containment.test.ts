@@ -210,7 +210,7 @@ describe("fill bands stay inside a frame", () => {
       // Only real 4px outlines count as frames. The 1px ink rectangles are drop
       // shadows, offset down and right, and enclose nothing the viewer can see.
       const frames = els
-        .filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.ink && e.strokeWidth === 4)
+        .filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.ink && e.strokeWidth === theme.strokes.outline)
         .map(bounds);
       for (const band of bands) {
         const box = bounds(band);

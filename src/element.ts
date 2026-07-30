@@ -1,5 +1,5 @@
-import { color, font, size, style } from "./tokens.js";
-import type { ColorRole, Theme } from "./theme.js";
+import { color, font, size } from "./tokens.js";
+import type { ColorRole, StrokeRung, Theme } from "./theme.js";
 
 export type ExcalidrawElement = Record<string, unknown> & {
   id: string;
@@ -41,7 +41,7 @@ export interface RectOptions {
   h: number;
   fill?: string;
   stroke?: string;
-  strokeWidth?: number;
+  strokeWidth?: StrokeRung;
   strokeStyle?: "solid" | "dashed" | "dotted";
   rounded?: boolean;
   opacity?: number;
@@ -52,7 +52,7 @@ export interface LineOptions {
   y: number;
   points: Array<[number, number]>;
   stroke?: string;
-  strokeWidth?: number;
+  strokeWidth?: StrokeRung;
   fill?: string;
   closed?: boolean;
 }
@@ -88,6 +88,15 @@ export class Factory {
     const value = this.theme.palette[role as ColorRole];
     if (value === undefined) {
       throw new Error(`Unknown colour role "${role}" — components must use tokens.color.*`);
+    }
+    return value;
+  }
+
+  /** Rung name → concrete px for this theme. */
+  private weight(rung: string | undefined): number {
+    const value = this.theme.strokes[(rung ?? "outline") as StrokeRung];
+    if (value === undefined) {
+      throw new Error(`Unknown stroke rung "${rung}" — use tokens.stroke.*`);
     }
     return value;
   }
@@ -156,7 +165,7 @@ export class Factory {
       h: o.h,
       fill: o.fill ?? color.surface,
       stroke: o.stroke ?? color.ink,
-      strokeWidth: o.strokeWidth ?? style.strokeWidth,
+      strokeWidth: this.weight(o.strokeWidth),
       strokeStyle: o.strokeStyle ?? "solid",
       roundness: this.theme.edges === "sharp"
         ? null
@@ -173,7 +182,7 @@ export class Factory {
       h: o.h,
       fill: o.fill ?? color.surface,
       stroke: o.stroke ?? color.ink,
-      strokeWidth: o.strokeWidth ?? style.strokeWidth,
+      strokeWidth: this.weight(o.strokeWidth),
       strokeStyle: o.strokeStyle ?? "solid",
       roundness: null,
       opacity: o.opacity ?? 100,
@@ -193,7 +202,7 @@ export class Factory {
       h: Math.max(...ys) - Math.min(...ys),
       fill: o.fill ?? color.transparent,
       stroke: o.stroke ?? color.ink,
-      strokeWidth: o.strokeWidth ?? style.strokeWidth,
+      strokeWidth: this.weight(o.strokeWidth),
       strokeStyle: "solid",
       roundness: { type: 2 },
       opacity: 100,
@@ -220,7 +229,7 @@ export class Factory {
       h: height,
       fill: color.transparent,
       stroke: o.stroke ?? color.ink,
-      strokeWidth: style.strokeWidth,
+      strokeWidth: this.weight("outline"),
       strokeStyle: "solid",
       roundness: null,
       opacity: 100,

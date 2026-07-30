@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, fillBand } from "../comic.js";
+import { color, fillBand, stroke } from "../comic.js";
 
 const R = 28;
 const CX = R;
@@ -24,7 +24,7 @@ export default function skeleton(theme: Theme): ExcalidrawElement[] {
     h: R * 2,
     fill: color.muted,
     stroke: color.border,
-    strokeWidth: 2,
+    strokeWidth: stroke.hairline,
   }));
 
   const barsTop = CY - ((BAR_WIDTHS.length - 1) * BAR_PITCH + BAR_H) / 2;

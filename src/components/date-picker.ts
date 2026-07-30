@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { chevron, color, font, inkBox, inkCircle, label, size } from "../comic.js";
+import { chevron, color, font, inkBox, inkCircle, label, size, stroke } from "../comic.js";
 
 const W = 320;
 const TRIGGER_H = 56;
@@ -27,14 +27,14 @@ export default function datePicker(theme: Theme): ExcalidrawElement[] {
 
   // Calendar glyph: a small box with two "binding" strokes above it.
   const glyphY = (TRIGGER_H - GLYPH_H) / 2;
-  els.push(f.line({ x: GLYPH_X + 4, y: glyphY - 6, points: [[0, 0], [0, 6]], strokeWidth: 2 }));
-  els.push(f.line({ x: GLYPH_X + GLYPH_W - 4, y: glyphY - 6, points: [[0, 0], [0, 6]], strokeWidth: 2 }));
+  els.push(f.line({ x: GLYPH_X + 4, y: glyphY - 6, points: [[0, 0], [0, 6]], strokeWidth: stroke.hairline }));
+  els.push(f.line({ x: GLYPH_X + GLYPH_W - 4, y: glyphY - 6, points: [[0, 0], [0, 6]], strokeWidth: stroke.hairline }));
   els.push(...inkBox(f, {
     x: GLYPH_X,
     y: glyphY,
     w: GLYPH_W,
     h: GLYPH_H,
-    strokeWidth: 2,
+    strokeWidth: stroke.hairline,
     shadow: false,
   }));
 

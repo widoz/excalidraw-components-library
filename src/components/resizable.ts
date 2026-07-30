@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, dots, fillBand, inkBox, label, size } from "../comic.js";
+import { color, dots, fillBand, inkBox, label, size, stroke } from "../comic.js";
 
 const LEFT_W = 180;
 const HANDLE_W = 20;
@@ -24,8 +24,8 @@ export default function resizable(theme: Theme): ExcalidrawElement[] {
   els.push(...fillBand(f, { x: handleX, y: 0, w: HANDLE_W, h: H, fill: color.muted, rounded: false }));
   // `rule()` is horizontal only; these flanking strokes are vertical, so they go
   // through `f.line` directly rather than the rule() helper.
-  els.push(f.line({ x: handleX, y: 0, points: [[0, 0], [0, H]], strokeWidth: 4 }));
-  els.push(f.line({ x: handleX + HANDLE_W, y: 0, points: [[0, 0], [0, H]], strokeWidth: 4 }));
+  els.push(f.line({ x: handleX, y: 0, points: [[0, 0], [0, H]], strokeWidth: stroke.outline }));
+  els.push(f.line({ x: handleX + HANDLE_W, y: 0, points: [[0, 0], [0, H]], strokeWidth: stroke.outline }));
 
   // Grip: three dots stacked vertically. `dots()` only spaces horizontally, so it is
   // called three times with count: 1 and a manually incremented y, reusing the helper's

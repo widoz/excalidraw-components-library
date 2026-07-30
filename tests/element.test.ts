@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { Factory, estimateTextWidth, mulberry32, seedFromString } from "../src/element.js";
-import { style } from "../src/tokens.js";
 import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
 
 const theme = resolveTheme(DEFAULT_PRESET);
@@ -43,7 +42,7 @@ describe("Factory", () => {
     for (const key of REQUIRED) expect(el).toHaveProperty(key);
     expect(el.type).toBe("rectangle");
     expect(el.roughness).toBe(theme.roughness);
-    expect(el.strokeWidth).toBe(style.strokeWidth);
+    expect(el.strokeWidth).toBe(theme.strokes.outline);
     expect(el.fillStyle).toBe("solid");
     expect(el.groupIds).toEqual([f.groupId]);
   });

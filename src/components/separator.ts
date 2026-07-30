@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, label, rule, size } from "../comic.js";
+import { color, font, label, rule, size, stroke } from "../comic.js";
 
 const W = 320;
 
@@ -23,7 +23,7 @@ export default function separator(theme: Theme): ExcalidrawElement[] {
     fontSize: size.fontSm,
     stroke: color.mutedText,
   }));
-  els.push(...rule(f, { x: 0, y: 74, w: W, stroke: color.ink, strokeWidth: 4 }));
+  els.push(...rule(f, { x: 0, y: 74, w: W, stroke: color.ink, strokeWidth: stroke.outline }));
 
   const wordY = 110;
   const words = ["Blog", "Docs", "Source"];
@@ -41,7 +41,7 @@ export default function separator(theme: Theme): ExcalidrawElement[] {
       y: lineY,
       points: [[0, 0], [0, lineH]],
       stroke: color.border,
-      strokeWidth: 2,
+      strokeWidth: stroke.hairline,
     }));
   }
 

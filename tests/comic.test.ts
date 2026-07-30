@@ -28,7 +28,7 @@ describe("inkBox", () => {
     expect(shadow!.y).toBe(20 + style.shadowOffset);
     expect(shadow!.backgroundColor).toBe(theme.palette.ink);
     expect(shadow!.strokeColor).toBe(theme.palette.ink);
-    expect(shadow!.strokeWidth).toBe(1);
+    expect(shadow!.strokeWidth).toBe(theme.strokes.shadow);
     expect(surface!.x).toBe(10);
     expect(surface!.y).toBe(20);
     expect(surface!.backgroundColor).toBe(theme.palette.surface);

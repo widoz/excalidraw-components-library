@@ -289,7 +289,7 @@ describe("button-group", () => {
     expect(texts(els)).toEqual(expect.arrayContaining(["Day", "Week", "Month"]));
     const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentRects).toHaveLength(1);
-    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
+    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === theme.strokes.shadow);
     expect(shadowRects).toHaveLength(1);
   });
 });
@@ -331,7 +331,7 @@ describe("chart", () => {
     // outline-less fill bands. Nothing else in the component is a rectangle.
     const bars = els.filter((e) => e.type === "rectangle");
     expect(bars).toHaveLength(5);
-    expect(bars.every((e) => e.strokeColor === theme.palette.ink && e.strokeWidth === 4)).toBe(true);
+    expect(bars.every((e) => e.strokeColor === theme.palette.ink && e.strokeWidth === theme.strokes.outline)).toBe(true);
     const accentBars = bars.filter((e) => e.backgroundColor === theme.palette.accent);
     expect(accentBars).toHaveLength(1);
   });
@@ -463,7 +463,7 @@ describe("field", () => {
     ]));
     // Each input is an inkBox, which draws exactly one shadow rect (fill = ink,
     // strokeWidth 1) behind its surface rect.
-    const shadowed = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.strokeWidth === 1);
+    const shadowed = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.strokeWidth === theme.strokes.shadow);
     expect(shadowed).toHaveLength(2);
     const errorMessage = els.find((e) => e.type === "text" && e.text === "Too short.");
     expect(errorMessage?.fontFamily).toBe(7);
@@ -486,7 +486,7 @@ describe("input-group", () => {
     expect(texts(els)).toEqual(expect.arrayContaining(["@", "guido", "Copy"]));
     const accentSegments = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentSegments).toHaveLength(1);
-    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
+    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === theme.strokes.shadow);
     expect(shadowRects).toHaveLength(1);
   });
 });
@@ -495,9 +495,9 @@ describe("input-otp", () => {
   it("has three filled digits, six shadowed cells and one caret", () => {
     const els = load(out, "input-otp");
     expect(texts(els)).toEqual(expect.arrayContaining(["4", "2", "7"]));
-    const shadowedCells = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.strokeWidth === 1);
+    const shadowedCells = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.strokeWidth === theme.strokes.shadow);
     expect(shadowedCells).toHaveLength(6);
-    const caret = els.filter((e) => e.type === "line" && e.strokeWidth === 2);
+    const caret = els.filter((e) => e.type === "line" && e.strokeWidth === theme.strokes.hairline);
     expect(caret).toHaveLength(1);
   });
 });
@@ -516,7 +516,7 @@ describe("kbd", () => {
   it("has five labels and four shadowed key caps", () => {
     const els = load(out, "kbd");
     expect(texts(els)).toEqual(expect.arrayContaining(["⌘", "K", "Shift", "↵", "+"]));
-    const shadowedCaps = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.strokeWidth === 1);
+    const shadowedCaps = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.strokeWidth === theme.strokes.shadow);
     expect(shadowedCaps).toHaveLength(4);
   });
 });
@@ -671,7 +671,7 @@ describe("toggle", () => {
     expect(texts(els)).toEqual(expect.arrayContaining(["B", "I", "Bold", "Italic"]));
     const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentRects).toHaveLength(1);
-    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
+    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === theme.strokes.shadow);
     expect(shadowRects).toHaveLength(1);
   });
 
@@ -696,11 +696,11 @@ describe("toggle-group", () => {
   it("has zero text, nine alignment marks, one pressed cell and one shared shadow", () => {
     const els = load(out, "toggle-group");
     expect(count(els, "text")).toBe(0);
-    const marks = els.filter((e) => e.type === "line" && e.strokeWidth === 2);
+    const marks = els.filter((e) => e.type === "line" && e.strokeWidth === theme.strokes.hairline);
     expect(marks).toHaveLength(9);
     const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentRects).toHaveLength(1);
-    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
+    const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === theme.strokes.shadow);
     expect(shadowRects).toHaveLength(1);
   });
 });

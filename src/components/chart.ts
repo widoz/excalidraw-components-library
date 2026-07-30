@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, inkBox, label, rule, size } from "../comic.js";
+import { color, font, inkBox, label, rule, size, stroke } from "../comic.js";
 
 const W = 340;
 const BAR_W = 44;
@@ -55,13 +55,13 @@ export default function chart(theme: Theme): ExcalidrawElement[] {
     }));
   });
 
-  els.push(...rule(f, { x: 0, y: BASELINE_Y, w: W, stroke: color.ink, strokeWidth: 4 }));
+  els.push(...rule(f, { x: 0, y: BASELINE_Y, w: W, stroke: color.ink, strokeWidth: stroke.outline }));
   els.push(f.line({
     x: AXIS_X,
     y: AXIS_TOP_Y,
     points: [[0, 0], [0, BASELINE_Y - AXIS_TOP_Y]],
     stroke: color.ink,
-    strokeWidth: 4,
+    strokeWidth: stroke.outline,
   }));
 
   return els;

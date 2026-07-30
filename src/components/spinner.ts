@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { arc, color, label, size } from "../comic.js";
+import { arc, color, label, size, stroke } from "../comic.js";
 
 const PITCH = 90;
 const R = 26;
@@ -27,7 +27,7 @@ export default function spinner(theme: Theme): ExcalidrawElement[] {
       startDeg: s.startDeg,
       endDeg: s.endDeg,
       stroke: color.ink,
-      strokeWidth: 4,
+      strokeWidth: stroke.outline,
     }));
   });
 

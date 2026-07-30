@@ -111,6 +111,16 @@ export const TRANSPARENT = "transparent";
 /** The canvas background, deliberately pure white under every palette. */
 export const CANVAS = "#ffffff";
 
+/** Stroke ladder rungs. Names, not values — `Factory` resolves them per theme. */
+export const stroke = {
+  /** The bold comic ink: component silhouettes. */
+  outline: "outline",
+  /** Hairlines: table rules, separators, carets, resize grips. */
+  hairline: "hairline",
+  /** The hard-shadow shape's own outline, kept thin so it doesn't fatten the silhouette. */
+  shadow: "shadow",
+} as const;
+
 /** Stroke ladders. The library uses three weights at once; a preset scales all three. */
 export const strokeLadders = {
   bold: { outline: 4, hairline: 2, shadow: 1 },
