@@ -10,6 +10,12 @@ describe("tokens", () => {
     expect(Object.keys(zinc)).toHaveLength(11);
   });
 
+  it("uses shadcn's current (Tailwind v4) zinc values", () => {
+    expect(zinc[400]).toBe("#9f9fa9");
+    expect(zinc[500]).toBe("#71717b");
+    expect(zinc[600]).toBe("#52525c");
+  });
+
   it("maps semantic colours onto the zinc scale", () => {
     expect(color.ink).toBe(zinc[900]);
     expect(color.surface).toBe(zinc[50]);
