@@ -43,6 +43,15 @@ export const DEFAULT_PRESET: Required<Preset> = {
 
 const EDGES: readonly EdgesName[] = ["sharp", "round"];
 
+/**
+ * These are the paths the default preset's own output lands on: `dist/components/`
+ * and `dist/comic-ui.excalidrawlib`. A non-default preset named either of these would
+ * resolve to an output directory (`dist/<name>/`) that collides with — and, since
+ * `buildAll` starts with an `rmSync` of its output dir, would delete — that committed
+ * output. Reserved so no preset can ever name its way into that collision.
+ */
+const RESERVED_NAMES: readonly string[] = ["components", "comic-ui"];
+
 /** Presets are hand-edited, so a typo must fail loudly rather than silently defaulting. */
 function pick<T extends string>(field: string, value: T, legal: readonly T[]): T {
   if (!legal.includes(value)) {
@@ -55,6 +64,12 @@ function pick<T extends string>(field: string, value: T, legal: readonly T[]): T
 
 export function resolveTheme(preset: Preset): Theme {
   if (!preset.name) throw new Error(`Preset field "name" is required and must be non-empty.`);
+  if (RESERVED_NAMES.includes(preset.name)) {
+    throw new Error(
+      `Preset name "${preset.name}" is reserved: it would collide with the default preset's ` +
+      `own committed output (dist/${preset.name}). Choose a different name.`,
+    );
+  }
 
   const paletteName = pick("palette", preset.palette ?? DEFAULT_PRESET.palette,
     Object.keys(palettes) as PaletteName[]);

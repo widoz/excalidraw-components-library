@@ -90,6 +90,16 @@ describe("paletteValues", () => {
   });
 });
 
+describe("reserved preset names", () => {
+  it("rejects a preset named 'components', which would collide with dist/components", () => {
+    expect(() => resolveTheme({ name: "components" })).toThrow(/reserved/);
+  });
+
+  it("rejects a preset named 'comic-ui', which would collide with the default library file", () => {
+    expect(() => resolveTheme({ name: "comic-ui" })).toThrow(/reserved/);
+  });
+});
+
 describe("DEFAULT_PRESET", () => {
   it("describes today's look with every field set", () => {
     expect(DEFAULT_PRESET).toEqual({

@@ -1,8 +1,9 @@
-import { mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { mkdtempSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { buildAll, DEFAULT_OUT, loadPreset, listPresets, outDirFor } from "../src/build.js";
+import { buildAll, DEFAULT_OUT, loadPreset, listPresets, outDirFor, PRESETS_DIR } from "../src/build.js";
 import { validateAll } from "../src/validate.js";
 import { registry } from "../src/registry.js";
 import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
@@ -104,6 +105,18 @@ describe("preset builds", () => {
 
   it("throws with the path when a preset is missing", () => {
     expect(() => loadPreset("nope")).toThrow(/presets\/nope\.json/);
+    expect(() => loadPreset("nope")).not.toThrow(/not valid JSON/);
+  });
+
+  it("throws naming the path and the parse error when a preset file is malformed", () => {
+    const badPath = join(PRESETS_DIR, "_malformed-test.json");
+    writeFileSync(badPath, "{ not: valid json");
+    try {
+      expect(() => loadPreset("_malformed-test")).toThrow(/presets\/_malformed-test\.json/);
+      expect(() => loadPreset("_malformed-test")).toThrow(/not valid JSON/);
+    } finally {
+      unlinkSync(badPath);
+    }
   });
 
   it("lists committed presets", () => {
@@ -115,5 +128,16 @@ describe("preset builds", () => {
     buildAll(resolveTheme({ name: "t", palette: "mist", edges: "sharp" }), tmp);
     expect(readdirSync(join(tmp, "components"))).toHaveLength(58);
     rmSync(tmp, { recursive: true, force: true });
+  });
+});
+
+describe("preset CLI", () => {
+  it("exits with an error naming the missing argument when --preset has no value", () => {
+    expect(() =>
+      execFileSync("npx", ["tsx", "src/build.ts", "--preset"], {
+        cwd: join(PRESETS_DIR, ".."),
+        stdio: ["ignore", "pipe", "pipe"],
+      }),
+    ).toThrowError(/--preset requires a preset name/);
   });
 });

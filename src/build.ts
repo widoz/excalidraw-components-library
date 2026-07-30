@@ -11,10 +11,19 @@ export const PRESETS_DIR = join(ROOT, "presets");
 
 export function loadPreset(name: string): Preset {
   const path = join(PRESETS_DIR, `${name}.json`);
+
+  let raw: string;
   try {
-    return JSON.parse(readFileSync(path, "utf8")) as Preset;
+    raw = readFileSync(path, "utf8");
   } catch {
     throw new Error(`No preset at presets/${name}.json. Available: ${listPresets().join(", ")}`);
+  }
+
+  try {
+    return JSON.parse(raw) as Preset;
+  } catch (err) {
+    const reason = err instanceof Error ? err.message : String(err);
+    throw new Error(`Preset at presets/${name}.json is not valid JSON: ${reason}`);
   }
 }
 
@@ -58,9 +67,19 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
   const all = args.includes("--all");
   const presetFlag = args.indexOf("--preset");
-  const names = all
-    ? listPresets()
-    : [presetFlag === -1 ? DEFAULT_PRESET.name : args[presetFlag + 1]!];
+
+  let names: string[];
+  if (all) {
+    names = listPresets();
+  } else if (presetFlag === -1) {
+    names = [DEFAULT_PRESET.name];
+  } else {
+    const presetName = args[presetFlag + 1];
+    if (presetName === undefined) {
+      throw new Error("--preset requires a preset name.");
+    }
+    names = [presetName];
+  }
 
   for (const name of names) {
     buildAll(resolveTheme(loadPreset(name)));
