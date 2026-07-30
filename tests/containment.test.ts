@@ -11,7 +11,7 @@ const theme = resolveTheme(DEFAULT_PRESET);
 let out: string;
 beforeAll(() => {
   out = mkdtempSync(join(tmpdir(), "comic-ui-contain-"));
-  buildAll(out);
+  buildAll(theme, out);
 });
 afterAll(() => rmSync(out, { recursive: true, force: true }));
 

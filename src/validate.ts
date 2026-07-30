@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { DEFAULT_OUT } from "./build.js";
-import { PALETTE_VALUES } from "./theme.js";
+import { DEFAULT_PRESET, paletteValues, resolveTheme, type Theme } from "./theme.js";
 import { SOURCE } from "./scene.js";
 
 const REQUIRED_FIELDS = [
@@ -66,7 +66,14 @@ function checkTypeFields(where: string, el: El, id: string, errors: string[]): v
   }
 }
 
-function checkElements(where: string, elements: El[], errors: string[]): void {
+interface ThemeChecks {
+  allowed: ReadonlySet<string>;
+  rungs: ReadonlySet<number>;
+  fontIds: ReadonlySet<number>;
+  roughness: number;
+}
+
+function checkElements(where: string, elements: El[], errors: string[], checks: ThemeChecks): void {
   if (!Array.isArray(elements)) {
     errors.push(`${where}: "elements" must be an array`);
     return;
@@ -100,9 +107,25 @@ function checkElements(where: string, elements: El[], errors: string[]): void {
 
     for (const field of ["strokeColor", "backgroundColor"]) {
       const value = String(el[field]);
-      if (!PALETTE_VALUES.has(value)) {
+      if (!checks.allowed.has(value)) {
         errors.push(`${where}/${id}: "${field}" value "${value}" is not in the palette`);
       }
+    }
+
+    const width = Number(el.strokeWidth);
+    if (!checks.rungs.has(width)) {
+      errors.push(`${where}/${id}: strokeWidth "${el.strokeWidth}" is not a rung of the active ladder (${[...checks.rungs].join(", ")})`);
+    }
+
+    if (el.type === "text") {
+      const family = Number(el.fontFamily);
+      if (!checks.fontIds.has(family)) {
+        errors.push(`${where}/${id}: fontFamily "${el.fontFamily}" is not one of the theme's (${[...checks.fontIds].join(", ")})`);
+      }
+    }
+
+    if (Number(el.roughness) !== checks.roughness) {
+      errors.push(`${where}/${id}: roughness "${el.roughness}" is not the theme's "${checks.roughness}"`);
     }
 
     const index = String(el.index ?? "");
@@ -139,9 +162,16 @@ function checkElements(where: string, elements: El[], errors: string[]): void {
   }
 }
 
-export function validateAll(outDir: string = DEFAULT_OUT): string[] {
+export function validateAll(theme: Theme, outDir: string = DEFAULT_OUT): string[] {
   const errors: string[] = [];
   const componentsDir = join(outDir, "components");
+
+  const checks: ThemeChecks = {
+    allowed: paletteValues(theme),
+    rungs: new Set(Object.values(theme.strokes)),
+    fontIds: new Set(Object.values(theme.fonts)),
+    roughness: theme.roughness,
+  };
 
   const files = readdirSync(componentsDir).filter((f) => f.endsWith(".excalidraw"));
   if (files.length === 0) errors.push("dist/components: no .excalidraw files");
@@ -158,11 +188,11 @@ export function validateAll(outDir: string = DEFAULT_OUT): string[] {
       errors.push(`${file}: appState must have exactly the keys "gridSize" and "viewBackgroundColor", found ${appStateKeys.join(", ")}`);
     }
     const bg = String(appState.viewBackgroundColor);
-    if (!PALETTE_VALUES.has(bg)) {
+    if (!checks.allowed.has(bg)) {
       errors.push(`${file}: appState.viewBackgroundColor "${bg}" is not in the palette`);
     }
 
-    checkElements(file, (scene.elements ?? []) as El[], errors);
+    checkElements(file, (scene.elements ?? []) as El[], errors, checks);
   }
 
   const lib = JSON.parse(
@@ -176,14 +206,14 @@ export function validateAll(outDir: string = DEFAULT_OUT): string[] {
     errors.push(`library: has ${items.length} items but ${files.length} component files exist`);
   }
   for (const item of items) {
-    checkElements(`library/${String(item.name)}`, (item.elements ?? []) as El[], errors);
+    checkElements(`library/${String(item.name)}`, (item.elements ?? []) as El[], errors, checks);
   }
 
   return errors;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const errors = validateAll();
+  const errors = validateAll(resolveTheme(DEFAULT_PRESET));
   if (errors.length > 0) {
     for (const error of errors) console.error(`ERROR ${error}`);
     console.error(`\n${errors.length} validation error(s)`);

@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { color, font, size, style, zinc } from "../src/tokens.js";
-import { DEFAULT_PRESET, PALETTE_VALUES, resolveTheme } from "../src/theme.js";
+import { DEFAULT_PRESET, paletteValues, resolveTheme } from "../src/theme.js";
 
 const theme = resolveTheme(DEFAULT_PRESET);
+const PALETTE_VALUES = paletteValues(theme);
 
 describe("tokens", () => {
   it("exposes the shadcn zinc scale", () => {

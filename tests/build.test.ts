@@ -5,12 +5,14 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { buildAll } from "../src/build.js";
 import { validateAll } from "../src/validate.js";
 import { registry } from "../src/registry.js";
+import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
 
+const theme = resolveTheme(DEFAULT_PRESET);
 let out: string;
 
 beforeAll(() => {
   out = mkdtempSync(join(tmpdir(), "comic-ui-"));
-  buildAll(out);
+  buildAll(theme, out);
 });
 
 afterAll(() => {
@@ -19,7 +21,7 @@ afterAll(() => {
 
 describe("build", () => {
   it("produces output that passes validation", () => {
-    expect(validateAll(out)).toEqual([]);
+    expect(validateAll(theme, out)).toEqual([]);
   });
 
   it("writes one scene file per registry entry", () => {
@@ -34,7 +36,7 @@ describe("build", () => {
   it("is deterministic", () => {
     const first = readFileSync(join(out, "comic-ui.excalidrawlib"), "utf8");
     const second = mkdtempSync(join(tmpdir(), "comic-ui-"));
-    buildAll(second);
+    buildAll(theme, second);
     expect(readFileSync(join(second, "comic-ui.excalidrawlib"), "utf8")).toBe(first);
     rmSync(second, { recursive: true, force: true });
   });
