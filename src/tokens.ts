@@ -141,12 +141,18 @@ export const fontFaces = {
 } as const;
 
 /**
- * Chars-per-em advance approximation per body face. These are estimates, not measured
- * metrics; the guard is the per-preset containment suite, which fails if text escapes
- * its component's box.
+ * Chars-per-em advance approximation per body face.
+ *
+ * `excalifont` is anchored at 0.55: the whole library was generated with that value and
+ * visually verified in Excalidraw, so it is the one entry with evidence behind it. The
+ * other two are estimates relative to that anchor — Comic Shanns is a wider face, Nunito
+ * a slightly narrower one. None of these are measured font metrics.
+ *
+ * The guard is behavioural, not numeric: the per-preset containment suite fails if a text
+ * element escapes its component's box. If a preset trips it, tune that face's value here.
  */
 export const fontAdvance = {
-  "comic-shanns": 0.55,
-  excalifont: 0.5,
+  "comic-shanns": 0.58,
+  excalifont: 0.55,
   nunito: 0.5,
 } as const;

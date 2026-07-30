@@ -19,8 +19,8 @@ export default function marker(theme: Theme): ExcalidrawElement[] {
   lines.forEach((line, i) => {
     const y = i * PITCH;
     if (line.markStart !== null && line.mark !== null) {
-      const prefixW = estimateTextWidth(line.markStart, size.fontMd);
-      const markW = estimateTextWidth(line.mark, size.fontMd);
+      const prefixW = estimateTextWidth(line.markStart, size.fontMd, f.theme.advance);
+      const markW = estimateTextWidth(line.mark, size.fontMd, f.theme.advance);
       // The swash must be emitted before the text it highlights, or it paints over the words.
       els.push(...swash(f, {
         x: prefixW - BLEED,

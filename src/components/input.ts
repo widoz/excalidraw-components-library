@@ -33,7 +33,7 @@ export default function input(theme: Theme): ExcalidrawElement[] {
     fontSize: size.fontSm,
   }));
   // Caret, parked just past the end of the typed text.
-  const caretX = PAD_X + estimateTextWidth(TYPED, size.fontSm) + 4;
+  const caretX = PAD_X + estimateTextWidth(TYPED, size.fontSm, f.theme.advance) + 4;
   els.push(f.line({ x: caretX, y: y2 + 14, points: [[0, 0], [0, H - 28]], strokeWidth: stroke.hairline }));
 
   return els;

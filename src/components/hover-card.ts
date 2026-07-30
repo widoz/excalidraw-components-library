@@ -58,7 +58,7 @@ export default function hoverCard(theme: Theme): ExcalidrawElement[] {
   els.push(...rule(f, {
     x: 0,
     y: triggerY + triggerFontSize * 1.25 + 2,
-    w: estimateTextWidth(triggerText, triggerFontSize),
+    w: estimateTextWidth(triggerText, triggerFontSize, f.theme.advance),
     stroke: color.border,
   }));
 

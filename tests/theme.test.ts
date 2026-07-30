@@ -12,7 +12,7 @@ describe("resolveTheme", () => {
     expect(t.strokes).toEqual({ outline: 4, hairline: 2, shadow: 1 });
     expect(t.roughness).toBe(2);
     expect(t.edges).toBe("round");
-    expect(t.advance).toBe(0.5);
+    expect(t.advance).toBe(0.55);
   });
 
   it("fills omitted fields from the default", () => {
@@ -57,7 +57,7 @@ describe("resolveTheme", () => {
 
   it("carries the advance factor for the body face", () => {
     expect(resolveTheme({ name: "n", font: "nunito" }).advance).toBe(0.5);
-    expect(resolveTheme({ name: "c", font: "comic-shanns" }).advance).toBe(0.55);
+    expect(resolveTheme({ name: "c", font: "comic-shanns" }).advance).toBe(0.58);
   });
 
   it("throws on an illegal value, naming the field and the legal set", () => {

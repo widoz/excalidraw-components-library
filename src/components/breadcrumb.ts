@@ -23,7 +23,7 @@ export default function breadcrumb(theme: Theme): ExcalidrawElement[] {
 
   let x = 0;
   crumbs.forEach((crumb, i) => {
-    const width = estimateTextWidth(crumb.text, size.fontMd);
+    const width = estimateTextWidth(crumb.text, size.fontMd, f.theme.advance);
     els.push(...label(f, {
       x,
       y: 0,

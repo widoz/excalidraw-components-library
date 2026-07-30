@@ -147,3 +147,18 @@ describe("estimateTextWidth", () => {
     expect(estimateTextWidth("a", 40)).toBeCloseTo(estimateTextWidth("a", 20) * 2);
   });
 });
+
+describe("estimateTextWidth advance", () => {
+  it("defaults to 0.55 so existing callers are unaffected", () => {
+    expect(estimateTextWidth("abcd", 20)).toBeCloseTo(4 * 20 * 0.55);
+  });
+
+  it("scales with an explicit advance", () => {
+    expect(estimateTextWidth("abcd", 20, 0.5)).toBeCloseTo(4 * 20 * 0.5);
+  });
+
+  it("a narrower advance yields a narrower estimate", () => {
+    expect(estimateTextWidth("hello", 20, 0.5))
+      .toBeLessThan(estimateTextWidth("hello", 20, 0.55));
+  });
+});

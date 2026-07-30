@@ -54,7 +54,7 @@ export default function inputGroup(theme: Theme): ExcalidrawElement[] {
     text: TYPED,
     fontSize: size.fontSm,
   }));
-  const caretX = textX + estimateTextWidth(TYPED, size.fontSm) + 4;
+  const caretX = textX + estimateTextWidth(TYPED, size.fontSm, f.theme.advance) + 4;
   els.push(f.line({ x: caretX, y: 14, points: [[0, 0], [0, H - 28]], strokeWidth: stroke.hairline }));
 
   // Trailing accent segment.

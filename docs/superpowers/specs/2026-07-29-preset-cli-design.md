@@ -179,9 +179,18 @@ every width derived from it too generous — `badge` pill widths, `marker`'s hig
 
 | font | advance |
 |---|---|
-| `comic-shanns` | 0.55 |
-| `excalifont` | 0.50 |
+| `comic-shanns` | 0.58 |
+| `excalifont` (default) | 0.55 |
 | `nunito` | 0.50 |
+
+`excalifont` is **anchored at 0.55**, not estimated. The entire 58-component library was
+generated with that value and then visually verified in real Excalidraw — every badge pill,
+marker swash and breadcrumb gap was looked at and judged correct. It is the one entry with
+evidence behind it, so the others are set relative to it: Comic Shanns is a wider face, Nunito
+a slightly narrower one.
+
+An earlier draft of this spec put `excalifont` at 0.50, which would have changed the geometry of
+55 of the 58 components on the strength of an unmeasured guess, discarding that verification.
 
 These are approximations, not measured metrics, and the spec does not pretend otherwise. They
 are safe because the guard is behavioural rather than numeric: the containment suite runs per

@@ -19,7 +19,7 @@ export default function kbd(theme: Theme): ExcalidrawElement[] {
   const f = new Factory("kbd", theme);
   const els: ExcalidrawElement[] = [];
 
-  const plusW = estimateTextWidth("+", PLUS_FONT);
+  const plusW = estimateTextWidth("+", PLUS_FONT, f.theme.advance);
   const cap0X = 0;
   const cap1X = cap0X + CAP0_W + GAP + plusW + GAP;
   const cap2X = cap1X + CAP1_W + SHIFT_GAP;

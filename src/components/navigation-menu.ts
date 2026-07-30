@@ -26,7 +26,7 @@ export default function navigationMenu(theme: Theme): ExcalidrawElement[] {
     const x = i * PITCH;
     // Both the band and the chevron are placed off the label's measured advance
     // width, so neither can drift when a label changes.
-    const textW = estimateTextWidth(text, size.fontMd);
+    const textW = estimateTextWidth(text, size.fontMd, f.theme.advance);
     if (text === "Docs") {
       // Band paints before the label, or it would cover the title.
       els.push(...fillBand(f, {

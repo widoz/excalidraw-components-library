@@ -29,9 +29,12 @@ export function seedFromString(input: string): number {
   return hash >>> 0;
 }
 
-/** Rough advance-width estimate. Good enough to centre a label. */
-export function estimateTextWidth(text: string, fontSize: number): number {
-  return text.length * fontSize * 0.55;
+/**
+ * Rough advance-width estimate. Good enough to size a box around a label.
+ * `advance` is chars-per-em for the face in use; see tokens.fontAdvance.
+ */
+export function estimateTextWidth(text: string, fontSize: number, advance = 0.55): number {
+  return text.length * fontSize * advance;
 }
 
 export interface RectOptions {
@@ -228,7 +231,7 @@ export class Factory {
   text(o: TextOptions): ExcalidrawElement {
     const fontSize = o.fontSize ?? size.fontMd;
     const align = o.align ?? "left";
-    const width = estimateTextWidth(o.text, fontSize);
+    const width = estimateTextWidth(o.text, fontSize, this.theme.advance);
     const height = fontSize * 1.25;
     const x = align === "center" ? o.x - width / 2 : align === "right" ? o.x - width : o.x;
     const el = this.base("text", {

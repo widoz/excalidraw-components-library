@@ -20,7 +20,7 @@ export default function badge(theme: Theme): ExcalidrawElement[] {
 
   let x = 0;
   for (const v of variants) {
-    const w = estimateTextWidth(v.text, size.fontSm) + PAD * 2;
+    const w = estimateTextWidth(v.text, size.fontSm, f.theme.advance) + PAD * 2;
     els.push(...inkBox(f, { x, y: 0, w, h: H, fill: v.fill, shadow: false }));
     els.push(...label(f, {
       x: x + w / 2,

@@ -31,7 +31,7 @@ export default function menubar(theme: Theme): ExcalidrawElement[] {
       els.push(...fillBand(f, {
         x: x - BAND_PAD_X,
         y: (BAR_H - bandH) / 2,
-        w: estimateTextWidth(title, size.fontMd) + BAND_PAD_X * 2,
+        w: estimateTextWidth(title, size.fontMd, f.theme.advance) + BAND_PAD_X * 2,
         h: bandH,
         fill: color.muted,
         rounded: false,
