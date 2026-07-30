@@ -1,3 +1,7 @@
 node_modules/
 *.log
 .DS_Store
+
+# Only the default preset's output is committed; other presets are build artifacts.
+dist/*/
+!dist/components/

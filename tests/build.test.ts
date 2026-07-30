@@ -1,8 +1,8 @@
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { buildAll } from "../src/build.js";
+import { buildAll, DEFAULT_OUT, loadPreset, listPresets, outDirFor } from "../src/build.js";
 import { validateAll } from "../src/validate.js";
 import { registry } from "../src/registry.js";
 import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
@@ -86,5 +86,34 @@ describe("registry", () => {
   it("appears in the library bundle once per component", () => {
     const lib = JSON.parse(readFileSync(join(out, "comic-ui.excalidrawlib"), "utf8"));
     expect(lib.libraryItems).toHaveLength(EXPECTED.length);
+  });
+});
+
+describe("preset builds", () => {
+  it("writes the default preset to dist root", () => {
+    expect(outDirFor(resolveTheme(DEFAULT_PRESET))).toBe(DEFAULT_OUT);
+  });
+
+  it("writes a named preset to a subdirectory", () => {
+    expect(outDirFor(resolveTheme({ name: "soft" }))).toBe(join(DEFAULT_OUT, "soft"));
+  });
+
+  it("loads a preset file from presets/", () => {
+    expect(loadPreset("default")).toMatchObject({ name: "default", palette: "zinc" });
+  });
+
+  it("throws with the path when a preset is missing", () => {
+    expect(() => loadPreset("nope")).toThrow(/presets\/nope\.json/);
+  });
+
+  it("lists committed presets", () => {
+    expect(listPresets()).toContain("default");
+  });
+
+  it("builds every component under a non-default theme", () => {
+    const tmp = mkdtempSync(join(tmpdir(), "preset-"));
+    buildAll(resolveTheme({ name: "t", palette: "mist", edges: "sharp" }), tmp);
+    expect(readdirSync(join(tmp, "components"))).toHaveLength(58);
+    rmSync(tmp, { recursive: true, force: true });
   });
 });
