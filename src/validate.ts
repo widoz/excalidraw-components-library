@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { DEFAULT_OUT } from "./build.js";
-import { PALETTE_VALUES } from "./tokens.js";
+import { PALETTE_VALUES } from "./theme.js";
 import { SOURCE } from "./scene.js";
 
 const REQUIRED_FIELDS = [

@@ -1,11 +1,12 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkCircle, label, size } from "../comic.js";
 
 const R = 30;
 
 /** Three avatars: image placeholder, initials, and an overlapping stack. */
-export default function avatar(): ExcalidrawElement[] {
-  const f = new Factory("avatar");
+export default function avatar(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("avatar", theme);
   const els: ExcalidrawElement[] = [];
 
   // 1. Image placeholder: a head-and-shoulders glyph built from two ellipses.

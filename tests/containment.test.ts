@@ -4,7 +4,9 @@ import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { buildAll } from "../src/build.js";
 import { registry } from "../src/registry.js";
-import { color } from "../src/tokens.js";
+import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
+
+const theme = resolveTheme(DEFAULT_PRESET);
 
 let out: string;
 beforeAll(() => {
@@ -189,7 +191,7 @@ describe("fill bands stay inside a frame", () => {
 
   it("accounts for every band-bearing component in the library", () => {
     const withBands = Object.keys(registry).filter((name) =>
-      load(name).some((e) => e.type === "rectangle" && e.strokeColor === color.transparent));
+      load(name).some((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent));
     // A new component that grows a fill band must be added to one of the two lists,
     // so nothing can escape this check by simply not being mentioned.
     const accounted = new Set([...FRAMED_BAND_COMPONENTS, ...FRAMELESS_BAND_COMPONENTS]);
@@ -203,12 +205,12 @@ describe("fill bands stay inside a frame", () => {
   for (const name of FRAMED_BAND_COMPONENTS) {
     it(`${name}: every fill band is enclosed by an ink-outlined rectangle`, () => {
       const els = load(name);
-      const bands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
+      const bands = els.filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent);
       expect(bands.length).toBeGreaterThan(0);
       // Only real 4px outlines count as frames. The 1px ink rectangles are drop
       // shadows, offset down and right, and enclose nothing the viewer can see.
       const frames = els
-        .filter((e) => e.type === "rectangle" && e.strokeColor === color.ink && e.strokeWidth === 4)
+        .filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.ink && e.strokeWidth === 4)
         .map(bounds);
       for (const band of bands) {
         const box = bounds(band);
@@ -222,8 +224,8 @@ describe("fill bands stay inside a frame", () => {
 describe("avatar glyph", () => {
   it("keeps the head and shoulders inside the avatar circle", () => {
     const els = load("avatar");
-    const circle = els.find((e) => e.type === "ellipse" && e.backgroundColor === color.muted);
-    const glyph = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.mutedText);
+    const circle = els.find((e) => e.type === "ellipse" && e.backgroundColor === theme.palette.muted);
+    const glyph = els.filter((e) => e.type === "ellipse" && e.backgroundColor === theme.palette.mutedText);
     expect(circle).toBeDefined();
     expect(glyph).toHaveLength(2);
     for (const part of glyph) {

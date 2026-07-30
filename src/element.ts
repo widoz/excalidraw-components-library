@@ -1,4 +1,5 @@
 import { color, font, size, style } from "./tokens.js";
+import type { ColorRole, Theme } from "./theme.js";
 
 export type ExcalidrawElement = Record<string, unknown> & {
   id: string;
@@ -72,12 +73,23 @@ export interface TextOptions {
  */
 export class Factory {
   readonly groupId: string;
+  readonly theme: Theme;
   private readonly rng: () => number;
   private counter = 0;
 
-  constructor(componentName: string) {
+  constructor(componentName: string, theme: Theme) {
     this.rng = mulberry32(seedFromString(componentName));
     this.groupId = `${componentName}-group`;
+    this.theme = theme;
+  }
+
+  /** Role name → concrete hex for this theme. */
+  private paint(role: string): string {
+    const value = this.theme.palette[role as ColorRole];
+    if (value === undefined) {
+      throw new Error(`Unknown colour role "${role}" — components must use tokens.color.*`);
+    }
+    return value;
   }
 
   /** Positive 31-bit integer from the seeded stream. */
@@ -112,12 +124,12 @@ export class Factory {
       width: o.w,
       height: o.h,
       angle: 0,
-      strokeColor: o.stroke,
-      backgroundColor: o.fill,
+      strokeColor: this.paint(o.stroke),
+      backgroundColor: this.paint(o.fill),
       fillStyle: "solid",
       strokeWidth: o.strokeWidth,
       strokeStyle: o.strokeStyle,
-      roughness: style.roughness,
+      roughness: this.theme.roughness,
       opacity: o.opacity,
       groupIds: [this.groupId],
       frameId: null,
@@ -146,7 +158,9 @@ export class Factory {
       stroke: o.stroke ?? color.ink,
       strokeWidth: o.strokeWidth ?? style.strokeWidth,
       strokeStyle: o.strokeStyle ?? "solid",
-      roundness: (o.rounded ?? true) ? { type: 3 } : null,
+      roundness: this.theme.edges === "sharp"
+        ? null
+        : (o.rounded ?? true) ? { type: 3 } : null,
       opacity: o.opacity ?? 100,
     });
   }

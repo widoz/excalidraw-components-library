@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 380;
@@ -13,8 +14,8 @@ const COL_X = [20, 200];
 const INSET = 10;
 
 /** Header row plus three body rows with alternating stripes. */
-export default function table(): ExcalidrawElement[] {
-  const f = new Factory("table");
+export default function table(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("table", theme);
   const els: ExcalidrawElement[] = [];
 
   const rows = [

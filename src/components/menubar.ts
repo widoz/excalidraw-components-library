@@ -1,4 +1,5 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 420;
@@ -11,8 +12,8 @@ const MENU_W = 200;
 const BAND_PAD_X = 12;
 
 /** A menu bar with four titles; "Edit" is open below it. */
-export default function menubar(): ExcalidrawElement[] {
-  const f = new Factory("menubar");
+export default function menubar(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("menubar", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: BAR_H, rounded: false }));

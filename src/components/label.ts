@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { checkMark, color, font, inkBox, label, size } from "../comic.js";
 
 const W = 320;
@@ -6,8 +7,8 @@ const INPUT_H = 56;
 const BOX = 34;
 
 /** The two pairings a label has: above an input, and beside a checkbox. */
-export default function labelComponent(): ExcalidrawElement[] {
-  const f = new Factory("label");
+export default function labelComponent(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("label", theme);
   const els: ExcalidrawElement[] = [];
 
   const labelH = size.fontSm * 1.25;

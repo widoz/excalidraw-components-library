@@ -5,11 +5,13 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { Factory, type ExcalidrawElement } from "../src/element.js";
 import { toLibrary, toScene } from "../src/scene.js";
 import { validateAll } from "../src/validate.js";
+import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
 
+const theme = resolveTheme(DEFAULT_PRESET);
 let dir: string;
 
 function makeElements(): ExcalidrawElement[] {
-  const f = new Factory("widget");
+  const f = new Factory("widget", theme);
   const rect = f.rect({ x: 0, y: 0, w: 40, h: 20 });
   const text = f.text({ x: 0, y: 30, text: "Hi" });
   const line = f.line({ x: 0, y: 0, points: [[0, 0], [10, 10]] });
@@ -24,7 +26,7 @@ function writeScene(
 ): void {
   const componentsDir = join(dir, "components");
   mkdirSync(componentsDir, { recursive: true });
-  const scene = { ...(toScene(elements) as Record<string, unknown>), ...overrides?.scene };
+  const scene = { ...(toScene(elements, theme) as Record<string, unknown>), ...overrides?.scene };
   if (appStateOverride) scene.appState = appStateOverride;
   writeFileSync(join(componentsDir, "widget.excalidraw"), JSON.stringify(scene));
   const library = {

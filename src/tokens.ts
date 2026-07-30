@@ -13,26 +13,30 @@ export const zinc = {
   950: "#09090b",
 } as const;
 
-/** Semantic roles. Components reference these, never raw hex. */
+/**
+ * Semantic colour roles. These are NAMES, not values — `Factory` resolves them against
+ * the active theme at emission. Components reference roles; only `theme.ts` knows hex.
+ */
 export const color = {
-  ink: zinc[900],
-  surface: zinc[50],
-  muted: zinc[200],
-  border: zinc[300],
-  subtle: zinc[400],
-  mutedText: zinc[500],
-  accent: zinc[700],
-  accentText: zinc[50],
+  ink: "ink",
+  surface: "surface",
+  muted: "muted",
+  border: "border",
+  subtle: "subtle",
+  mutedText: "mutedText",
+  accent: "accent",
+  accentText: "accentText",
   transparent: "transparent",
-  canvas: "#ffffff",
+  canvas: "canvas",
 } as const;
 
-/** Every value legally allowed to appear as a stroke or background in output. */
-export const PALETTE_VALUES: ReadonlySet<string> = new Set<string>([
-  ...Object.values(zinc),
-  "transparent",
-  "#ffffff",
-]);
+/**
+ * Deprecated: the default theme's palette used to live here, computed via
+ * `resolveTheme(DEFAULT_PRESET)`. That created a `tokens.ts` <-> `theme.ts` import
+ * cycle that breaks at module-evaluation time (`palettes` is not yet initialised
+ * when `resolveTheme` would run). It now lives in `theme.ts`; `validate.ts` imports
+ * it from there. Task 7 replaces this with a per-theme set.
+ */
 
 /** The comic look, applied to every shape. */
 export const style = {

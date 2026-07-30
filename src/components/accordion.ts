@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { chevron, color, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 320;
@@ -8,8 +9,8 @@ const BODY_H = 80;
 const CHEVRON_S = 8;
 
 /** Three stacked rows; the first is expanded with a ruled body underneath it. */
-export default function accordion(): ExcalidrawElement[] {
-  const f = new Factory("accordion");
+export default function accordion(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("accordion", theme);
   const els: ExcalidrawElement[] = [];
 
   const rows = [

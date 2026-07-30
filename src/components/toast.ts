@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size, xMark } from "../comic.js";
 
 const W = 360;
@@ -7,8 +8,8 @@ const BTN_W = 80;
 const BTN_H = 40;
 
 /** A floating save-confirmation toast: heavier shadow, dismiss X, and an undo button. */
-export default function toast(): ExcalidrawElement[] {
-  const f = new Factory("toast");
+export default function toast(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("toast", theme);
   const els: ExcalidrawElement[] = [];
 
   // inkBox always offsets its shadow by the default 6px, but a toast needs to read as

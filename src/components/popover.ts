@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { bubble, color, font, inkBox, label, rule, size } from "../comic.js";
 
 const TRIGGER_W = 140;
@@ -8,8 +9,8 @@ const BUBBLE_H = 160;
 const PAD = 20;
 
 /** A trigger button with a comic popover bubble above it, tail aimed at its centre. */
-export default function popover(): ExcalidrawElement[] {
-  const f = new Factory("popover");
+export default function popover(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("popover", theme);
   const els: ExcalidrawElement[] = [];
 
   // The tail reaches 26px below the bubble, so this leaves a 4px gap above the trigger.

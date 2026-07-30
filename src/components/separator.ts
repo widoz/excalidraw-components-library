@@ -1,11 +1,12 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, label, rule, size } from "../comic.js";
 
 const W = 320;
 
 /** Two demonstrations: a titled section divided by a horizontal rule, and words divided by vertical rules. */
-export default function separator(): ExcalidrawElement[] {
-  const f = new Factory("separator");
+export default function separator(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("separator", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...label(f, {

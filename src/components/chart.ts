@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 340;
@@ -17,8 +18,8 @@ const BARS = [
 const TALLEST_INDEX = 3;
 
 /** Five bars on a shared baseline with an accent tallest bar, gridlines, and month labels. */
-export default function chart(): ExcalidrawElement[] {
-  const f = new Factory("chart");
+export default function chart(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("chart", theme);
   const els: ExcalidrawElement[] = [];
 
   // Gridlines first, so the bars drawn afterwards sit on top of them.

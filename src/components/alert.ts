@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { burst, color, font, inkBox, label, size } from "../comic.js";
 
 const W = 380;
 const H = 120;
 
 /** Icon slot with a comic burst behind it, plus a title and body. */
-export default function alert(): ExcalidrawElement[] {
-  const f = new Factory("alert");
+export default function alert(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("alert", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H, fill: color.surface }));

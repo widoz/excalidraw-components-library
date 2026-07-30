@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, fillBand, inkBox, label, size } from "../comic.js";
 
 const W = size.control;
@@ -6,8 +7,8 @@ const H = 32;
 const ROW = 76;
 
 /** Two bars at 35% and 80%. */
-export default function progress(): ExcalidrawElement[] {
-  const f = new Factory("progress");
+export default function progress(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("progress", theme);
   const els: ExcalidrawElement[] = [];
 
   [35, 80].forEach((pct, i) => {

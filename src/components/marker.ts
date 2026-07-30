@@ -1,4 +1,5 @@
 import { estimateTextWidth, Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, label, size, swash } from "../comic.js";
 
 const PITCH = 44;
@@ -11,8 +12,8 @@ const lines = [
 ];
 
 /** Three lines of sample copy, with two phrases highlighted by a swash drawn behind the words. */
-export default function marker(): ExcalidrawElement[] {
-  const f = new Factory("marker");
+export default function marker(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("marker", theme);
   const els: ExcalidrawElement[] = [];
 
   lines.forEach((line, i) => {

@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { chevron, color, fillBand, inkBox, label, size } from "../comic.js";
 
 const W = size.control;
@@ -6,8 +7,8 @@ const TRIGGER_H = 56;
 const ITEM_H = 46;
 
 /** Closed trigger with a chevron, plus the open menu with one highlighted item. */
-export default function select(): ExcalidrawElement[] {
-  const f = new Factory("select");
+export default function select(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("select", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: TRIGGER_H }));

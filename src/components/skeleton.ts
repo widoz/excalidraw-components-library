@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, fillBand } from "../comic.js";
 
 const R = 28;
@@ -10,8 +11,8 @@ const BAR_PITCH = 28;
 const BAR_WIDTHS = [200, 170, 120];
 
 /** A bare loading placeholder: no frame, no text, just an avatar circle and stacked bars. */
-export default function skeleton(): ExcalidrawElement[] {
-  const f = new Factory("skeleton");
+export default function skeleton(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("skeleton", theme);
   const els: ExcalidrawElement[] = [];
 
   // Drawn directly via f.ellipse, not inkCircle: skeletons carry no drop shadow,

@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size } from "../comic.js";
 
 const CELL = 60;
 const GAP = 20;
 
 /** Two square toggles: one pressed (sunk, no shadow), one at rest (shadowed). */
-export default function toggle(): ExcalidrawElement[] {
-  const f = new Factory("toggle");
+export default function toggle(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("toggle", theme);
   const els: ExcalidrawElement[] = [];
 
   const toggles = [

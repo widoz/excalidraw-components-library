@@ -1,4 +1,5 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, inkBox, label, size } from "../comic.js";
 
 const W = size.control;
@@ -7,8 +8,8 @@ const PAD_X = 18;
 const TYPED = "hello there";
 
 /** Two fields: one with placeholder text, one focused with a doubled outline and caret. */
-export default function input(): ExcalidrawElement[] {
-  const f = new Factory("input");
+export default function input(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("input", theme);
   const els: ExcalidrawElement[] = [];
 
   // Resting field.

@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { chevron, color, dots, font, inkBox, inkCircle, label, size } from "../comic.js";
 
 const W = 360;
@@ -10,8 +11,8 @@ const DOT_GAP = 22;
 const DOT_COUNT = 3;
 
 /** A slide with an index label, straddling prev/next buttons, and dot indicators below. */
-export default function carousel(): ExcalidrawElement[] {
-  const f = new Factory("carousel");
+export default function carousel(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("carousel", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H }));

@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { burst, color, font, inkBox, label, size } from "../comic.js";
 
 const W = 340;
@@ -7,8 +8,8 @@ const BTN_W = 150;
 const BTN_H = 48;
 
 /** A dashed empty-state frame: burst glyph, title, body copy and a call-to-action. */
-export default function empty(): ExcalidrawElement[] {
-  const f = new Factory("empty");
+export default function empty(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("empty", theme);
   const els: ExcalidrawElement[] = [];
 
   // Dashed placeholder frame: no shadow, a solid hard shadow behind a dashed

@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { bubble as bubbleShape, color, rule } from "../comic.js";
 
 const IN_W = 220;
@@ -9,8 +10,8 @@ const OUT_X = 80;
 const OUT_Y = 120;
 
 /** Two chat bubbles, incoming and outgoing, each carrying ruled copy lines. */
-export default function bubble(): ExcalidrawElement[] {
-  const f = new Factory("bubble");
+export default function bubble(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("bubble", theme);
   const els: ExcalidrawElement[] = [];
 
   // Incoming, apex near the left edge.

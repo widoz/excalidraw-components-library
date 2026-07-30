@@ -1,4 +1,5 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, inkCircle, label, rule, size } from "../comic.js";
 
 const CARD_W = 300;
@@ -11,8 +12,8 @@ const TRIGGER_GAP = 30;
  * An open hover card floating above its trigger link. The card is emitted first
  * (top of the elements array) since it visually sits above/in-front of the trigger.
  */
-export default function hoverCard(): ExcalidrawElement[] {
-  const f = new Factory("hover-card");
+export default function hoverCard(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("hover-card", theme);
   const els: ExcalidrawElement[] = [];
 
   // The card.

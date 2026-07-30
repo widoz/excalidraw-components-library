@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, fillBand, inkBox, rule } from "../comic.js";
 
 const W = 320;
@@ -25,8 +26,8 @@ const TRACK_W = 10;
 const TRACK_H = H - SCROLLBAR_INSET_Y * 2;
 
 /** A scrollable content frame with eight ruled copy lines and a right-side scrollbar. */
-export default function scrollArea(): ExcalidrawElement[] {
-  const f = new Factory("scroll-area");
+export default function scrollArea(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("scroll-area", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H }));

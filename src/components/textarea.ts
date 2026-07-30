@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, inkBox, label, rule, size } from "../comic.js";
 
 const W = size.control;
 const H = 180;
 
 /** Multi-line box with ruled placeholder lines and a corner resize grip. */
-export default function textarea(): ExcalidrawElement[] {
-  const f = new Factory("textarea");
+export default function textarea(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("textarea", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H }));

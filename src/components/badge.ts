@@ -1,4 +1,5 @@
 import { estimateTextWidth, Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size } from "../comic.js";
 
 const H = 38;
@@ -6,8 +7,8 @@ const GAP = 16;
 const PAD = 18;
 
 /** Row of four badges: default, secondary, outline, dark. */
-export default function badge(): ExcalidrawElement[] {
-  const f = new Factory("badge");
+export default function badge(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("badge", theme);
   const els: ExcalidrawElement[] = [];
 
   const variants = [

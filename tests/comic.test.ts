@@ -16,37 +16,40 @@ import {
   xMark,
 } from "../src/comic.js";
 import { color, style } from "../src/tokens.js";
+import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
+
+const theme = resolveTheme(DEFAULT_PRESET);
 
 describe("inkBox", () => {
   it("emits a shadow behind the surface", () => {
-    const f = new Factory("demo");
+    const f = new Factory("demo", theme);
     const [shadow, surface] = inkBox(f, { x: 10, y: 20, w: 100, h: 40 });
     expect(shadow!.x).toBe(10 + style.shadowOffset);
     expect(shadow!.y).toBe(20 + style.shadowOffset);
-    expect(shadow!.backgroundColor).toBe(color.ink);
-    expect(shadow!.strokeColor).toBe(color.ink);
+    expect(shadow!.backgroundColor).toBe(theme.palette.ink);
+    expect(shadow!.strokeColor).toBe(theme.palette.ink);
     expect(shadow!.strokeWidth).toBe(1);
     expect(surface!.x).toBe(10);
     expect(surface!.y).toBe(20);
-    expect(surface!.backgroundColor).toBe(color.surface);
+    expect(surface!.backgroundColor).toBe(theme.palette.surface);
     // Shadow is emitted first, so it sits behind.
     expect(String(shadow!.index) < String(surface!.index)).toBe(true);
   });
 
   it("omits the shadow when asked", () => {
-    const els = inkBox(new Factory("demo"), { x: 0, y: 0, w: 10, h: 10, shadow: false });
+    const els = inkBox(new Factory("demo", theme), { x: 0, y: 0, w: 10, h: 10, shadow: false });
     expect(els).toHaveLength(1);
   });
 
   it("honours an explicit fill", () => {
-    const els = inkBox(new Factory("demo"), { x: 0, y: 0, w: 10, h: 10, fill: color.accent });
-    expect(els[1]!.backgroundColor).toBe(color.accent);
+    const els = inkBox(new Factory("demo", theme), { x: 0, y: 0, w: 10, h: 10, fill: color.accent });
+    expect(els[1]!.backgroundColor).toBe(theme.palette.accent);
   });
 });
 
 describe("inkCircle", () => {
   it("emits a shadow and a surface positioned from the centre", () => {
-    const [shadow, surface] = inkCircle(new Factory("demo"), { cx: 50, cy: 50, r: 20 });
+    const [shadow, surface] = inkCircle(new Factory("demo", theme), { cx: 50, cy: 50, r: 20 });
     expect(surface!.x).toBe(30);
     expect(surface!.y).toBe(30);
     expect(surface!.width).toBe(40);
@@ -57,7 +60,7 @@ describe("inkCircle", () => {
 
 describe("label", () => {
   it("emits exactly one text element", () => {
-    const els = label(new Factory("demo"), { x: 0, y: 0, text: "Hi" });
+    const els = label(new Factory("demo", theme), { x: 0, y: 0, text: "Hi" });
     expect(els).toHaveLength(1);
     expect(els[0]!.type).toBe("text");
     expect(els[0]!.text).toBe("Hi");
@@ -66,7 +69,7 @@ describe("label", () => {
 
 describe("rule", () => {
   it("emits a horizontal line of the given width", () => {
-    const [el] = rule(new Factory("demo"), { x: 5, y: 9, w: 60 });
+    const [el] = rule(new Factory("demo", theme), { x: 5, y: 9, w: 60 });
     expect(el!.type).toBe("line");
     expect(el!.x).toBe(5);
     expect(el!.y).toBe(9);
@@ -76,7 +79,7 @@ describe("rule", () => {
 
 describe("checkMark", () => {
   it("emits a three-point tick", () => {
-    const [el] = checkMark(new Factory("demo"), { x: 0, y: 0, s: 20 });
+    const [el] = checkMark(new Factory("demo", theme), { x: 0, y: 0, s: 20 });
     expect(el!.type).toBe("line");
     expect((el!.points as number[][]).length).toBe(3);
   });
@@ -84,16 +87,16 @@ describe("checkMark", () => {
 
 describe("chevron", () => {
   it("emits a three-point angle", () => {
-    const [down] = chevron(new Factory("demo"), { x: 0, y: 0, s: 12, dir: "down" });
-    const [right] = chevron(new Factory("demo"), { x: 0, y: 0, s: 12, dir: "right" });
+    const [down] = chevron(new Factory("demo", theme), { x: 0, y: 0, s: 12, dir: "down" });
+    const [right] = chevron(new Factory("demo", theme), { x: 0, y: 0, s: 12, dir: "right" });
     expect((down!.points as number[][]).length).toBe(3);
     expect((right!.points as number[][]).length).toBe(3);
     expect(down!.points).not.toEqual(right!.points);
   });
 
   it("mirrors right when pointing left, occupying the same bounding box", () => {
-    const [right] = chevron(new Factory("demo"), { x: 0, y: 0, s: 12, dir: "right" });
-    const [left] = chevron(new Factory("demo"), { x: 0, y: 0, s: 12, dir: "left" });
+    const [right] = chevron(new Factory("demo", theme), { x: 0, y: 0, s: 12, dir: "right" });
+    const [left] = chevron(new Factory("demo", theme), { x: 0, y: 0, s: 12, dir: "left" });
     expect((left!.points as number[][]).length).toBe(3);
     expect(left!.points).not.toEqual(right!.points);
     // Factory.line requires the first point to be exactly [0, 0].
@@ -110,16 +113,16 @@ describe("chevron", () => {
 
 describe("bubble", () => {
   it("emits a rounded box with a shadow and a closed tail", () => {
-    const els = bubble(new Factory("demo"), { x: 0, y: 0, w: 120, h: 60, tailAt: "bottom", apexX: 60 });
+    const els = bubble(new Factory("demo", theme), { x: 0, y: 0, w: 120, h: 60, tailAt: "bottom", apexX: 60 });
     expect(els.length).toBe(3);
     const tail = els[2]!;
     expect(tail.type).toBe("line");
     expect((tail.points as number[][]).length).toBe(4);
-    expect(tail.backgroundColor).toBe(color.surface);
+    expect(tail.backgroundColor).toBe(theme.palette.surface);
   });
 
   it("puts the tail's point exactly at x + apexX", () => {
-    const els = bubble(new Factory("demo"), { x: 200, y: 0, w: 120, h: 60, tailAt: "bottom", apexX: 60 });
+    const els = bubble(new Factory("demo", theme), { x: 200, y: 0, w: 120, h: 60, tailAt: "bottom", apexX: 60 });
     const tail = els[2]!;
     const apex = (tail.points as number[][])[1]!;
     expect((tail.x as number) + apex[0]!).toBe(260);
@@ -128,8 +131,8 @@ describe("bubble", () => {
   });
 
   it("points the tail up and down from the matching edge", () => {
-    const down = bubble(new Factory("demo"), { x: 0, y: 0, w: 100, h: 40, tailAt: "bottom", apexX: 50 })[2]!;
-    const up = bubble(new Factory("demo"), { x: 0, y: 0, w: 100, h: 40, tailAt: "top", apexX: 50 })[2]!;
+    const down = bubble(new Factory("demo", theme), { x: 0, y: 0, w: 100, h: 40, tailAt: "bottom", apexX: 50 })[2]!;
+    const up = bubble(new Factory("demo", theme), { x: 0, y: 0, w: 100, h: 40, tailAt: "top", apexX: 50 })[2]!;
     expect(down.y).toBe(40);
     expect((down.points as number[][])[1]![1]).toBe(26);
     expect(up.y).toBe(0);
@@ -139,7 +142,7 @@ describe("bubble", () => {
 
 describe("burst", () => {
   it("emits one closed star polygon", () => {
-    const [el] = burst(new Factory("demo"), { cx: 0, cy: 0, r: 30, spikes: 8 });
+    const [el] = burst(new Factory("demo", theme), { cx: 0, cy: 0, r: 30, spikes: 8 });
     expect(el!.type).toBe("line");
     // 8 spikes = 16 alternating points, plus the closing repeat.
     expect((el!.points as number[][]).length).toBe(17);
@@ -148,7 +151,7 @@ describe("burst", () => {
 
 describe("xMark", () => {
   it("emits two crossing lines", () => {
-    const els = xMark(new Factory("demo"), { x: 0, y: 0, s: 16 });
+    const els = xMark(new Factory("demo", theme), { x: 0, y: 0, s: 16 });
     expect(els).toHaveLength(2);
     expect(els.every((e) => e.type === "line")).toBe(true);
   });
@@ -156,18 +159,18 @@ describe("xMark", () => {
 
 describe("arc", () => {
   it("emits one open line whose first point is [0,0]", () => {
-    const [el] = arc(new Factory("demo"), { cx: 100, cy: 100, r: 40, startDeg: 0, endDeg: 270 });
+    const [el] = arc(new Factory("demo", theme), { cx: 100, cy: 100, r: 40, startDeg: 0, endDeg: 270 });
     expect(el!.type).toBe("line");
     const pts = el!.points as number[][];
     expect(pts[0]).toEqual([0, 0]);
     expect(pts.length).toBeGreaterThan(8);
     // Open, not closed: last point must differ from the first.
     expect(pts[pts.length - 1]).not.toEqual([0, 0]);
-    expect(el!.backgroundColor).toBe(color.transparent);
+    expect(el!.backgroundColor).toBe(theme.palette.transparent);
   });
 
   it("starts at the requested angle", () => {
-    const f = new Factory("demo");
+    const f = new Factory("demo", theme);
     const [el] = arc(f, { cx: 100, cy: 100, r: 40, startDeg: 0, endDeg: 90 });
     // 0 degrees is the +x axis, so the arc begins at (cx + r, cy).
     expect(el!.x).toBeCloseTo(140);
@@ -185,7 +188,7 @@ describe("arc", () => {
       [360, 80, 80],  // full circle
     ];
     for (const [endDeg, w, h] of cases) {
-      const el = arc(new Factory(`a${endDeg}`), { cx: 0, cy: 0, r: 40, startDeg: 0, endDeg })[0]!;
+      const el = arc(new Factory(`a`, theme), { cx: 0, cy: 0, r: 40, startDeg: 0, endDeg })[0]!;
       expect(Math.abs(Number(el.width) - w), `width at ${endDeg} deg`).toBeLessThan(0.5);
       expect(Math.abs(Number(el.height) - h), `height at ${endDeg} deg`).toBeLessThan(0.5);
     }
@@ -195,7 +198,7 @@ describe("arc", () => {
     // spinner's third arc runs 200 -> 470 rather than 200 -> 110 precisely so it
     // sweeps the long way round. If that ever silently reversed, the three spinners
     // would stop reading as a progression.
-    const [el] = arc(new Factory("demo"), { cx: 0, cy: 0, r: 40, startDeg: 200, endDeg: 470 });
+    const [el] = arc(new Factory("demo", theme), { cx: 0, cy: 0, r: 40, startDeg: 200, endDeg: 470 });
     const angles = (el!.points as number[][]).map(([px, py]) => {
       const ax = (el!.x as number) + px!;
       const ay = (el!.y as number) + py!;
@@ -221,7 +224,7 @@ describe("arc", () => {
 
 describe("dots", () => {
   it("emits one ellipse per dot, evenly spaced", () => {
-    const els = dots(new Factory("demo"), { x: 10, y: 50, count: 3, gap: 20, r: 5 });
+    const els = dots(new Factory("demo", theme), { x: 10, y: 50, count: 3, gap: 20, r: 5 });
     expect(els).toHaveLength(3);
     expect(els.every((e) => e.type === "ellipse")).toBe(true);
     expect(els.map((e) => e.x)).toEqual([10, 30, 50]);
@@ -231,19 +234,19 @@ describe("dots", () => {
 
 describe("swash", () => {
   it("emits one closed filled polygon whose first point is [0,0]", () => {
-    const [el] = swash(new Factory("demo"), { x: 0, y: 0, w: 120, h: 30 });
+    const [el] = swash(new Factory("demo", theme), { x: 0, y: 0, w: 120, h: 30 });
     expect(el!.type).toBe("line");
     const pts = el!.points as number[][];
     expect(pts[0]).toEqual([0, 0]);
     expect(pts[pts.length - 1]).toEqual([0, 0]);
-    expect(el!.backgroundColor).toBe(color.muted);
+    expect(el!.backgroundColor).toBe(theme.palette.muted);
   });
 
   it("bulges h*0.22 left and h*0.25 right of the w it is given", () => {
     // The side lobes are what make it read as a hand-drawn stroke rather than a box,
     // but they mean the drawn extent is wider than `w`. A caller sizing a highlight
     // off `w` alone under-accounts for h*0.47 of overhang.
-    const [el] = swash(new Factory("demo"), { x: 100, y: 50, w: 120, h: 30 });
+    const [el] = swash(new Factory("demo", theme), { x: 100, y: 50, w: 120, h: 30 });
     const xs = (el!.points as number[][]).map(([px]) => (el!.x as number) + px!);
     const ys = (el!.points as number[][]).map(([, py]) => (el!.y as number) + py!);
     expect(Math.min(...xs)).toBeCloseTo(100 - 30 * 0.22, 6);
@@ -258,13 +261,13 @@ describe("swash", () => {
 
 describe("strokeStyle passthrough", () => {
   it("inkBox forwards a dashed stroke style to the surface", () => {
-    const els = inkBox(new Factory("demo"), { x: 0, y: 0, w: 100, h: 40, strokeStyle: "dashed" });
+    const els = inkBox(new Factory("demo", theme), { x: 0, y: 0, w: 100, h: 40, strokeStyle: "dashed" });
     expect(els[els.length - 1]!.strokeStyle).toBe("dashed");
   });
 
   it("fillBand forwards a stroke style", () => {
     const [el] = fillBand(
-      new Factory("demo"),
+      new Factory("demo", theme),
       { x: 0, y: 0, w: 100, h: 40, fill: color.accent, rounded: false, strokeStyle: "dotted" },
     );
     expect(el!.strokeStyle).toBe("dotted");

@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
 
 const DASH_W = 300;
@@ -13,8 +14,8 @@ const MENU_Y = 60;
  * spilling past its bottom-right corner — the menu is drawn last so it paints
  * on top of the dashed area.
  */
-export default function contextMenu(): ExcalidrawElement[] {
-  const f = new Factory("context-menu");
+export default function contextMenu(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("context-menu", theme);
   const els: ExcalidrawElement[] = [];
 
   // Dashed drop target, drawn first so the menu paints over it.

@@ -1,4 +1,5 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { chevron, color, font, label, size } from "../comic.js";
 
 const GAP = 20;
@@ -10,8 +11,8 @@ const CHEVRON_S = 8;
 const CHEVRON_W = CHEVRON_S * 0.7;
 
 /** Three crumbs with hand-drawn chevron separators; the last one is bold. */
-export default function breadcrumb(): ExcalidrawElement[] {
-  const f = new Factory("breadcrumb");
+export default function breadcrumb(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("breadcrumb", theme);
   const els: ExcalidrawElement[] = [];
 
   const crumbs = [

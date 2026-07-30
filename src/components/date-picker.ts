@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { chevron, color, font, inkBox, inkCircle, label, size } from "../comic.js";
 
 const W = 320;
@@ -17,8 +18,8 @@ const CHEVRON_S = 8;
 const SELECTED_DAY = 17;
 
 /** Trigger with a calendar glyph and a compact three-week month popover below it. */
-export default function datePicker(): ExcalidrawElement[] {
-  const f = new Factory("date-picker");
+export default function datePicker(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("date-picker", theme);
   const els: ExcalidrawElement[] = [];
 
   // Trigger.

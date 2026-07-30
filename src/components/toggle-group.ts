@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, rule, style } from "../comic.js";
 
 const CELL_W = 70;
@@ -11,8 +12,8 @@ const WIDTHS = [30, 20, 26];
 const MARK_YS = [16, 28, 40];
 
 /** Three joined square toggles, one pressed, marked with alignment-icon strokes. */
-export default function toggleGroup(): ExcalidrawElement[] {
-  const f = new Factory("toggle-group");
+export default function toggleGroup(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("toggle-group", theme);
   const els: ExcalidrawElement[] = [];
 
   // One shadow behind the whole group, seam-clean like button-group.

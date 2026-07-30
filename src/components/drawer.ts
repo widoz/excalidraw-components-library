@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 360;
@@ -13,8 +14,8 @@ const INSET = 20;
  * panel itself is drawn square (`rounded: false`) and a rounded grabber bar
  * stands in for the "sheet" affordance instead.
  */
-export default function drawer(): ExcalidrawElement[] {
-  const f = new Factory("drawer");
+export default function drawer(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("drawer", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H, rounded: false }));

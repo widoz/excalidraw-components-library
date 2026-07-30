@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size } from "../comic.js";
 
 const W = 200;
@@ -6,8 +7,8 @@ const H = 56;
 const GAP = 28;
 
 /** Three buttons: default (accent), secondary (surface), disabled (muted, flat). */
-export default function button(): ExcalidrawElement[] {
-  const f = new Factory("button");
+export default function button(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("button", theme);
   const els: ExcalidrawElement[] = [];
 
   const variants = [

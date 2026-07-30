@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { checkMark, color, inkBox, label, size } from "../comic.js";
 
 const BOX = 34;
 const ROW = 56;
 
 /** Three stacked checkboxes: checked, unchecked, checked. */
-export default function checkboxGroup(): ExcalidrawElement[] {
-  const f = new Factory("checkbox-group");
+export default function checkboxGroup(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("checkbox-group", theme);
   const els: ExcalidrawElement[] = [];
 
   const rows = [

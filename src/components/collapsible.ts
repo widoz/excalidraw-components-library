@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { chevron, color, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 320;
@@ -10,8 +11,8 @@ const GAP_BETWEEN_STATES = 40;
 const TRIGGER_TEXT = "Show 3 more";
 
 /** Two states side by side: an expanded trigger with three revealed rows, and a collapsed one. */
-export default function collapsible(): ExcalidrawElement[] {
-  const f = new Factory("collapsible");
+export default function collapsible(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("collapsible", theme);
   const els: ExcalidrawElement[] = [];
 
   // Expanded state.

@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size } from "../comic.js";
 
 const W = size.control;
@@ -10,8 +11,8 @@ const GROUP_GAP = 130;
  * so the error group signals with weight (a doubled outline, `font.comic`
  * text) rather than a colour that doesn't exist in the token set.
  */
-export default function field(): ExcalidrawElement[] {
-  const f = new Factory("field");
+export default function field(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("field", theme);
   const els: ExcalidrawElement[] = [];
 
   // Group 1: valid.

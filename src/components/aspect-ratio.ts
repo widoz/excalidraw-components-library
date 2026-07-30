@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size } from "../comic.js";
 
 const W = 320;
 const H = 180;
 
 /** A dashed placeholder frame with crossed diagonals and a ratio label. */
-export default function aspectRatio(): ExcalidrawElement[] {
-  const f = new Factory("aspect-ratio");
+export default function aspectRatio(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("aspect-ratio", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, {

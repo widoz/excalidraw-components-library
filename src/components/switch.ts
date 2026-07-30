@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, inkBox, inkCircle, label, size } from "../comic.js";
 
 const TRACK_W = 88;
@@ -7,8 +8,8 @@ const KNOB_R = 15;
 const ROW = 72;
 
 /** Two switches: off (knob left, muted track) and on (knob right, accent track). */
-export default function switchComponent(): ExcalidrawElement[] {
-  const f = new Factory("switch");
+export default function switchComponent(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("switch", theme);
   const els: ExcalidrawElement[] = [];
 
   const rows = [

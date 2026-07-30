@@ -3,7 +3,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { buildAll } from "../src/build.js";
-import { color } from "../src/tokens.js";
+import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
+
+const theme = resolveTheme(DEFAULT_PRESET);
 
 let out: string;
 beforeAll(() => {
@@ -31,7 +33,7 @@ function expectBandPrecedesLabel(dir: string, name: string, text: string): void 
   const els = load(dir, name);
   const labelEl = els.find((e) => e.type === "text" && e.text === text);
   expect(labelEl, `${name} has no label "${text}"`).toBeDefined();
-  const bands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
+  const bands = els.filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent);
   expect(bands.length, `${name} emits no fill band`).toBeGreaterThan(0);
   // The band must overlap the label horizontally and vertically, or it is some other
   // band and this test would pass for the wrong reason.
@@ -96,7 +98,7 @@ describe("checkbox-group", () => {
 
   it("fills checked boxes with accent", () => {
     const els = load(out, "checkbox-group");
-    const accentBoxes = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const accentBoxes = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentBoxes).toHaveLength(2);
   });
 });
@@ -115,8 +117,8 @@ describe("switch", () => {
     const els = load(out, "switch");
     expect(count(els, "text")).toBe(2);
     const tracks = els.filter((e) => e.type === "rectangle");
-    expect(tracks.some((e) => e.backgroundColor === color.accent)).toBe(true);
-    expect(tracks.some((e) => e.backgroundColor === color.muted)).toBe(true);
+    expect(tracks.some((e) => e.backgroundColor === theme.palette.accent)).toBe(true);
+    expect(tracks.some((e) => e.backgroundColor === theme.palette.muted)).toBe(true);
   });
 });
 
@@ -128,7 +130,7 @@ describe("select", () => {
     // One chevron line.
     expect(count(els, "line")).toBe(1);
     // The highlighted menu row is an accent-filled rectangle.
-    expect(els.some((e) => e.type === "rectangle" && e.backgroundColor === color.accent)).toBe(true);
+    expect(els.some((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent)).toBe(true);
   });
 });
 
@@ -183,7 +185,7 @@ describe("tabs", () => {
     const els = load(out, "tabs");
     expect(texts(els)).toEqual(expect.arrayContaining(["Preview", "Code", "Notes"]));
     // Only the active tab is accent-filled.
-    const active = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const active = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(active).toHaveLength(1);
   });
 });
@@ -192,7 +194,7 @@ describe("table", () => {
   it("has a header row, three body rows and alternating stripes", () => {
     const els = load(out, "table");
     expect(texts(els)).toEqual(expect.arrayContaining(["Name", "Role", "Ada", "Grace"]));
-    const striped = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.muted);
+    const striped = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.muted);
     // Header row plus one striped body row.
     expect(striped.length).toBeGreaterThanOrEqual(2);
   });
@@ -201,7 +203,7 @@ describe("table", () => {
 describe("progress", () => {
   it("has two tracks and two accent fills", () => {
     const els = load(out, "progress");
-    const fills = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const fills = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(fills).toHaveLength(2);
     expect(texts(els)).toEqual(expect.arrayContaining(["35%", "80%"]));
   });
@@ -265,7 +267,7 @@ describe("alert-dialog", () => {
     const bursts = els.filter((e) => e.type === "line" && Array.isArray(e.points) && (e.points as unknown[]).length > 10);
     expect(bursts).toHaveLength(1);
     const shadowedFooterBoxes = els.filter(
-      (e) => e.type === "rectangle" && e.backgroundColor === color.ink && e.width === 130,
+      (e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.width === 130,
     );
     expect(shadowedFooterBoxes).toHaveLength(2);
   });
@@ -285,7 +287,7 @@ describe("button-group", () => {
   it("has three labelled cells with one pressed and one shared shadow", () => {
     const els = load(out, "button-group");
     expect(texts(els)).toEqual(expect.arrayContaining(["Day", "Week", "Month"]));
-    const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentRects).toHaveLength(1);
     const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
     expect(shadowRects).toHaveLength(1);
@@ -301,7 +303,7 @@ describe("calendar", () => {
     }
     expect(texts(els)).toContain("17");
     expect(texts(els)).toContain("24");
-    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.accent);
+    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === theme.palette.accent);
     expect(accentEllipses).toHaveLength(1);
     // Header's left/right chevrons.
     expect(count(els, "line")).toBe(2);
@@ -329,8 +331,8 @@ describe("chart", () => {
     // outline-less fill bands. Nothing else in the component is a rectangle.
     const bars = els.filter((e) => e.type === "rectangle");
     expect(bars).toHaveLength(5);
-    expect(bars.every((e) => e.strokeColor === color.ink && e.strokeWidth === 4)).toBe(true);
-    const accentBars = bars.filter((e) => e.backgroundColor === color.accent);
+    expect(bars.every((e) => e.strokeColor === theme.palette.ink && e.strokeWidth === 4)).toBe(true);
+    const accentBars = bars.filter((e) => e.backgroundColor === theme.palette.accent);
     expect(accentBars).toHaveLength(1);
   });
 });
@@ -341,7 +343,7 @@ describe("collapsible", () => {
     expect(texts(els).filter((t) => t === "Show 3 more")).toHaveLength(2);
     expect(count(els, "line")).toBe(2 + 3);
     // Content rules are drawn with the muted stroke, distinguishing them from the chevrons.
-    const contentRules = els.filter((e) => e.type === "line" && e.strokeColor === color.muted);
+    const contentRules = els.filter((e) => e.type === "line" && e.strokeColor === theme.palette.muted);
     expect(contentRules).toHaveLength(3);
   });
 });
@@ -359,7 +361,7 @@ describe("combobox", () => {
       (e) => e.type === "line" && (e.points as Array<[number, number]>).some((p) => p[1] < 0),
     );
     expect(checks).toHaveLength(1);
-    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.muted);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent && e.backgroundColor === theme.palette.muted);
     expect(mutedBands).toHaveLength(1);
   });
 });
@@ -373,7 +375,7 @@ describe("command", () => {
     for (const key of ["N", "L", "E"]) {
       expect(texts(els)).toContain(key);
     }
-    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.muted);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent && e.backgroundColor === theme.palette.muted);
     expect(mutedBands).toHaveLength(1);
   });
 });
@@ -382,7 +384,7 @@ describe("pagination", () => {
   it("has five page cells with one active, plus prev and next arrows", () => {
     const els = load(out, "pagination");
     expect(texts(els)).toEqual(expect.arrayContaining(["1", "2", "3", "4", "5"]));
-    const active = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const active = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     // Active page cell is drawn as a shadowed box, so the accent rect is the surface one.
     expect(active).toHaveLength(1);
     // Two chevrons.
@@ -398,7 +400,7 @@ describe("context-menu", () => {
     // four it names and this test pins that count explicitly.
     expect(texts(els)).toEqual(expect.arrayContaining(["Right-click here", "Back", "Reload", "Inspect"]));
     expect(count(els, "text")).toBe(4);
-    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.muted);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent && e.backgroundColor === theme.palette.muted);
     expect(mutedBands).toHaveLength(1);
     // One separator rule.
     expect(count(els, "line")).toBe(1);
@@ -416,7 +418,7 @@ describe("date-picker", () => {
     const els = load(out, "date-picker");
     expect(texts(els)).toContain("17 July 2026");
     expect(texts(els)).toContain("July 2026");
-    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.accent);
+    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === theme.palette.accent);
     expect(accentEllipses).toHaveLength(1);
     // Header left/right chevrons are 3-point lines; the glyph's two binding
     // strokes are 2-point lines, so filtering by point count isolates the chevrons.
@@ -430,10 +432,10 @@ describe("drawer", () => {
     const els = load(out, "drawer");
     expect(texts(els)).toContain("Share drawing");
     expect(texts(els)).toContain("Copy link");
-    const grabber = els.find((e) => e.type === "rectangle" && e.backgroundColor === color.border && e.strokeColor === color.transparent);
+    const grabber = els.find((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.border && e.strokeColor === theme.palette.transparent);
     expect(grabber).toBeDefined();
     expect(grabber?.width).toBe(60);
-    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentSurfaces).toHaveLength(1);
   });
 });
@@ -461,7 +463,7 @@ describe("field", () => {
     ]));
     // Each input is an inkBox, which draws exactly one shadow rect (fill = ink,
     // strokeWidth 1) behind its surface rect.
-    const shadowed = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.ink && e.strokeWidth === 1);
+    const shadowed = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.strokeWidth === 1);
     expect(shadowed).toHaveLength(2);
     const errorMessage = els.find((e) => e.type === "text" && e.text === "Too short.");
     expect(errorMessage?.fontFamily).toBe(7);
@@ -473,7 +475,7 @@ describe("hover-card", () => {
     const els = load(out, "hover-card");
     expect(texts(els).filter((t) => t === "@guido")).toHaveLength(2);
     expect(texts(els)).toContain("GS");
-    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.accent);
+    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === theme.palette.accent);
     expect(accentEllipses).toHaveLength(1);
   });
 });
@@ -482,7 +484,7 @@ describe("input-group", () => {
   it("shows the prefix, value and action, with one accent segment and one shared shadow", () => {
     const els = load(out, "input-group");
     expect(texts(els)).toEqual(expect.arrayContaining(["@", "guido", "Copy"]));
-    const accentSegments = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const accentSegments = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentSegments).toHaveLength(1);
     const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
     expect(shadowRects).toHaveLength(1);
@@ -493,7 +495,7 @@ describe("input-otp", () => {
   it("has three filled digits, six shadowed cells and one caret", () => {
     const els = load(out, "input-otp");
     expect(texts(els)).toEqual(expect.arrayContaining(["4", "2", "7"]));
-    const shadowedCells = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.ink && e.strokeWidth === 1);
+    const shadowedCells = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.strokeWidth === 1);
     expect(shadowedCells).toHaveLength(6);
     const caret = els.filter((e) => e.type === "line" && e.strokeWidth === 2);
     expect(caret).toHaveLength(1);
@@ -505,7 +507,7 @@ describe("item", () => {
     const els = load(out, "item");
     expect(texts(els)).toEqual(expect.arrayContaining(["★", "Sketch Kit", "20 components"]));
     expect(count(els, "line")).toBe(1);
-    const mutedEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.muted);
+    const mutedEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === theme.palette.muted);
     expect(mutedEllipses).toHaveLength(1);
   });
 });
@@ -514,7 +516,7 @@ describe("kbd", () => {
   it("has five labels and four shadowed key caps", () => {
     const els = load(out, "kbd");
     expect(texts(els)).toEqual(expect.arrayContaining(["⌘", "K", "Shift", "↵", "+"]));
-    const shadowedCaps = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.ink && e.strokeWidth === 1);
+    const shadowedCaps = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.strokeWidth === 1);
     expect(shadowedCaps).toHaveLength(4);
   });
 });
@@ -527,7 +529,7 @@ describe("label", () => {
     expect(texts(els)).toEqual(["Email address", "ada@example.com", "Accept terms"]);
     // One check mark, drawn as a single line.
     expect(count(els, "line")).toBe(1);
-    const accentBoxes = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const accentBoxes = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentBoxes).toHaveLength(1);
   });
 });
@@ -536,7 +538,7 @@ describe("menubar", () => {
   it("shows four titles and Edit's open menu of three items", () => {
     const els = load(out, "menubar");
     expect(texts(els)).toEqual(["File", "Edit", "View", "Help", "Undo", "Redo", "Preferences"]);
-    const mutedBands = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.muted);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.muted);
     expect(mutedBands).toHaveLength(1);
     // One separator rule.
     expect(count(els, "line")).toBe(1);
@@ -574,7 +576,7 @@ describe("resizable", () => {
     const els = load(out, "resizable");
     expect(texts(els)).toEqual(["Left", "Right"]);
     expect(count(els, "ellipse")).toBe(3);
-    const mutedBands = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.muted);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.muted);
     expect(mutedBands).toHaveLength(1);
   });
 });
@@ -583,7 +585,7 @@ describe("scroll-area", () => {
   it("has eight content rules and a two-piece scrollbar with a shorter thumb", () => {
     const els = load(out, "scroll-area");
     expect(count(els, "line")).toBe(8);
-    const scrollbarBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
+    const scrollbarBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent);
     expect(scrollbarBands).toHaveLength(2);
     const [track, thumb] = scrollbarBands.sort((a, b) => (b.height as number) - (a.height as number));
     expect((thumb!.height as number)).toBeLessThan(track!.height as number);
@@ -612,7 +614,7 @@ describe("sheet", () => {
       "Edit drawing", "Name", "Tags", "Notes", "Save changes",
     ]));
     expect(count(els, "line")).toBe(2);
-    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentSurfaces).toHaveLength(1);
   });
 
@@ -621,7 +623,7 @@ describe("sheet", () => {
     const rects = els.filter((e) => e.type === "rectangle");
     const shadow = rects[0] as { x: number; y: number; backgroundColor: string };
     const surface = rects[1] as { x: number; y: number; backgroundColor: string };
-    expect(shadow.backgroundColor).toBe(color.ink);
+    expect(shadow.backgroundColor).toBe(theme.palette.ink);
     expect(shadow.x).toBeLessThan(surface.x);
     expect(shadow.y).toBeGreaterThan(surface.y);
   });
@@ -633,9 +635,9 @@ describe("sidebar", () => {
     expect(texts(els)).toEqual(expect.arrayContaining([
       "Sketch Kit", "Overview", "Components", "Palette", "Settings", "GS", "guido",
     ]));
-    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.muted);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent && e.backgroundColor === theme.palette.muted);
     expect(mutedBands).toHaveLength(1);
-    const accentEdges = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.accent && e.width === 4);
+    const accentEdges = els.filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent && e.backgroundColor === theme.palette.accent && e.width === 4);
     expect(accentEdges).toHaveLength(1);
   });
 });
@@ -644,7 +646,7 @@ describe("skeleton", () => {
   it("has zero text, exactly three bars and one ellipse", () => {
     const els = load(out, "skeleton");
     expect(count(els, "text")).toBe(0);
-    const bars = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent);
+    const bars = els.filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent);
     expect(bars).toHaveLength(3);
     expect(count(els, "ellipse")).toBe(1);
   });
@@ -667,7 +669,7 @@ describe("toggle", () => {
   it("has one pressed toggle with no shadow and one at rest with a shadow", () => {
     const els = load(out, "toggle");
     expect(texts(els)).toEqual(expect.arrayContaining(["B", "I", "Bold", "Italic"]));
-    const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentRects).toHaveLength(1);
     const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
     expect(shadowRects).toHaveLength(1);
@@ -696,7 +698,7 @@ describe("toggle-group", () => {
     expect(count(els, "text")).toBe(0);
     const marks = els.filter((e) => e.type === "line" && e.strokeWidth === 2);
     expect(marks).toHaveLength(9);
-    const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const accentRects = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentRects).toHaveLength(1);
     const shadowRects = els.filter((e) => e.type === "rectangle" && e.strokeWidth === 1);
     expect(shadowRects).toHaveLength(1);
@@ -708,7 +710,7 @@ describe("attachment", () => {
     const els = load(out, "attachment");
     expect(texts(els)).toEqual(expect.arrayContaining(["sketch-kit.excalidraw", "48 KB"]));
     expect(count(els, "line")).toBe(4);
-    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === color.transparent && e.backgroundColor === color.muted);
+    const mutedBands = els.filter((e) => e.type === "rectangle" && e.strokeColor === theme.palette.transparent && e.backgroundColor === theme.palette.muted);
     expect(mutedBands).toHaveLength(1);
   });
 });
@@ -719,7 +721,7 @@ describe("bubble", () => {
     expect(count(els, "text")).toBe(0);
     const tails = els.filter((e) => e.type === "line" && (e.points as unknown[]).length === 4);
     expect(tails).toHaveLength(2);
-    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentSurfaces).toHaveLength(1);
   });
 });
@@ -757,9 +759,9 @@ describe("message", () => {
     const els = load(out, "message");
     const tails = els.filter((e) => e.type === "line" && (e.points as unknown[]).length === 4);
     expect(tails).toHaveLength(2);
-    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === color.accent);
+    const accentEllipses = els.filter((e) => e.type === "ellipse" && e.backgroundColor === theme.palette.accent);
     expect(accentEllipses).toHaveLength(1);
-    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === color.accent);
+    const accentSurfaces = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.accent);
     expect(accentSurfaces).toHaveLength(1);
   });
 });

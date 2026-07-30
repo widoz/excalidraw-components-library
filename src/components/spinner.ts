@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { arc, color, label, size } from "../comic.js";
 
 const PITCH = 90;
 const R = 26;
 
 /** Three spinners at increasing sweep, suggesting rotation, over a "Loading..." caption. */
-export default function spinner(): ExcalidrawElement[] {
-  const f = new Factory("spinner");
+export default function spinner(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("spinner", theme);
   const els: ExcalidrawElement[] = [];
 
   // 90, then 180, then 270 degrees of sweep, each starting further round the circle:

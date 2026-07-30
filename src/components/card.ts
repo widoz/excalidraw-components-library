@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 340;
 const H = 230;
 
 /** Title, description lines, and a footer button. */
-export default function card(): ExcalidrawElement[] {
-  const f = new Factory("card");
+export default function card(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("card", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H }));

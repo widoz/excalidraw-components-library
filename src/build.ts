@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { registry } from "./registry.js";
 import { toLibrary, toScene, type LibraryItemInput } from "./scene.js";
+import { DEFAULT_PRESET, resolveTheme } from "./theme.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const DEFAULT_OUT = join(ROOT, "dist");
@@ -12,13 +13,14 @@ export function buildAll(outDir: string = DEFAULT_OUT): void {
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(componentsDir, { recursive: true });
 
+  const theme = resolveTheme(DEFAULT_PRESET);
   const items: LibraryItemInput[] = [];
 
   for (const [name, entry] of Object.entries(registry)) {
-    const elements = entry.build();
+    const elements = entry.build(theme);
     writeFileSync(
       join(componentsDir, `${name}.excalidraw`),
-      `${JSON.stringify(toScene(elements), null, 2)}\n`,
+      `${JSON.stringify(toScene(elements, theme), null, 2)}\n`,
     );
     items.push({ name: entry.title, elements });
   }

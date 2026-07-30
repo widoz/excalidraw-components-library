@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { bubble, color, font, inkBox, label, size } from "../comic.js";
 
 const BTN_W = 140;
@@ -7,8 +8,8 @@ const BUBBLE_W = 220;
 const BUBBLE_H = 60;
 
 /** A trigger button with a comic speech bubble pointing down at it. */
-export default function tooltip(): ExcalidrawElement[] {
-  const f = new Factory("tooltip");
+export default function tooltip(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("tooltip", theme);
   const els: ExcalidrawElement[] = [];
 
   // The tail reaches 26px below the bubble, so this leaves a 4px gap above the button.

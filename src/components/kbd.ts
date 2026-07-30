@@ -1,4 +1,5 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size } from "../comic.js";
 
 const CAP_H = 52;
@@ -14,8 +15,8 @@ const CAP2_W = 100; // "Shift"
 const CAP3_W = 56; // "↵"
 
 /** A row of key caps: "⌘ + K", a gap, then "Shift" and "↵". */
-export default function kbd(): ExcalidrawElement[] {
-  const f = new Factory("kbd");
+export default function kbd(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("kbd", theme);
   const els: ExcalidrawElement[] = [];
 
   const plusW = estimateTextWidth("+", PLUS_FONT);

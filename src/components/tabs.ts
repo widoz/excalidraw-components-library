@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size } from "../comic.js";
 
 const TAB_W = 120;
@@ -7,8 +8,8 @@ const W = TAB_W * 3;
 const PANEL_H = 150;
 
 /** Three tab headers with the first active, plus the panel below. */
-export default function tabs(): ExcalidrawElement[] {
-  const f = new Factory("tabs");
+export default function tabs(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("tabs", theme);
   const els: ExcalidrawElement[] = [];
 
   // Panel first, so the active tab's extra height paints over the seam and overlaps it.

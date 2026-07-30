@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, dots, fillBand, inkBox, label, size } from "../comic.js";
 
 const LEFT_W = 180;
@@ -7,8 +8,8 @@ const RIGHT_W = 200;
 const H = 220;
 
 /** Two side-by-side panels split by a draggable handle with a vertical grip. */
-export default function resizable(): ExcalidrawElement[] {
-  const f = new Factory("resizable");
+export default function resizable(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("resizable", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: LEFT_W, h: H, rounded: false }));

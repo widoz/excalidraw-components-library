@@ -1,4 +1,5 @@
 import type { ExcalidrawElement } from "./element.js";
+import type { Theme } from "./theme.js";
 import accordion from "./components/accordion.js";
 import alert from "./components/alert.js";
 import alertDialog from "./components/alert-dialog.js";
@@ -58,7 +59,7 @@ import toggle from "./components/toggle.js";
 import toggleGroup from "./components/toggle-group.js";
 import tooltip from "./components/tooltip.js";
 
-export type ComponentBuilder = () => ExcalidrawElement[];
+export type ComponentBuilder = (theme: Theme) => ExcalidrawElement[];
 
 export interface ComponentEntry {
   /** Human-readable name, used as the library item name. */

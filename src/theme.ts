@@ -94,3 +94,10 @@ export function resolveTheme(preset: Preset): Theme {
 export function paletteValues(theme: Theme): ReadonlySet<string> {
   return new Set(Object.values(theme.palette));
 }
+
+/**
+ * Deprecated: the default theme's palette. `validate.ts` still imports this until
+ * Task 7 replaces it with a per-theme set. Defined here rather than in `tokens.ts` to
+ * avoid a `tokens.ts` <-> `theme.ts` import cycle at module-evaluation time.
+ */
+export const PALETTE_VALUES: ReadonlySet<string> = paletteValues(resolveTheme(DEFAULT_PRESET));

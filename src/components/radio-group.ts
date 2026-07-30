@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, inkCircle, label, size } from "../comic.js";
 
 const R = 18;
 const ROW = 56;
 
 /** Three stacked radios, the second one selected. */
-export default function radioGroup(): ExcalidrawElement[] {
-  const f = new Factory("radio-group");
+export default function radioGroup(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("radio-group", theme);
   const els: ExcalidrawElement[] = [];
 
   const rows = [

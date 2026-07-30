@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { chevron, color, font, inkBox, label, size } from "../comic.js";
 
 const CELL = 48;
@@ -11,8 +12,8 @@ const ICON_W = ICON_S * 0.7;
 const ICON_GAP = 18;
 
 /** Prev arrow, pages 1-5 with page 2 active, next arrow. */
-export default function pagination(): ExcalidrawElement[] {
-  const f = new Factory("pagination");
+export default function pagination(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("pagination", theme);
   const els: ExcalidrawElement[] = [];
 
   const pages = [1, 2, 3, 4, 5];

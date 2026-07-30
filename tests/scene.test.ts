@@ -1,18 +1,19 @@
 import { describe, expect, it } from "vitest";
 import { Factory } from "../src/element.js";
 import { SOURCE, toLibrary, toScene } from "../src/scene.js";
-import { color } from "../src/tokens.js";
+import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
 
-const els = () => [new Factory("demo").rect({ x: 0, y: 0, w: 10, h: 10 })];
+const theme = resolveTheme(DEFAULT_PRESET);
+const els = () => [new Factory("demo", theme).rect({ x: 0, y: 0, w: 10, h: 10 })];
 
 describe("toScene", () => {
   it("wraps elements in a valid scene envelope", () => {
-    const scene = toScene(els()) as Record<string, unknown>;
+    const scene = toScene(els(), theme) as Record<string, unknown>;
     expect(scene.type).toBe("excalidraw");
     expect(scene.version).toBe(2);
     expect(scene.source).toBe(SOURCE);
     expect(scene.files).toEqual({});
-    expect(scene.appState).toEqual({ gridSize: null, viewBackgroundColor: color.canvas });
+    expect(scene.appState).toEqual({ gridSize: null, viewBackgroundColor: theme.palette.canvas });
     expect(scene.elements).toHaveLength(1);
   });
 });

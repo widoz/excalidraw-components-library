@@ -1,15 +1,15 @@
 import type { ExcalidrawElement } from "./element.js";
-import { color } from "./tokens.js";
+import type { Theme } from "./theme.js";
 
 export const SOURCE = "excalidraw-comic-components";
 
-export function toScene(elements: ExcalidrawElement[]): object {
+export function toScene(elements: ExcalidrawElement[], theme: Theme): object {
   return {
     type: "excalidraw",
     version: 2,
     source: SOURCE,
     elements,
-    appState: { gridSize: null, viewBackgroundColor: color.canvas },
+    appState: { gridSize: null, viewBackgroundColor: theme.palette.canvas },
     files: {},
   };
 }

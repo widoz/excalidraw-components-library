@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
 
 const W = 260;
@@ -7,8 +8,8 @@ const TRIGGER_H = 52;
 const ITEM_H = 46;
 
 /** Trigger plus an open menu: four items, one hovered, one separator before the last. */
-export default function dropdownMenu(): ExcalidrawElement[] {
-  const f = new Factory("dropdown-menu");
+export default function dropdownMenu(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("dropdown-menu", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: TRIGGER_W, h: TRIGGER_H }));

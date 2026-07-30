@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, font, label, size, style } from "../comic.js";
 
 const CELL_W = 110;
@@ -6,8 +7,8 @@ const CELL_H = 56;
 const W = CELL_W * 3;
 
 /** Three square-cornered buttons joined edge to edge, sharing one hard shadow. */
-export default function buttonGroup(): ExcalidrawElement[] {
-  const f = new Factory("button-group");
+export default function buttonGroup(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("button-group", theme);
   const els: ExcalidrawElement[] = [];
 
   // One shadow behind the whole group, not one per cell — the seams must stay clean.

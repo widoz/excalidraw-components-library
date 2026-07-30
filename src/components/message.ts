@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { bubble, color, font, inkCircle, label, rule, size } from "../comic.js";
 
 const R = 22;
@@ -9,8 +10,8 @@ const BUBBLE1_W = 260;
 const BUBBLE1_H = 86;
 
 /** A two-turn chat exchange: initials avatar plus tailed bubble, incoming then a reply. */
-export default function message(): ExcalidrawElement[] {
-  const f = new Factory("message");
+export default function message(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("message", theme);
   const els: ExcalidrawElement[] = [];
 
   // Incoming message.

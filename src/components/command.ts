@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { color, fillBand, font, inkBox, inkCircle, label, rule, size } from "../comic.js";
 
 const W = 340;
@@ -14,8 +15,8 @@ const ROWS = [
 ];
 
 /** Search row with a magnifier glyph, a "Suggestions" heading, and three key-hinted rows. */
-export default function command(): ExcalidrawElement[] {
-  const f = new Factory("command");
+export default function command(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("command", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: PANEL_H }));

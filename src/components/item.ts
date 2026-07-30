@@ -1,4 +1,5 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
+import type { Theme } from "../theme.js";
 import { chevron, color, font, inkBox, inkCircle, label, size } from "../comic.js";
 
 const W = 340;
@@ -8,8 +9,8 @@ const ICON_R = 22;
 const CHEVRON_S = 10;
 
 /** A single list row: leading icon, stacked title/subtitle, trailing chevron. */
-export default function item(): ExcalidrawElement[] {
-  const f = new Factory("item");
+export default function item(theme: Theme): ExcalidrawElement[] {
+  const f = new Factory("item", theme);
   const els: ExcalidrawElement[] = [];
 
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H }));
