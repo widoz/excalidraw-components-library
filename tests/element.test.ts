@@ -121,6 +121,24 @@ describe("Factory", () => {
     expect(el.x).toBeCloseTo(100 - estimateTextWidth("Hello", 20) / 2);
     expect(el.textAlign).toBe("center");
   });
+
+  it("throws naming the role for an unknown colour role", () => {
+    const f = new Factory("demo", theme);
+    expect(() => f.rect({ x: 0, y: 0, w: 10, h: 10, fill: "burgundy" }))
+      .toThrow(/Unknown colour role "burgundy"/);
+  });
+
+  it("throws naming the rung for an unknown stroke rung", () => {
+    const f = new Factory("demo", theme);
+    expect(() => f.rect({ x: 0, y: 0, w: 10, h: 10, strokeWidth: "chunky" as never }))
+      .toThrow(/Unknown stroke rung "chunky"/);
+  });
+
+  it("throws naming the role for an unknown font role", () => {
+    const f = new Factory("demo", theme);
+    expect(() => f.text({ x: 0, y: 0, text: "Hi", fontFamily: "shouty" as never }))
+      .toThrow(/Unknown font role "shouty"/);
+  });
 });
 
 describe("estimateTextWidth", () => {

@@ -101,6 +101,15 @@ export class Factory {
     return value;
   }
 
+  /** Role name → concrete font id for this theme. */
+  private face(role: string | undefined): number {
+    const value = this.theme.fonts[(role ?? "body") as FontRole];
+    if (value === undefined) {
+      throw new Error(`Unknown font role "${role}" — use tokens.font.*`);
+    }
+    return value;
+  }
+
   /** Positive 31-bit integer from the seeded stream. */
   private int(): number {
     return Math.floor(this.rng() * 2 ** 31);
@@ -237,7 +246,7 @@ export class Factory {
     el.text = o.text;
     el.originalText = o.text;
     el.fontSize = fontSize;
-    el.fontFamily = this.theme.fonts[(o.fontFamily ?? "body") as FontRole];
+    el.fontFamily = this.face(o.fontFamily);
     el.textAlign = align;
     el.verticalAlign = "top";
     el.containerId = null;
