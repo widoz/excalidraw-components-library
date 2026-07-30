@@ -42,7 +42,7 @@ export default function attachment(theme: Theme): ExcalidrawElement[] {
     y: 18,
     text: "sketch-kit.excalidraw",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...label(f, {
     x: textX,

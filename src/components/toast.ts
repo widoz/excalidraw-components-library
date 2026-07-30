@@ -22,7 +22,7 @@ export default function toast(theme: Theme): ExcalidrawElement[] {
     y: 20,
     text: "Drawing saved",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...label(f, {
     x: 24,
@@ -42,7 +42,7 @@ export default function toast(theme: Theme): ExcalidrawElement[] {
     y: btnY + (BTN_H - size.fontSm * 1.25) / 2,
     text: "Undo",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 

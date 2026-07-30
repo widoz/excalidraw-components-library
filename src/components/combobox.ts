@@ -21,7 +21,7 @@ export default function combobox(theme: Theme): ExcalidrawElement[] {
     y: (TRIGGER_H - size.fontMd * 1.25) / 2,
     text: "Excalifont",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...chevron(f, { x: W - 42, y: TRIGGER_H / 2 - 5, s: CHEVRON_S, dir: "down" }));
 

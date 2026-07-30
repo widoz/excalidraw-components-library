@@ -20,7 +20,7 @@ export default function sidebar(theme: Theme): ExcalidrawElement[] {
     y: 20 + (40 - size.fontMd * 1.25) / 2,
     text: "Sketch Kit",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
 
   els.push(...rule(f, { x: 20, y: 80, w: W - 40 }));
@@ -40,7 +40,7 @@ export default function sidebar(theme: Theme): ExcalidrawElement[] {
       y: y + (ROW_H - size.fontSm * 1.25) / 2,
       text,
       fontSize: size.fontSm,
-      fontFamily: text === "Components" ? font.comic : font.hand,
+      fontFamily: text === "Components" ? font.heading : font.body,
     }));
   });
 
@@ -53,7 +53,7 @@ export default function sidebar(theme: Theme): ExcalidrawElement[] {
     y: avatarY - (size.fontSm * 1.25) / 2,
     text: "GS",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));

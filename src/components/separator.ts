@@ -14,7 +14,7 @@ export default function separator(theme: Theme): ExcalidrawElement[] {
     y: 0,
     text: "Radix Primitives",
     fontSize: size.fontLg,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...label(f, {
     x: 0,

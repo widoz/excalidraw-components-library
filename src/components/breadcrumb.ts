@@ -29,7 +29,7 @@ export default function breadcrumb(theme: Theme): ExcalidrawElement[] {
       y: 0,
       text: crumb.text,
       fontSize: size.fontMd,
-      fontFamily: crumb.current ? font.comic : font.hand,
+      fontFamily: crumb.current ? font.heading : font.body,
       stroke: crumb.current ? color.ink : color.mutedText,
     }));
     x += width;

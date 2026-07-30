@@ -39,7 +39,7 @@ export default function kbd(theme: Theme): ExcalidrawElement[] {
       y: (CAP_H - size.fontMd * 1.25) / 2,
       text: cap.text,
       fontSize: size.fontMd,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       align: "center",
     }));
   }

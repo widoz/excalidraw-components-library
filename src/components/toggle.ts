@@ -32,7 +32,7 @@ export default function toggle(theme: Theme): ExcalidrawElement[] {
       y: (CELL - size.fontMd * 1.25) / 2,
       text: t.glyph,
       fontSize: size.fontMd,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: t.pressed ? color.accentText : color.ink,
       align: "center",
     }));

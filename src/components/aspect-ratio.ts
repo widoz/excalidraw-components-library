@@ -40,7 +40,7 @@ export default function aspectRatio(theme: Theme): ExcalidrawElement[] {
     y: (H - size.fontMd * 1.25) / 2,
     text: "16 : 9",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 

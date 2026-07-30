@@ -43,7 +43,7 @@ export default function slider(theme: Theme): ExcalidrawElement[] {
     y: trackY - BUBBLE_H - 42 + (BUBBLE_H - size.fontMd * 1.25) / 2,
     text: String(VALUE),
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 

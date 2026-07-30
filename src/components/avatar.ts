@@ -24,7 +24,7 @@ export default function avatar(theme: Theme): ExcalidrawElement[] {
     y: R - (size.fontMd * 1.25) / 2,
     text: "GS",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));

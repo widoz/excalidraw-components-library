@@ -18,7 +18,7 @@ export default function labelComponent(theme: Theme): ExcalidrawElement[] {
     y: 0,
     text: "Email address",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
 
   const inputY = labelH + gap;

@@ -1,6 +1,6 @@
 import type { ExcalidrawElement, Factory } from "./element.js";
 import { color, font, size, stroke, style } from "./tokens.js";
-import type { StrokeRung } from "./theme.js";
+import type { FontRole, StrokeRung } from "./theme.js";
 
 /** A filled box with a bold ink outline and a hard offset shadow. */
 export function inkBox(
@@ -101,7 +101,7 @@ export function label(
   f: Factory,
   o: {
     x: number; y: number; text: string;
-    fontSize?: number; fontFamily?: number;
+    fontSize?: number; fontFamily?: FontRole;
     stroke?: string; align?: "left" | "center" | "right";
   },
 ): ExcalidrawElement[] {

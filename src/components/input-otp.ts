@@ -37,7 +37,7 @@ export default function inputOtp(theme: Theme): ExcalidrawElement[] {
         y: (CELL_H - size.fontLg * 1.25) / 2,
         text: digits[i]!,
         fontSize: size.fontLg,
-        fontFamily: font.comic,
+        fontFamily: font.heading,
         align: "center",
       }));
     }

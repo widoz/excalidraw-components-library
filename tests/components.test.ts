@@ -466,7 +466,7 @@ describe("field", () => {
     const shadowed = els.filter((e) => e.type === "rectangle" && e.backgroundColor === theme.palette.ink && e.strokeWidth === theme.strokes.shadow);
     expect(shadowed).toHaveLength(2);
     const errorMessage = els.find((e) => e.type === "text" && e.text === "Too short.");
-    expect(errorMessage?.fontFamily).toBe(7);
+    expect(errorMessage?.fontFamily).toBe(theme.fonts.heading);
   });
 });
 

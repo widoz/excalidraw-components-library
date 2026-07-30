@@ -21,7 +21,7 @@ export default function message(theme: Theme): ExcalidrawElement[] {
     y: ROW1_Y + R - (size.fontSm * 1.25) / 2,
     text: "GS",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -57,7 +57,7 @@ export default function message(theme: Theme): ExcalidrawElement[] {
     y: row2Y + R - (size.fontSm * 1.25) / 2,
     text: "AI",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));

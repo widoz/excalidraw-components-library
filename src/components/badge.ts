@@ -27,7 +27,7 @@ export default function badge(theme: Theme): ExcalidrawElement[] {
       y: (H - size.fontSm * 1.25) / 2,
       text: v.text,
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: v.ink,
       align: "center",
     }));

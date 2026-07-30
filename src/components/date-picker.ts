@@ -60,7 +60,7 @@ export default function datePicker(theme: Theme): ExcalidrawElement[] {
     y: POPOVER_Y + (HEADER_H - size.fontMd * 1.25) / 2,
     text: "July 2026",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
   els.push(...chevron(f, {
@@ -84,7 +84,7 @@ export default function datePicker(theme: Theme): ExcalidrawElement[] {
         y: cy - (size.fontSm * 1.25) / 2,
         text: String(day),
         fontSize: size.fontSm,
-        fontFamily: font.comic,
+        fontFamily: font.heading,
         stroke: color.accentText,
         align: "center",
       }));

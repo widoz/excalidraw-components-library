@@ -31,7 +31,7 @@ export default function popover(theme: Theme): ExcalidrawElement[] {
     y: PAD,
     text: "Dimensions",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
 
   const rule1Y = PAD + size.fontMd * 1.25 + 16;
@@ -57,7 +57,7 @@ export default function popover(theme: Theme): ExcalidrawElement[] {
     y: triggerY + (TRIGGER_H - size.fontSm * 1.25) / 2,
     text: "Options",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 

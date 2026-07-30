@@ -27,7 +27,7 @@ export default function accordion(theme: Theme): ExcalidrawElement[] {
       y: y + (ROW_H - size.fontMd * 1.25) / 2,
       text: row.text,
       fontSize: size.fontMd,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
     }));
     // "down" spans [0, s*2] wide by [0, s*0.7] tall; "right" spans [0, s*0.7] wide by
     // [0, s*2] tall (see comic.ts chevron()) — each direction is centred on its own extent.

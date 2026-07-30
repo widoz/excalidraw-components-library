@@ -37,7 +37,7 @@ export const DEFAULT_PRESET: Required<Preset> = {
   strokeWidth: "bold",
   sloppiness: "cartoonist",
   edges: "round",
-  font: "comic-shanns",
+  font: "excalifont",
   palette: "zinc",
 };
 

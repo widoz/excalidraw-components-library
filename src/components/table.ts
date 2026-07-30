@@ -43,7 +43,7 @@ export default function table(theme: Theme): ExcalidrawElement[] {
       y: (ROW_H - size.fontSm * 1.25) / 2,
       text,
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
     }));
   });
 

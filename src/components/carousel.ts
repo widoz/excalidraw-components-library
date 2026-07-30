@@ -21,7 +21,7 @@ export default function carousel(theme: Theme): ExcalidrawElement[] {
     y: (H - size.fontLg * 1.25) / 2,
     text: "1 / 3",
     fontSize: size.fontLg,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 

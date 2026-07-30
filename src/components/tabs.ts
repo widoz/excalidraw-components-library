@@ -35,7 +35,7 @@ export default function tabs(theme: Theme): ExcalidrawElement[] {
       y: (h - size.fontSm * 1.25) / 2,
       text: title,
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: active ? color.accentText : color.mutedText,
       align: "center",
     }));

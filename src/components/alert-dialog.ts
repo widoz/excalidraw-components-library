@@ -29,7 +29,7 @@ export default function alertDialog(theme: Theme): ExcalidrawElement[] {
     y: 44 - (size.fontMd * 1.25) / 2,
     text: "!",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -38,7 +38,7 @@ export default function alertDialog(theme: Theme): ExcalidrawElement[] {
     y: 30,
     text: "Delete everything?",
     fontSize: size.fontLg,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
 
   els.push(...rule(f, { x: 30, y: 92, w: W - 120, stroke: color.muted }));
@@ -56,7 +56,7 @@ export default function alertDialog(theme: Theme): ExcalidrawElement[] {
       y: btnY + (BTN_H - size.fontSm * 1.25) / 2,
       text: b.text,
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: b.ink,
       align: "center",
     }));

@@ -8,11 +8,11 @@ describe("resolveTheme", () => {
     expect(t.palette.accent).toBe("#3f3f46");
     expect(t.palette.transparent).toBe("transparent");
     expect(t.palette.canvas).toBe("#ffffff");
-    expect(t.fonts).toEqual({ body: 7, heading: 7 });
+    expect(t.fonts).toEqual({ body: 1, heading: 7 });
     expect(t.strokes).toEqual({ outline: 4, hairline: 2, shadow: 1 });
     expect(t.roughness).toBe(2);
     expect(t.edges).toBe("round");
-    expect(t.advance).toBe(0.55);
+    expect(t.advance).toBe(0.5);
   });
 
   it("fills omitted fields from the default", () => {
@@ -97,7 +97,7 @@ describe("DEFAULT_PRESET", () => {
       strokeWidth: "bold",
       sloppiness: "cartoonist",
       edges: "round",
-      font: "comic-shanns",
+      font: "excalifont",
       palette: "zinc",
     });
   });

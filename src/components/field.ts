@@ -8,7 +8,7 @@ const GROUP_GAP = 130;
 
 /**
  * Two stacked form fields: one valid, one in error. The palette is grayscale,
- * so the error group signals with weight (a doubled outline, `font.comic`
+ * so the error group signals with weight (a doubled outline, `font.heading`
  * text) rather than a colour that doesn't exist in the token set.
  */
 export default function field(theme: Theme): ExcalidrawElement[] {
@@ -52,7 +52,7 @@ export default function field(theme: Theme): ExcalidrawElement[] {
     y: input2Y + INPUT_H + 10,
     text: "Too short.",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.ink,
   }));
 

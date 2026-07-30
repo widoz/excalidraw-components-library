@@ -59,7 +59,7 @@ export default function contextMenu(theme: Theme): ExcalidrawElement[] {
       y: y + (ITEM_H - size.fontSm * 1.25) / 2,
       text,
       fontSize: size.fontSm,
-      fontFamily: font.hand,
+      fontFamily: font.body,
     }));
   });
 

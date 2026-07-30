@@ -22,7 +22,7 @@ export default function collapsible(theme: Theme): ExcalidrawElement[] {
     y: (TRIGGER_H - size.fontMd * 1.25) / 2,
     text: TRIGGER_TEXT,
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...chevron(f, {
     x: W - 24 - CHEVRON_S * 2,
@@ -50,7 +50,7 @@ export default function collapsible(theme: Theme): ExcalidrawElement[] {
     y: trigger2Y + (TRIGGER_H - size.fontMd * 1.25) / 2,
     text: TRIGGER_TEXT,
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...chevron(f, {
     x: W - 24 - CHEVRON_S * 0.7,

@@ -1,5 +1,5 @@
-import { color, font, size } from "./tokens.js";
-import type { ColorRole, StrokeRung, Theme } from "./theme.js";
+import { color, size } from "./tokens.js";
+import type { ColorRole, FontRole, StrokeRung, Theme } from "./theme.js";
 
 export type ExcalidrawElement = Record<string, unknown> & {
   id: string;
@@ -62,7 +62,7 @@ export interface TextOptions {
   y: number;
   text: string;
   fontSize?: number;
-  fontFamily?: number;
+  fontFamily?: FontRole;
   stroke?: string;
   align?: "left" | "center" | "right";
 }
@@ -237,7 +237,7 @@ export class Factory {
     el.text = o.text;
     el.originalText = o.text;
     el.fontSize = fontSize;
-    el.fontFamily = o.fontFamily ?? font.hand;
+    el.fontFamily = this.theme.fonts[(o.fontFamily ?? "body") as FontRole];
     el.textAlign = align;
     el.verticalAlign = "top";
     el.containerId = null;

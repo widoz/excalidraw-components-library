@@ -34,7 +34,7 @@ export default function drawer(theme: Theme): ExcalidrawElement[] {
     y: 40,
     text: "Share drawing",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
 
   els.push(...rule(f, { x: 24, y: 92, w: W - 48, stroke: color.muted }));
@@ -47,7 +47,7 @@ export default function drawer(theme: Theme): ExcalidrawElement[] {
     y: btnY + (BTN_H - size.fontSm * 1.25) / 2,
     text: "Copy link",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));

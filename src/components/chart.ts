@@ -50,7 +50,7 @@ export default function chart(theme: Theme): ExcalidrawElement[] {
       y: BASELINE_Y + 10,
       text: bar.month,
       fontSize: size.fontSm,
-      fontFamily: font.hand,
+      fontFamily: font.body,
       align: "center",
     }));
   });

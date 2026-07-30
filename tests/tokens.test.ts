@@ -45,8 +45,8 @@ describe("tokens", () => {
     expect(style.roughness).toBe(2);
     expect(style.strokeWidth).toBe(4);
     expect(style.shadowOffset).toBe(6);
-    expect(font.hand).toBe(1);
-    expect(font.comic).toBe(7);
+    expect(font.body).toBe("body");
+    expect(font.heading).toBe("heading");
     expect(size.control).toBe(320);
   });
 });

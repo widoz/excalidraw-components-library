@@ -23,7 +23,7 @@ export default function item(theme: Theme): ExcalidrawElement[] {
     y: cy - (size.fontMd * 1.25) / 2,
     text: "★",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -33,7 +33,7 @@ export default function item(theme: Theme): ExcalidrawElement[] {
     y: 18,
     text: "Sketch Kit",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...label(f, {
     x: textX,

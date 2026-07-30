@@ -44,7 +44,7 @@ export default function buttonGroup(theme: Theme): ExcalidrawElement[] {
       y: (CELL_H - size.fontMd * 1.25) / 2,
       text: b.text,
       fontSize: size.fontMd,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: b.pressed ? color.accentText : color.ink,
       align: "center",
     }));

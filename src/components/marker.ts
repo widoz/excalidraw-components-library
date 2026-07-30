@@ -35,7 +35,7 @@ export default function marker(theme: Theme): ExcalidrawElement[] {
       y,
       text: line.text,
       fontSize: size.fontMd,
-      fontFamily: font.hand,
+      fontFamily: font.body,
     }));
   });
 

@@ -42,7 +42,7 @@ export default function menubar(theme: Theme): ExcalidrawElement[] {
       y: (BAR_H - size.fontMd * 1.25) / 2,
       text: title,
       fontSize: size.fontMd,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
     }));
   });
 

@@ -74,7 +74,7 @@ export default function command(theme: Theme): ExcalidrawElement[] {
       y: keyY + (KEY_H - size.fontSm * 1.25) / 2,
       text: row.key,
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       align: "center",
     }));
   });

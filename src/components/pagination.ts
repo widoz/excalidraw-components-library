@@ -44,7 +44,7 @@ export default function pagination(theme: Theme): ExcalidrawElement[] {
       y: (CELL - size.fontSm * 1.25) / 2,
       text: String(page),
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: active ? color.accentText : color.ink,
       align: "center",
     }));

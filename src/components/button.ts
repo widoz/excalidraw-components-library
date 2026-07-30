@@ -25,7 +25,7 @@ export default function button(theme: Theme): ExcalidrawElement[] {
       y: y + (H - size.fontMd * 1.25) / 2,
       text: v.text,
       fontSize: size.fontMd,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: v.ink,
       align: "center",
     }));

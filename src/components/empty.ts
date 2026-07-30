@@ -32,7 +32,7 @@ export default function empty(theme: Theme): ExcalidrawElement[] {
     y: burstCy - (size.fontLg * 1.25) / 2,
     text: "?",
     fontSize: size.fontLg,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -41,7 +41,7 @@ export default function empty(theme: Theme): ExcalidrawElement[] {
     y: 142,
     text: "Nothing here yet",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
   els.push(...label(f, {
@@ -61,7 +61,7 @@ export default function empty(theme: Theme): ExcalidrawElement[] {
     y: btnY + (BTN_H - size.fontSm * 1.25) / 2,
     text: "New drawing",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));

@@ -43,7 +43,7 @@ export default function navigationMenu(theme: Theme): ExcalidrawElement[] {
       y: (NAV_ROW_H - size.fontMd * 1.25) / 2,
       text,
       fontSize: size.fontMd,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
     }));
     els.push(...chevron(f, {
       x: x + textW + CHEVRON_GAP,

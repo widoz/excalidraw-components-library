@@ -41,7 +41,7 @@ export default function inputGroup(theme: Theme): ExcalidrawElement[] {
     y: (H - size.fontMd * 1.25) / 2,
     text: "@",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -64,7 +64,7 @@ export default function inputGroup(theme: Theme): ExcalidrawElement[] {
     y: (H - size.fontMd * 1.25) / 2,
     text: "Copy",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));

@@ -17,7 +17,7 @@ export default function card(theme: Theme): ExcalidrawElement[] {
     y: 24,
     text: "Sketch Kit",
     fontSize: size.fontLg,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...label(f, {
     x: 24,
@@ -41,7 +41,7 @@ export default function card(theme: Theme): ExcalidrawElement[] {
     y: btnY + (btnH - size.fontSm * 1.25) / 2,
     text: "Get it",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));

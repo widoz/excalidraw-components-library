@@ -30,7 +30,7 @@ export default function dialog(theme: Theme): ExcalidrawElement[] {
     y: 30,
     text: "Delete drawing?",
     fontSize: size.fontLg,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
 
   els.push(...rule(f, { x: 30, y: 92, w: W - 120, stroke: color.muted }));
@@ -50,7 +50,7 @@ export default function dialog(theme: Theme): ExcalidrawElement[] {
       y: btnY + (BTN_H - size.fontSm * 1.25) / 2,
       text: b.text,
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: b.ink,
       align: "center",
     }));

@@ -29,7 +29,7 @@ export default function tooltip(theme: Theme): ExcalidrawElement[] {
     y: (BUBBLE_H - size.fontSm * 1.25) / 2,
     text: "Save your work!",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -39,7 +39,7 @@ export default function tooltip(theme: Theme): ExcalidrawElement[] {
     y: btnY + (BTN_H - size.fontSm * 1.25) / 2,
     text: "Save",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));

@@ -18,7 +18,7 @@ export default function dropdownMenu(theme: Theme): ExcalidrawElement[] {
     y: (TRIGGER_H - size.fontMd * 1.25) / 2,
     text: "Actions",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -51,7 +51,7 @@ export default function dropdownMenu(theme: Theme): ExcalidrawElement[] {
       stroke: color.ink,
       // The palette is grayscale, so the destructive item is emphasised by weight,
       // not hue: full-ink in the heavier comic face.
-      fontFamily: item.danger ? font.comic : font.hand,
+      fontFamily: item.danger ? font.heading : font.body,
     }));
   });
 

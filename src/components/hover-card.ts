@@ -27,7 +27,7 @@ export default function hoverCard(theme: Theme): ExcalidrawElement[] {
     y: cy - (size.fontSm * 1.25) / 2,
     text: "GS",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));
@@ -37,7 +37,7 @@ export default function hoverCard(theme: Theme): ExcalidrawElement[] {
     y: cy - (size.fontMd * 1.25) / 2,
     text: "@guido",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
 
   // Two ruled lines standing in for bio copy.

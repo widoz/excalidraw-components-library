@@ -19,7 +19,7 @@ export default function alert(theme: Theme): ExcalidrawElement[] {
     y: H / 2 - (size.fontLg * 1.25) / 2,
     text: "!",
     fontSize: size.fontLg,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -28,7 +28,7 @@ export default function alert(theme: Theme): ExcalidrawElement[] {
     y: 28,
     text: "Heads up!",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...label(f, {
     x: 100,

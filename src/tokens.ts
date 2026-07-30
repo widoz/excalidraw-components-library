@@ -46,13 +46,11 @@ export const style = {
   shadowOffset: 6,
 } as const;
 
-/** Excalidraw font family ids. */
-export const font = {
-  /** Excalifont, the default hand-drawn face. */
-  hand: 1,
-  /** Comic Shanns, used for emphasis. */
-  comic: 7,
-} as const;
+/**
+ * Font roles. Names, not ids — `Factory` resolves them per theme. The body face is a
+ * preset choice; headings, emphasis and button labels are always Comic Shanns.
+ */
+export const font = { body: "body", heading: "heading" } as const;
 
 export const size = {
   /** Canonical width of a form control. */
