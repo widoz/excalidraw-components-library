@@ -102,6 +102,11 @@ export const palettes = {
   },
 } as const;
 
+/** Not part of any palette: the literal Excalidraw uses for "no fill". */
+export const TRANSPARENT = "transparent";
+/** The canvas background, deliberately pure white under every palette. */
+export const CANVAS = "#ffffff";
+
 /** Stroke ladders. The library uses three weights at once; a preset scales all three. */
 export const strokeLadders = {
   bold: { outline: 4, hairline: 2, shadow: 1 },

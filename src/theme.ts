@@ -1,4 +1,4 @@
-import { fontAdvance, fontFaces, palettes, sloppinessValues, strokeLadders } from "./tokens.js";
+import { CANVAS, fontAdvance, fontFaces, palettes, sloppinessValues, strokeLadders, TRANSPARENT } from "./tokens.js";
 
 export type ColorRole =
   | "ink" | "surface" | "muted" | "border" | "subtle"
@@ -79,8 +79,8 @@ export function resolveTheme(preset: Preset): Theme {
       mutedText: p[500],
       accent: p[700],
       accentText: p[50],
-      transparent: "transparent",
-      canvas: "#ffffff",
+      transparent: TRANSPARENT,
+      canvas: CANVAS,
     },
     fonts: { ...fontFaces[fontName] },
     strokes: { ...strokeLadders[strokeName] },
