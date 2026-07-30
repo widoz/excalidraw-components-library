@@ -1,6 +1,6 @@
 import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { createInterface } from "node:readline/promises";
+import { createInterface } from "node:readline";
 import { stdin, stdout } from "node:process";
 import { PRESETS_DIR } from "./build.js";
 import { DEFAULT_PRESET, resolveTheme, type Preset } from "./theme.js";
@@ -48,27 +48,56 @@ const CHOICES: Record<string, readonly string[]> = {
   palette: Object.keys(palettes),
 };
 
-async function prompt(): Promise<Preset> {
-  const rl = createInterface({ input: stdin, output: stdout });
-  try {
-    const name = (await rl.question("Preset name: ")).trim();
-    const preset: Preset = { name };
-    for (const [field, choices] of Object.entries(CHOICES)) {
-      const fallback = DEFAULT_PRESET[field as keyof Preset];
-      const answer = (await rl.question(
-        `${field} [${choices.join(" | ")}] (${fallback}): `,
-      )).trim();
-      if (answer) (preset as unknown as Record<string, string>)[field] = answer;
-    }
-    return preset;
-  } finally {
-    rl.close();
-  }
+const PROMPT_FIELDS = Object.entries(CHOICES);
+
+/**
+ * When a non-TTY stdin (a pipe, a redirected file, or anything an automated test
+ * drives) already has several newline-terminated answers queued, Node's `readline`
+ * splits the buffered chunk into `'line'` events and emits them all synchronously as
+ * part of one flush. A `question()` call resumed via `await` only re-attaches its
+ * listener on the next microtask — by then the flush has already moved past later
+ * lines, and they're lost (no listener was attached when they fired), so every
+ * `question()` after the first hangs forever. Chaining each `question()` call
+ * synchronously from directly inside the previous one's callback closes that gap:
+ * the next listener is attached within the same synchronous flush, so it does not
+ * miss lines still queued behind the one just consumed. Plain `node:readline`
+ * (not `/promises`) is used because its callback form is what makes that synchronous
+ * chaining possible; it is still Node core, so this is still a zero-dependency prompt.
+ */
+function prompt(): Promise<Preset> {
+  return new Promise((resolve) => {
+    const rl = createInterface({ input: stdin, output: stdout });
+    rl.question("Preset name: ", (rawName) => {
+      const preset: Preset = { name: rawName.trim() };
+      const askField = (i: number): void => {
+        if (i >= PROMPT_FIELDS.length) {
+          rl.close();
+          resolve(preset);
+          return;
+        }
+        const [field, choices] = PROMPT_FIELDS[i]!;
+        const fallback = DEFAULT_PRESET[field as keyof Preset];
+        rl.question(`${field} [${choices.join(" | ")}] (${fallback}): `, (raw) => {
+          const answer = raw.trim();
+          if (answer) (preset as unknown as Record<string, string>)[field] = answer;
+          askField(i + 1);
+        });
+      };
+      askField(0);
+    });
+  });
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
   const { force, ...fields } = args;
   const preset = fields.name ? (fields as Preset) : await prompt();
   console.log(`Wrote ${writePreset(preset, force)}`);
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((error: unknown) => {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  });
 }
