@@ -256,7 +256,13 @@ npm run build -- --preset soft    # → dist/soft/
 npm run build -- --all            # every file in presets/
 ```
 
-`src/preset.ts` uses `node:readline/promises` for prompts — no dependency. Each prompt lists
+`src/preset.ts` uses `node:readline` for prompts — no dependency. It uses the callback form
+rather than `node:readline/promises`: a non-TTY stdin (a pipe, as in the automated tests)
+can flush several buffered answer lines synchronously as one batch of `'line'` events, and
+an `await`-based promise interface only re-attaches its listener on the next microtask,
+missing lines that fired earlier in that flush. Chaining each `question()` call from
+directly inside the previous one's callback keeps the listener attached within the same
+synchronous flush. Each prompt lists
 its legal values and defaults to the current default preset's value on empty input. Writing
 over an existing preset requires `--force`.
 
@@ -276,6 +282,10 @@ dist/<preset>/               non-default presets (gitignored)
 
 Existing import paths keep working. `.gitignore` gains `dist/*/` with a `!dist/components/`
 negation, so only the default preset's output is tracked.
+
+`components` and `comic-ui` are reserved preset names: `resolveTheme` rejects them, because
+they would resolve to `dist/components/` and `dist/comic-ui.excalidrawlib` — the default
+preset's own committed output paths — which `buildAll`'s `rmSync` would then delete.
 
 `buildAll` gains a `theme` parameter. Its signature becomes
 `buildAll(theme: Theme, outDir?: string)`, with `outDir` defaulting to `dist/` for the default
