@@ -23,7 +23,10 @@ export function parseArgs(argv: string[]): Partial<Preset> & { force: boolean } 
     const field = FLAGS[flag];
     if (!field) throw new Error(`Unknown flag ${flag}. Known: ${Object.keys(FLAGS).join(", ")}, --force`);
     const value = argv[++i];
-    if (value === undefined) throw new Error(`Flag ${flag} needs a value.`);
+    // A following flag is never a value: `--name --force` used to yield name "--force".
+    if (value === undefined || value.startsWith("--")) {
+      throw new Error(`Flag ${flag} needs a value.`);
+    }
     (out as unknown as Record<string, string>)[field] = value;
   }
   return out;
@@ -65,12 +68,20 @@ const PROMPT_FIELDS = Object.entries(CHOICES);
  * chaining possible; it is still Node core, so this is still a zero-dependency prompt.
  */
 function prompt(): Promise<Preset> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const rl = createInterface({ input: stdin, output: stdout });
+    let answered = false;
+    // On EOF mid-questionnaire (truncated pipe, Ctrl-D at a TTY) the pending
+    // `question()` never settles, so without this the promise was simply abandoned:
+    // no file, no message, exit code 0. main()'s .catch prints and exits 1.
+    rl.on("close", () => {
+      if (!answered) reject(new Error("Aborted before every field was answered."));
+    });
     rl.question("Preset name: ", (rawName) => {
       const preset: Preset = { name: rawName.trim() };
       const askField = (i: number): void => {
         if (i >= PROMPT_FIELDS.length) {
+          answered = true;
           rl.close();
           resolve(preset);
           return;

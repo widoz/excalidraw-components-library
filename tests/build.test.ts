@@ -1,9 +1,9 @@
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { buildAll, DEFAULT_OUT, loadPreset, listPresets, outDirFor, PRESETS_DIR } from "../src/build.js";
+import { buildAll, DEFAULT_OUT, loadPreset, listPresets, outDirFor, PRESETS_DIR, selectPresets } from "../src/build.js";
 import { validateAll } from "../src/validate.js";
 import { registry } from "../src/registry.js";
 import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
@@ -135,6 +135,17 @@ describe("preset builds", () => {
     }
   });
 
+  it("rejects a preset whose filename and name field disagree", () => {
+    const path = join(PRESETS_DIR, "_mismatch-test.json");
+    writeFileSync(path, `{ "name": "somethingelse" }`);
+    try {
+      expect(() => loadPreset("_mismatch-test")).toThrow(/must match/);
+      expect(() => loadPreset("_mismatch-test")).toThrow(/somethingelse/);
+    } finally {
+      unlinkSync(path);
+    }
+  });
+
   it("lists committed presets", () => {
     expect(listPresets()).toContain("default");
   });
@@ -148,12 +159,56 @@ describe("preset builds", () => {
 });
 
 describe("preset CLI", () => {
+  const REPO_ROOT = join(PRESETS_DIR, "..");
+
   it("exits with an error naming the missing argument when --preset has no value", () => {
     expect(() =>
       execFileSync("npx", ["tsx", "src/build.ts", "--preset"], {
-        cwd: join(PRESETS_DIR, ".."),
+        cwd: REPO_ROOT,
         stdio: ["ignore", "pipe", "pipe"],
       }),
     ).toThrowError(/--preset requires a preset name/);
+  });
+
+  it("does not take a following flag as the preset name", () => {
+    expect(() => selectPresets(["--preset", "--quiet"])).toThrow(/--preset requires a preset name/);
+  });
+
+  it("selects the default, one named preset, or every preset", () => {
+    expect(selectPresets([])).toEqual([DEFAULT_PRESET.name]);
+    expect(selectPresets(["--preset", "blueprint"])).toEqual(["blueprint"]);
+    expect(selectPresets(["--all"])).toEqual(listPresets());
+  });
+
+  // `--all` iterates listPresets() in sorted order, so "blueprint" is built before
+  // "default" — and "default" writes to dist/ itself. A whole-directory rmSync there
+  // deleted dist/blueprint again, leaving only the default behind.
+  beforeAll(() => {
+    execFileSync("npx", ["tsx", "src/build.ts", "--all"], { cwd: REPO_ROOT, encoding: "utf8" });
+  });
+
+  it("--all leaves every preset's output present", () => {
+    for (const name of listPresets()) {
+      const dir = outDirFor(resolveTheme(loadPreset(name)));
+      expect(
+        readdirSync(join(dir, "components")).filter((f) => f.endsWith(".excalidraw")),
+        `${name} components`,
+      ).toHaveLength(Object.keys(registry).length);
+      expect(existsSync(join(dir, "comic-ui.excalidrawlib")), `${name} library`).toBe(true);
+    }
+  });
+
+  it("building only the default preset leaves other presets' output alone", () => {
+    const blueprint = outDirFor(resolveTheme(loadPreset("blueprint")));
+    execFileSync("npx", ["tsx", "src/build.ts"], { cwd: REPO_ROOT, encoding: "utf8" });
+    expect(existsSync(join(blueprint, "comic-ui.excalidrawlib"))).toBe(true);
+  });
+
+  it("validates a named preset's own output directory", () => {
+    const stdout = execFileSync("npx", ["tsx", "src/validate.ts", "--preset", "blueprint"], {
+      cwd: REPO_ROOT,
+      encoding: "utf8",
+    });
+    expect(stdout).toContain("All generated files are valid.");
   });
 });

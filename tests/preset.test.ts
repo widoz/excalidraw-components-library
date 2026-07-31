@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -29,6 +29,11 @@ describe("parseArgs", () => {
 
   it("throws on a flag with no value", () => {
     expect(() => parseArgs(["--name"])).toThrow(/--name/);
+  });
+
+  it("throws rather than swallowing a following flag as a value", () => {
+    expect(() => parseArgs(["--name", "--force"])).toThrow(/--name/);
+    expect(() => parseArgs(["--name", "x", "--palette", "--force"])).toThrow(/--palette/);
   });
 
   it("throws on an unknown flag", () => {
@@ -102,6 +107,17 @@ describe("interactive prompt (piped, non-TTY stdin)", () => {
       font: "nunito",
       palette: "mist",
     });
+  });
+
+  it("fails loudly on stdin that ends mid-questionnaire, instead of exiting 0 in silence", () => {
+    const run = spawnSync("npx", ["tsx", "src/preset.ts"], {
+      cwd: REPO_ROOT,
+      input: `${name}\n`,
+      encoding: "utf8",
+    });
+    expect(run.status).toBe(1);
+    expect(run.stderr).toContain("Aborted before every field was answered.");
+    expect(existsSync(path)).toBe(false);
   });
 
   it("prints the readable validation error (not a stack trace) and exits non-zero on a bad answer", () => {

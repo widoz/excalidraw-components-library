@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { DEFAULT_OUT } from "./build.js";
-import { DEFAULT_PRESET, paletteValues, resolveTheme, type Theme } from "./theme.js";
+import { DEFAULT_OUT, loadPreset, outDirFor, selectPresets } from "./build.js";
+import { paletteValues, resolveTheme, type Theme } from "./theme.js";
 import { SOURCE } from "./scene.js";
 
 const REQUIRED_FIELDS = [
@@ -213,7 +213,16 @@ export function validateAll(theme: Theme, outDir: string = DEFAULT_OUT): string[
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const errors = validateAll(resolveTheme(DEFAULT_PRESET));
+  // Same flags as build.ts, so `build -- --preset X` and `validate -- --preset X`
+  // talk about the same output. Without this, validate only ever saw the default.
+  const errors: string[] = [];
+  for (const name of selectPresets(process.argv.slice(2))) {
+    const theme = resolveTheme(loadPreset(name));
+    for (const error of validateAll(theme, outDirFor(theme))) {
+      errors.push(`${name}: ${error}`);
+    }
+  }
+
   if (errors.length > 0) {
     for (const error of errors) console.error(`ERROR ${error}`);
     console.error(`\n${errors.length} validation error(s)`);
