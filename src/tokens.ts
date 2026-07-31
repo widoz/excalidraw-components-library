@@ -38,10 +38,15 @@ export const color = {
  * it from there. Task 7 replaces this with a per-theme set.
  */
 
-/** The comic look, applied to every shape. */
+/**
+ * The comic look, applied to every shape.
+ *
+ * `roughness` and `strokeWidth` used to live here as fixed numbers. Both are preset
+ * choices now (`theme.roughness`, `theme.strokes.*`), and a component reaching for a
+ * number here would silently pin one preset's value under every preset — a `Factory`
+ * rung name, by contrast, is checked and throws. They were unused, so they are gone.
+ */
 export const style = {
-  roughness: 2,
-  strokeWidth: 4,
   /** Hard drop-shadow displacement, in px, down and right. */
   shadowOffset: 6,
 } as const;

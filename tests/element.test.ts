@@ -118,7 +118,7 @@ describe("Factory", () => {
   it("centres text by shifting x left by half the estimated width", () => {
     const f = new Factory("demo", theme);
     const el = f.text({ x: 100, y: 0, text: "Hello", align: "center" });
-    expect(el.x).toBeCloseTo(100 - estimateTextWidth("Hello", 20) / 2);
+    expect(el.x).toBeCloseTo(100 - estimateTextWidth("Hello", 20, theme.advance) / 2);
     expect(el.textAlign).toBe("center");
   });
 
@@ -134,6 +134,21 @@ describe("Factory", () => {
       .toThrow(/Unknown stroke rung "chunky"/);
   });
 
+  // A bare index reaches Object.prototype: `fill: "constructor"` used to return a
+  // function, throw nothing, and serialise an element with a missing strokeColor.
+  it.each(["constructor", "toString", "hasOwnProperty", "__proto__"])(
+    "throws for the inherited key %j rather than resolving it",
+    (key) => {
+      const f = new Factory("demo", theme);
+      expect(() => f.rect({ x: 0, y: 0, w: 10, h: 10, fill: key }))
+        .toThrow(/Unknown colour role/);
+      expect(() => f.rect({ x: 0, y: 0, w: 10, h: 10, strokeWidth: key as never }))
+        .toThrow(/Unknown stroke rung/);
+      expect(() => f.text({ x: 0, y: 0, text: "Hi", fontFamily: key as never }))
+        .toThrow(/Unknown font role/);
+    },
+  );
+
   it("throws naming the role for an unknown font role", () => {
     const f = new Factory("demo", theme);
     expect(() => f.text({ x: 0, y: 0, text: "Hi", fontFamily: "shouty" as never }))
@@ -143,16 +158,12 @@ describe("Factory", () => {
 
 describe("estimateTextWidth", () => {
   it("scales with length and font size", () => {
-    expect(estimateTextWidth("ab", 20)).toBeCloseTo(estimateTextWidth("a", 20) * 2);
-    expect(estimateTextWidth("a", 40)).toBeCloseTo(estimateTextWidth("a", 20) * 2);
+    expect(estimateTextWidth("ab", 20, 0.55)).toBeCloseTo(estimateTextWidth("a", 20, 0.55) * 2);
+    expect(estimateTextWidth("a", 40, 0.55)).toBeCloseTo(estimateTextWidth("a", 20, 0.55) * 2);
   });
 });
 
 describe("estimateTextWidth advance", () => {
-  it("defaults to 0.55 so existing callers are unaffected", () => {
-    expect(estimateTextWidth("abcd", 20)).toBeCloseTo(4 * 20 * 0.55);
-  });
-
   it("scales with an explicit advance", () => {
     expect(estimateTextWidth("abcd", 20, 0.5)).toBeCloseTo(4 * 20 * 0.5);
   });

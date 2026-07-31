@@ -73,13 +73,18 @@ npm run preset -- --name soft --palette stone --edges sharp
 npm run build                     # default preset → dist/
 npm run build -- --preset soft    # → dist/soft/
 npm run build -- --all            # every preset in presets/
+npm run validate -- --preset soft # checks dist/soft/ (--all also works)
 ```
 
 `presets/` is committed so a style is reproducible. Only the default preset's `dist/` is
 committed; other presets are build artifacts you regenerate.
 
-Preset names `components` and `comic-ui` are reserved: they would collide with the
-default preset's own output paths (`dist/components/`, `dist/comic-ui.excalidrawlib`).
+A preset's filename and its `name` field must match — the filename is what `--preset`
+selects, the field is what picks the output directory. A name must also be a plain path
+segment (`[a-z0-9][a-z0-9-]*`): it becomes a directory under `dist/`, and building a
+preset removes and rewrites that directory. Names `components` and `comic-ui` are
+reserved on top of that: they would collide with the default preset's own output paths
+(`dist/components/`, `dist/comic-ui.excalidrawlib`).
 
 `edges: sharp` squares every corner. `edges: round` means "round where the component asks
 for it" — 26 components are square for structural reasons (joined cells, inner bands) and

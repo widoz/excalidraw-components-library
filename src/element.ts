@@ -31,9 +31,11 @@ export function seedFromString(input: string): number {
 
 /**
  * Rough advance-width estimate. Good enough to size a box around a label.
- * `advance` is chars-per-em for the face in use; see tokens.fontAdvance.
+ * `advance` is chars-per-em for the face in use (`f.theme.advance`; see
+ * tokens.fontAdvance) and is required — a default here would let a caller silently
+ * pin one face's metric across every preset.
  */
-export function estimateTextWidth(text: string, fontSize: number, advance = 0.55): number {
+export function estimateTextWidth(text: string, fontSize: number, advance: number): number {
   return text.length * fontSize * advance;
 }
 
@@ -86,31 +88,36 @@ export class Factory {
     this.theme = theme;
   }
 
-  /** Role name → concrete hex for this theme. */
+  /**
+   * Role name → concrete hex for this theme.
+   *
+   * `Object.hasOwn`, not a bare index: inherited Object.prototype keys otherwise slip
+   * past an `undefined` check. `fill: "constructor"` returned a function, threw nothing,
+   * and serialised an element with a missing colour. Same for `weight` and `face`.
+   */
   private paint(role: string): string {
-    const value = this.theme.palette[role as ColorRole];
-    if (value === undefined) {
+    if (!Object.hasOwn(this.theme.palette, role)) {
       throw new Error(`Unknown colour role "${role}" — components must use tokens.color.*`);
     }
-    return value;
+    return this.theme.palette[role as ColorRole];
   }
 
   /** Rung name → concrete px for this theme. */
   private weight(rung: string | undefined): number {
-    const value = this.theme.strokes[(rung ?? "outline") as StrokeRung];
-    if (value === undefined) {
+    const key = rung ?? "outline";
+    if (!Object.hasOwn(this.theme.strokes, key)) {
       throw new Error(`Unknown stroke rung "${rung}" — use tokens.stroke.*`);
     }
-    return value;
+    return this.theme.strokes[key as StrokeRung];
   }
 
   /** Role name → concrete font id for this theme. */
   private face(role: string | undefined): number {
-    const value = this.theme.fonts[(role ?? "body") as FontRole];
-    if (value === undefined) {
+    const key = role ?? "body";
+    if (!Object.hasOwn(this.theme.fonts, key)) {
       throw new Error(`Unknown font role "${role}" — use tokens.font.*`);
     }
-    return value;
+    return this.theme.fonts[key as FontRole];
   }
 
   /** Positive 31-bit integer from the seeded stream. */

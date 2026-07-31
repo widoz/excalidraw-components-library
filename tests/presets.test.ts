@@ -14,6 +14,10 @@ const PRESETS: Preset[] = [
   { name: "ax-sloppiness", sloppiness: "architect" },
   { name: "ax-edges", edges: "sharp" },
   { name: "ax-font", font: "nunito" },
+  // nunito (0.5) is narrower than the default 0.55, so it can only shrink a text box —
+  // which the one-sided growth check below passes vacuously. comic-shanns (0.58) is the
+  // only face that can widen one, so it is the one that actually exercises the guard.
+  { name: "ax-font-wide", font: "comic-shanns" },
   { name: "ax-palette", palette: "mauve" },
   { name: "ax-all", strokeWidth: "thin", sloppiness: "architect", edges: "sharp", font: "nunito", palette: "mauve" },
 ];
@@ -32,6 +36,10 @@ const baseline = build({ name: "default" });
 const counts = Object.fromEntries(
   Object.keys(registry).map((n) => [n, load(baseline, n).length]),
 );
+
+// The baseline is built at module scope (every suite below compares against it), so its
+// temp directory needs a file-level teardown of its own.
+afterAll(() => rmSync(baseline, { recursive: true, force: true }));
 
 describe.each(PRESETS)("preset $name", (preset) => {
   const theme = resolveTheme(preset);
@@ -78,17 +86,14 @@ describe.each(PRESETS)("preset $name", (preset) => {
     }
   });
 
-  it("keeps every element inside its component's bounding box", () => {
+  // A component's own bounding box is the union of its elements, so "inside the box" is
+  // true by construction. What is not: how far this preset's box may widen against the
+  // default's — the failure mode a wrong `advance` factor produces.
+  it("does not widen a component much past the default's width", () => {
     for (const name of Object.keys(registry)) {
-      const els = load(dir, name);
-      const xs = els.flatMap((e) => [Number(e.x), Number(e.x) + Number(e.width)]);
-      const ys = els.flatMap((e) => [Number(e.y), Number(e.y) + Number(e.height)]);
-      const box = { x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys) };
-      // A text element whose estimate is badly wrong escapes this box relative to the
-      // default's, which is the failure mode a wrong `advance` factor produces.
-      const baseEls = load(baseline, name);
-      const bxs = baseEls.flatMap((e) => [Number(e.x), Number(e.x) + Number(e.width)]);
-      const grow = (box.x1 - box.x0) / (Math.max(...bxs) - Math.min(...bxs));
+      const xs = load(dir, name).flatMap((e) => [Number(e.x), Number(e.x) + Number(e.width)]);
+      const bxs = load(baseline, name).flatMap((e) => [Number(e.x), Number(e.x) + Number(e.width)]);
+      const grow = (Math.max(...xs) - Math.min(...xs)) / (Math.max(...bxs) - Math.min(...bxs));
       expect(grow, `${name} width vs default`).toBeLessThan(1.35);
     }
   });

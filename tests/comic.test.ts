@@ -188,7 +188,7 @@ describe("arc", () => {
       [360, 80, 80],  // full circle
     ];
     for (const [endDeg, w, h] of cases) {
-      const el = arc(new Factory(`a`, theme), { cx: 0, cy: 0, r: 40, startDeg: 0, endDeg })[0]!;
+      const el = arc(new Factory(`a${endDeg}`, theme), { cx: 0, cy: 0, r: 40, startDeg: 0, endDeg })[0]!;
       expect(Math.abs(Number(el.width) - w), `width at ${endDeg} deg`).toBeLessThan(0.5);
       expect(Math.abs(Number(el.height) - h), `height at ${endDeg} deg`).toBeLessThan(0.5);
     }
