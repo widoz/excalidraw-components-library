@@ -1,5 +1,5 @@
 import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, isAbsolute, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { registry } from "./registry.js";
 import { toLibrary, toScene, type LibraryItemInput } from "./scene.js";
@@ -34,8 +34,26 @@ export function listPresets(): string[] {
     .sort();
 }
 
+/**
+ * Second layer under `resolveTheme`'s name check: whatever a preset name ends up being,
+ * the directory `buildAll` deletes and rewrites must sit inside `dist/`. Living in
+ * `outDirFor` rather than in `buildAll` is deliberate — `outDirFor` is the only place a
+ * *derived* (theme-controlled) output path is produced, so guarding it covers every
+ * caller of the destructive default, while `buildAll`'s explicit `outDir` argument
+ * (which tests point at temp dirs, by design) stays free.
+ */
+function assertInsideDist(dir: string): string {
+  const rel = relative(DEFAULT_OUT, dir);
+  if (rel.startsWith("..") || isAbsolute(rel)) {
+    throw new Error(`Refusing to build into "${dir}": it escapes ${DEFAULT_OUT}.`);
+  }
+  return dir;
+}
+
 export function outDirFor(theme: Theme): string {
-  return theme.name === DEFAULT_PRESET.name ? DEFAULT_OUT : join(DEFAULT_OUT, theme.name);
+  return assertInsideDist(
+    theme.name === DEFAULT_PRESET.name ? DEFAULT_OUT : join(DEFAULT_OUT, theme.name),
+  );
 }
 
 export function buildAll(theme: Theme, outDir: string = outDirFor(theme)): void {

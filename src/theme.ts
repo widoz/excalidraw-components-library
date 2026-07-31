@@ -52,6 +52,16 @@ const EDGES: readonly EdgesName[] = ["sharp", "round"];
  */
 const RESERVED_NAMES: readonly string[] = ["components", "comic-ui"];
 
+/**
+ * A preset name becomes a path segment (`dist/<name>/`, `presets/<name>.json`), and
+ * `buildAll` starts by recursively removing its output directory. A name containing
+ * `..`, a slash, or a leading dot therefore resolves that removal outside `dist/` —
+ * `{"name": ".."}` resolves to the repository root. Restricting the charset to a
+ * single safe path segment is what makes the name unable to express a traversal at
+ * all; the reserved-name list above only ever covered two spellings of this hazard.
+ */
+const NAME_PATTERN = /^[a-z0-9][a-z0-9-]*$/i;
+
 /** Presets are hand-edited, so a typo must fail loudly rather than silently defaulting. */
 function pick<T extends string>(field: string, value: T, legal: readonly T[]): T {
   if (!legal.includes(value)) {
@@ -64,6 +74,12 @@ function pick<T extends string>(field: string, value: T, legal: readonly T[]): T
 
 export function resolveTheme(preset: Preset): Theme {
   if (!preset.name) throw new Error(`Preset field "name" is required and must be non-empty.`);
+  if (!NAME_PATTERN.test(preset.name)) {
+    throw new Error(
+      `Preset name "${preset.name}" is illegal: a name becomes a path segment, so it must ` +
+      `start with a letter or digit and contain only letters, digits and hyphens.`,
+    );
+  }
   if (RESERVED_NAMES.includes(preset.name)) {
     throw new Error(
       `Preset name "${preset.name}" is reserved: it would collide with the default preset's ` +

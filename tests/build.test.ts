@@ -99,6 +99,22 @@ describe("preset builds", () => {
     expect(outDirFor(resolveTheme({ name: "soft" }))).toBe(join(DEFAULT_OUT, "soft"));
   });
 
+  // Second layer: even if a traversal name reached a Theme some other way (a future
+  // caller building one by hand, a loosened check), the output path must stay in dist/.
+  it.each(["..", "../..", "../../etc"])(
+    "refuses to derive an output directory that escapes dist/ for the name %j",
+    (name) => {
+      const escaped = { ...theme, name };
+      expect(() => outDirFor(escaped)).toThrow(/escapes/);
+      expect(() => outDirFor(escaped)).toThrow(new RegExp(DEFAULT_OUT.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    },
+  );
+
+  it("resolveTheme rejects a traversal name outright, so buildAll never sees one", () => {
+    expect(() => resolveTheme({ name: ".." })).toThrow(/illegal/);
+    expect(() => buildAll(resolveTheme({ name: "../.." }))).toThrow(/illegal/);
+  });
+
   it("loads a preset file from presets/", () => {
     expect(loadPreset("default")).toMatchObject({ name: "default", palette: "zinc" });
   });

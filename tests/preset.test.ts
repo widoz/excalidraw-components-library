@@ -60,6 +60,13 @@ describe("writePreset", () => {
     rmSync(dir, { recursive: true, force: true });
   });
 
+  it("refuses to write outside the presets directory", () => {
+    const dir = mkdtempSync(join(tmpdir(), "presets-"));
+    expect(() => writePreset({ name: "../escaped" }, false, dir)).toThrow(/illegal/);
+    expect(existsSync(join(dir, "..", "escaped.json"))).toBe(false);
+    rmSync(dir, { recursive: true, force: true });
+  });
+
   it("rejects a preset that does not resolve", () => {
     const dir = mkdtempSync(join(tmpdir(), "presets-"));
     expect(() => writePreset({ name: "bad", palette: "burgundy" as never }, false, dir))
