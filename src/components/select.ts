@@ -1,13 +1,14 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { chevron, color, fillBand, inkBox, label, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = size.control;
 const TRIGGER_H = 56;
 const ITEM_H = 46;
 
 /** Closed trigger with a chevron, plus the open menu with one highlighted item. */
-export default function select(theme: Theme): ExcalidrawElement[] {
+export default function select(theme: Theme): ComponentOutput {
   const f = new Factory("select", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -41,5 +42,5 @@ export default function select(theme: Theme): ExcalidrawElement[] {
     }));
   });
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

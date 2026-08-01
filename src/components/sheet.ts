@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size, stroke, style, xMark } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 320;
 const H = 420;
@@ -15,7 +16,7 @@ const BTN_H = 50;
  * hand instead of via `inkBox`. The shadow rect is emitted first, at x - 6, y + 6,
  * so it sits behind the surface that is drawn right after it.
  */
-export default function sheet(theme: Theme): ExcalidrawElement[] {
+export default function sheet(theme: Theme): ComponentOutput {
   const f = new Factory("sheet", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -76,5 +77,5 @@ export default function sheet(theme: Theme): ExcalidrawElement[] {
     align: "center",
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

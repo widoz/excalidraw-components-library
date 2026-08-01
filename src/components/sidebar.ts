@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, fillBand, font, inkBox, inkCircle, label, rule, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 240;
 const H = 420;
@@ -8,7 +9,7 @@ const ROW_H = 52;
 const NAV_Y = 96;
 
 /** Vertical nav panel: logo row, four nav rows with one active, and a bottom avatar row. */
-export default function sidebar(theme: Theme): ExcalidrawElement[] {
+export default function sidebar(theme: Theme): ComponentOutput {
   const f = new Factory("sidebar", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -65,5 +66,5 @@ export default function sidebar(theme: Theme): ExcalidrawElement[] {
   }));
   els.push(...rule(f, { x: 20, y: ruleY, w: W - 40 }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

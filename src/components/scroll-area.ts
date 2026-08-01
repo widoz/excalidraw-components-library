@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, fillBand, inkBox, rule } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 320;
 const H = 220;
@@ -26,7 +27,7 @@ const TRACK_W = 10;
 const TRACK_H = H - SCROLLBAR_INSET_Y * 2;
 
 /** A scrollable content frame with eight ruled copy lines and a right-side scrollbar. */
-export default function scrollArea(theme: Theme): ExcalidrawElement[] {
+export default function scrollArea(theme: Theme): ComponentOutput {
   const f = new Factory("scroll-area", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -58,5 +59,5 @@ export default function scrollArea(theme: Theme): ExcalidrawElement[] {
     rounded: true,
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

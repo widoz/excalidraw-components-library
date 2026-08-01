@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, fillBand, stroke } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const R = 28;
 const CX = R;
@@ -11,7 +12,7 @@ const BAR_PITCH = 28;
 const BAR_WIDTHS = [200, 170, 120];
 
 /** A bare loading placeholder: no frame, no text, just an avatar circle and stacked bars. */
-export default function skeleton(theme: Theme): ExcalidrawElement[] {
+export default function skeleton(theme: Theme): ComponentOutput {
   const f = new Factory("skeleton", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -39,5 +40,5 @@ export default function skeleton(theme: Theme): ExcalidrawElement[] {
     }));
   });
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

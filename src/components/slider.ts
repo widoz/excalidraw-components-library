@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { bubble, color, fillBand, font, inkBox, inkCircle, label, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = size.control;
 const TRACK_H = 16;
@@ -9,7 +10,7 @@ const BUBBLE_W = 76;
 const BUBBLE_H = 48;
 
 /** Track, filled portion, knob, and a value bubble above the knob. */
-export default function slider(theme: Theme): ExcalidrawElement[] {
+export default function slider(theme: Theme): ComponentOutput {
   const f = new Factory("slider", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -47,5 +48,5 @@ export default function slider(theme: Theme): ExcalidrawElement[] {
     align: "center",
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }
