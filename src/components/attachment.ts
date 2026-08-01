@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, fillBand, font, inkBox, label, size, stroke, xMark } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 300;
 const H = 72;
@@ -11,7 +12,7 @@ const BAND_H = 48;
 const FOLD = 14;
 
 /** A file chip: a folded-corner thumbnail, filename, size, and a remove X. */
-export default function attachment(theme: Theme): ExcalidrawElement[] {
+export default function attachment(theme: Theme): ComponentOutput {
   const f = new Factory("attachment", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -54,5 +55,5 @@ export default function attachment(theme: Theme): ExcalidrawElement[] {
 
   els.push(...xMark(f, { x: W - 32, y: (H - 16) / 2, s: 16, stroke: color.ink }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

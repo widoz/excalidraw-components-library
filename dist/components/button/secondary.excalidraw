@@ -4,7 +4,7 @@
   "source": "excalidraw-comic-components",
   "elements": [
     {
-      "id": "button-group-0-gics6f",
+      "id": "button-group-3-1vs94k",
       "type": "rectangle",
       "x": 6,
       "y": 6,
@@ -22,13 +22,13 @@
         "button-group"
       ],
       "frameId": null,
-      "index": "a00000V",
+      "index": "a00003V",
       "roundness": {
         "type": 3
       },
-      "seed": 998020765,
+      "seed": 1370665076,
       "version": 1,
-      "versionNonce": 1498222714,
+      "versionNonce": 293273997,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1,
@@ -36,7 +36,7 @@
       "locked": false
     },
     {
-      "id": "button-group-1-clvly0",
+      "id": "button-group-4-86r6wb",
       "type": "rectangle",
       "x": 0,
       "y": 0,
@@ -44,7 +44,7 @@
       "height": 56,
       "angle": 0,
       "strokeColor": "#18181b",
-      "backgroundColor": "#3f3f46",
+      "backgroundColor": "#fafafa",
       "fillStyle": "solid",
       "strokeWidth": 4,
       "strokeStyle": "solid",
@@ -54,13 +54,13 @@
         "button-group"
       ],
       "frameId": null,
-      "index": "a00001V",
+      "index": "a00004V",
       "roundness": {
         "type": 3
       },
-      "seed": 2010195355,
+      "seed": 796717160,
       "version": 1,
-      "versionNonce": 1240909310,
+      "versionNonce": 156551392,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1,
@@ -68,14 +68,14 @@
       "locked": false
     },
     {
-      "id": "button-group-2-8qdz6x",
+      "id": "button-group-5-vjoqap",
       "type": "text",
       "x": 50.49999999999999,
       "y": 15.5,
       "width": 99.00000000000001,
       "height": 25,
       "angle": 0,
-      "strokeColor": "#fafafa",
+      "strokeColor": "#18181b",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 4,
@@ -86,18 +86,18 @@
         "button-group"
       ],
       "frameId": null,
-      "index": "a00002V",
+      "index": "a00005V",
       "roundness": null,
-      "seed": 843335461,
+      "seed": 1612871097,
       "version": 1,
-      "versionNonce": 878066157,
+      "versionNonce": 274412632,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Click me!",
-      "originalText": "Click me!",
+      "text": "Secondary",
+      "originalText": "Secondary",
       "fontSize": 20,
       "fontFamily": 7,
       "textAlign": "center",

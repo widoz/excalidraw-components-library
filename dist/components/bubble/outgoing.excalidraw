@@ -4,12 +4,12 @@
   "source": "excalidraw-comic-components",
   "elements": [
     {
-      "id": "bubble-group-0-x6g2hj",
+      "id": "bubble-group-5-nkhisk",
       "type": "rectangle",
       "x": 6,
       "y": 6,
-      "width": 220,
-      "height": 80,
+      "width": 200,
+      "height": 64,
       "angle": 0,
       "strokeColor": "#18181b",
       "backgroundColor": "#18181b",
@@ -22,13 +22,13 @@
         "bubble-group"
       ],
       "frameId": null,
-      "index": "a00000V",
+      "index": "a00005V",
       "roundness": {
         "type": 3
       },
-      "seed": 1184390104,
+      "seed": 363106606,
       "version": 1,
-      "versionNonce": 906522910,
+      "versionNonce": 2028530088,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1,
@@ -36,15 +36,15 @@
       "locked": false
     },
     {
-      "id": "bubble-group-1-kytvoj",
+      "id": "bubble-group-6-6rd95e",
       "type": "rectangle",
       "x": 0,
       "y": 0,
-      "width": 220,
-      "height": 80,
+      "width": 200,
+      "height": 64,
       "angle": 0,
       "strokeColor": "#18181b",
-      "backgroundColor": "#fafafa",
+      "backgroundColor": "#3f3f46",
       "fillStyle": "solid",
       "strokeWidth": 4,
       "strokeStyle": "solid",
@@ -54,13 +54,13 @@
         "bubble-group"
       ],
       "frameId": null,
-      "index": "a00001V",
+      "index": "a00006V",
       "roundness": {
         "type": 3
       },
-      "seed": 1760166677,
+      "seed": 958507067,
       "version": 1,
-      "versionNonce": 820406478,
+      "versionNonce": 263210611,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1,
@@ -68,15 +68,15 @@
       "locked": false
     },
     {
-      "id": "bubble-group-2-iakwp0",
+      "id": "bubble-group-7-kmjaom",
       "type": "line",
-      "x": 12,
-      "y": 80,
+      "x": 144,
+      "y": 64,
       "width": 40,
       "height": 26,
       "angle": 0,
       "strokeColor": "#18181b",
-      "backgroundColor": "#fafafa",
+      "backgroundColor": "#3f3f46",
       "fillStyle": "solid",
       "strokeWidth": 4,
       "strokeStyle": "solid",
@@ -86,13 +86,13 @@
         "bubble-group"
       ],
       "frameId": null,
-      "index": "a00002V",
+      "index": "a00007V",
       "roundness": {
         "type": 2
       },
-      "seed": 1809076516,
+      "seed": 833166781,
       "version": 1,
-      "versionNonce": 740632253,
+      "versionNonce": 345188115,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1,
@@ -123,14 +123,14 @@
       "endArrowhead": null
     },
     {
-      "id": "bubble-group-3-905va8",
+      "id": "bubble-group-8-s8uo6q",
       "type": "line",
-      "x": 24,
-      "y": 26,
-      "width": 150,
+      "x": 20,
+      "y": 18,
+      "width": 130,
       "height": 0,
       "angle": 0,
-      "strokeColor": "#18181b",
+      "strokeColor": "#fafafa",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 2,
@@ -141,13 +141,13 @@
         "bubble-group"
       ],
       "frameId": null,
-      "index": "a00003V",
+      "index": "a00008V",
       "roundness": {
         "type": 2
       },
-      "seed": 607187024,
+      "seed": 1506553893,
       "version": 1,
-      "versionNonce": 1636166604,
+      "versionNonce": 2050960690,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1,
@@ -159,7 +159,7 @@
           0
         ],
         [
-          150,
+          130,
           0
         ]
       ],
@@ -170,14 +170,14 @@
       "endArrowhead": null
     },
     {
-      "id": "bubble-group-4-67gjn2",
+      "id": "bubble-group-9-7r532j",
       "type": "line",
-      "x": 24,
-      "y": 48,
-      "width": 100,
+      "x": 20,
+      "y": 38,
+      "width": 90,
       "height": 0,
       "angle": 0,
-      "strokeColor": "#18181b",
+      "strokeColor": "#fafafa",
       "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 2,
@@ -188,13 +188,13 @@
         "bubble-group"
       ],
       "frameId": null,
-      "index": "a00004V",
+      "index": "a00009V",
       "roundness": {
         "type": 2
       },
-      "seed": 983513674,
+      "seed": 1239671578,
       "version": 1,
-      "versionNonce": 909626611,
+      "versionNonce": 574003549,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1,
@@ -206,7 +206,7 @@
           0
         ],
         [
-          100,
+          90,
           0
         ]
       ],

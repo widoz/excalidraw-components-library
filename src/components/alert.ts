@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { burst, color, font, inkBox, label, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 380;
 const H = 120;
 
 /** Icon slot with a comic burst behind it, plus a title and body. */
-export default function alert(theme: Theme): ExcalidrawElement[] {
+export default function alert(theme: Theme): ComponentOutput {
   const f = new Factory("alert", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -38,5 +39,5 @@ export default function alert(theme: Theme): ExcalidrawElement[] {
     stroke: color.mutedText,
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }
