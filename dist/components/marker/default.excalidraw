@@ -1,0 +1,263 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "excalidraw-comic-components",
+  "elements": [
+    {
+      "id": "marker-group-0-n2uge9",
+      "type": "line",
+      "x": 100.00000000000001,
+      "y": 0,
+      "width": 129.81,
+      "height": 27.6,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#e4e4e7",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 2,
+      "opacity": 100,
+      "groupIds": [
+        "marker-group"
+      ],
+      "frameId": null,
+      "index": "a00000V",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 1809765049,
+      "version": 1,
+      "versionNonce": 1823380194,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          119.00000000000001,
+          -2.76
+        ],
+        [
+          124.75000000000001,
+          11.5
+        ],
+        [
+          119.00000000000001,
+          24.840000000000003
+        ],
+        [
+          0,
+          23
+        ],
+        [
+          -5.06,
+          11.5
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "marker-group-1-rcgbhf",
+      "type": "text",
+      "x": 0,
+      "y": 0,
+      "width": 209.00000000000003,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#18181b",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 4,
+      "strokeStyle": "solid",
+      "roughness": 2,
+      "opacity": 100,
+      "groupIds": [
+        "marker-group"
+      ],
+      "frameId": null,
+      "index": "a00001V",
+      "roundness": null,
+      "seed": 276655323,
+      "version": 1,
+      "versionNonce": 1281865482,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "The quick brown fox",
+      "originalText": "The quick brown fox",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "marker-group-2-adzvyn",
+      "type": "line",
+      "x": 155,
+      "y": 44,
+      "width": 118.81,
+      "height": 27.6,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#e4e4e7",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 2,
+      "opacity": 100,
+      "groupIds": [
+        "marker-group"
+      ],
+      "frameId": null,
+      "index": "a00002V",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 243601900,
+      "version": 1,
+      "versionNonce": 1466190328,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          108,
+          -2.76
+        ],
+        [
+          113.75,
+          11.5
+        ],
+        [
+          108,
+          24.840000000000003
+        ],
+        [
+          0,
+          23
+        ],
+        [
+          -5.06,
+          11.5
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "marker-group-3-93kkdq",
+      "type": "text",
+      "x": 0,
+      "y": 44,
+      "width": 253.00000000000003,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#18181b",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 4,
+      "strokeStyle": "solid",
+      "roughness": 2,
+      "opacity": 100,
+      "groupIds": [
+        "marker-group"
+      ],
+      "frameId": null,
+      "index": "a00003V",
+      "roundness": null,
+      "seed": 956568688,
+      "version": 1,
+      "versionNonce": 2011467693,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "jumps over the lazy dog",
+      "originalText": "jumps over the lazy dog",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "id": "marker-group-4-iffxes",
+      "type": "text",
+      "x": 0,
+      "y": 88,
+      "width": 231.00000000000003,
+      "height": 25,
+      "angle": 0,
+      "strokeColor": "#18181b",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 4,
+      "strokeStyle": "solid",
+      "roughness": 2,
+      "opacity": 100,
+      "groupIds": [
+        "marker-group"
+      ],
+      "frameId": null,
+      "index": "a00004V",
+      "roundness": null,
+      "seed": 961996741,
+      "version": 1,
+      "versionNonce": 1448434711,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "and lands in the ink.",
+      "originalText": "and lands in the ink.",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}

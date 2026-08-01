@@ -49,7 +49,9 @@ describe.each(PRESETS)("preset $name", (preset) => {
   afterAll(() => rmSync(dir, { recursive: true, force: true }));
 
   it("writes every component", () => {
-    expect(readdirSync(join(dir, "components"))).toHaveLength(Object.keys(registry).length);
+    expect(
+      readdirSync(join(dir, "components")).filter((f) => f.endsWith(".excalidraw")),
+    ).toHaveLength(Object.keys(registry).length);
   });
 
   it("draws the same elements as the default — style changes how, never what", () => {

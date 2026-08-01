@@ -41,6 +41,40 @@ describe("build", () => {
     expect(readFileSync(join(second, "comic-ui.excalidrawlib"), "utf8")).toBe(first);
     rmSync(second, { recursive: true, force: true });
   });
+
+  it("writes a variant directory per component", () => {
+    for (const name of Object.keys(registry)) {
+      const dir = join(out, "components", name);
+      const files = readdirSync(dir).filter((f) => f.endsWith(".excalidraw"));
+      expect(files.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("normalises every variant file to the origin", () => {
+    for (const name of Object.keys(registry)) {
+      const dir = join(out, "components", name);
+      for (const file of readdirSync(dir)) {
+        const scene = JSON.parse(readFileSync(join(dir, file), "utf8"));
+        const minX = Math.min(...scene.elements.map((e: { x: number }) => e.x));
+        const minY = Math.min(...scene.elements.map((e: { y: number }) => e.y));
+        expect([minX, minY], `${name}/${file}`).toEqual([0, 0]);
+      }
+    }
+  });
+
+  it("keeps each component's variants a partition of its sheet", () => {
+    for (const name of Object.keys(registry)) {
+      const sheet = JSON.parse(readFileSync(join(out, "components", `${name}.excalidraw`), "utf8"));
+      const dir = join(out, "components", name);
+      const fromVariants = readdirSync(dir)
+        .sort()
+        .flatMap((file) => JSON.parse(readFileSync(join(dir, file), "utf8")).elements as { id: string }[])
+        .map((e) => e.id)
+        .sort();
+      const fromSheet = (sheet.elements as { id: string }[]).map((e) => e.id).sort();
+      expect(fromVariants, name).toEqual(fromSheet);
+    }
+  });
 });
 
 describe("button", () => {
@@ -153,7 +187,9 @@ describe("preset builds", () => {
   it("builds every component under a non-default theme", () => {
     const tmp = mkdtempSync(join(tmpdir(), "preset-"));
     buildAll(resolveTheme({ name: "t", palette: "mist", edges: "sharp" }), tmp);
-    expect(readdirSync(join(tmp, "components"))).toHaveLength(58);
+    expect(
+      readdirSync(join(tmp, "components")).filter((f) => f.endsWith(".excalidraw")),
+    ).toHaveLength(58);
     rmSync(tmp, { recursive: true, force: true });
   });
 });

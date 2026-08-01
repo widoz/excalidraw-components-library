@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { registry } from "./registry.js";
 import { toLibrary, toScene, type LibraryItemInput } from "./scene.js";
 import { DEFAULT_PRESET, resolveTheme, type Preset, type Theme } from "./theme.js";
+import { normalize, toOutput } from "./variants.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const DEFAULT_OUT = join(ROOT, "dist");
@@ -84,12 +85,25 @@ export function buildAll(theme: Theme, outDir: string = outDirFor(theme)): void 
   const items: LibraryItemInput[] = [];
 
   for (const [name, entry] of Object.entries(registry)) {
-    const elements = entry.build(theme);
+    const output = toOutput(entry.build(theme));
+
     writeFileSync(
       join(componentsDir, `${name}.excalidraw`),
-      `${JSON.stringify(toScene(elements, theme), null, 2)}\n`,
+      `${JSON.stringify(toScene(output.elements, theme), null, 2)}\n`,
     );
-    items.push({ name: entry.title, elements });
+
+    // Variants are written under the component's own directory. The whole of
+    // componentsDir is removed above, so a renamed variant leaves nothing stale.
+    const variantDir = join(componentsDir, name);
+    mkdirSync(variantDir, { recursive: true });
+    for (const variant of output.variants) {
+      writeFileSync(
+        join(variantDir, `${variant.name}.excalidraw`),
+        `${JSON.stringify(toScene(normalize(variant.elements), theme), null, 2)}\n`,
+      );
+    }
+
+    items.push({ name: entry.title, elements: output.elements });
   }
 
   writeFileSync(
