@@ -3,9 +3,18 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { buildAll } from "../src/build.js";
+import { registry } from "../src/registry.js";
 import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
 
 const theme = resolveTheme(DEFAULT_PRESET);
+
+it("every component declares at least one variant", () => {
+  for (const [name, entry] of Object.entries(registry)) {
+    const output = entry.build(theme);
+    expect(Array.isArray(output), `${name} still returns a bare array`).toBe(false);
+    expect(output.variants.length, name).toBeGreaterThan(0);
+  }
+});
 
 let out: string;
 beforeAll(() => {

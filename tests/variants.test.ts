@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalize, toOutput, variants } from "../src/variants.js";
+import { normalize, variants } from "../src/variants.js";
 import type { ExcalidrawElement } from "../src/element.js";
 
 const el = (x: number, y: number): ExcalidrawElement =>
@@ -32,20 +32,6 @@ describe("variants", () => {
 
   it("rejects a component with no variants", () => {
     expect(() => variants([])).toThrow(/at least one/i);
-  });
-});
-
-describe("toOutput", () => {
-  it("wraps a bare array as a single default variant", () => {
-    const out = toOutput([el(0, 0), el(0, 10)]);
-    expect(out.variants).toHaveLength(1);
-    expect(out.variants[0]!.name).toBe("default");
-    expect(out.variants[0]!.elements).toHaveLength(2);
-  });
-
-  it("passes a ComponentOutput through unchanged", () => {
-    const made = variants([{ name: "only", elements: [el(0, 0)] }]);
-    expect(toOutput(made)).toBe(made);
   });
 });
 

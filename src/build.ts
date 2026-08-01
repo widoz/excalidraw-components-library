@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { registry } from "./registry.js";
 import { toLibrary, toScene, type LibraryItemInput } from "./scene.js";
 import { DEFAULT_PRESET, resolveTheme, type Preset, type Theme } from "./theme.js";
-import { normalize, toOutput } from "./variants.js";
+import { normalize } from "./variants.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const DEFAULT_OUT = join(ROOT, "dist");
@@ -85,7 +85,7 @@ export function buildAll(theme: Theme, outDir: string = outDirFor(theme)): void 
   const items: LibraryItemInput[] = [];
 
   for (const [name, entry] of Object.entries(registry)) {
-    const output = toOutput(entry.build(theme));
+    const output = entry.build(theme);
 
     writeFileSync(
       join(componentsDir, `${name}.excalidraw`),

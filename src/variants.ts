@@ -38,16 +38,6 @@ export function variants(parts: Variant[]): ComponentOutput {
 }
 
 /**
- * Bridge for components not yet migrated: a bare element array becomes one
- * variant named "default". Removed in the task that tightens the builder type.
- */
-export function toOutput(result: ExcalidrawElement[] | ComponentOutput): ComponentOutput {
-  return Array.isArray(result)
-    ? { elements: result, variants: [{ name: "default", elements: result }] }
-    : result;
-}
-
-/**
  * Shifts elements so their bounding box starts at (0, 0). Required, not cosmetic:
  * `input`'s focus ring starts at x=-4, and a composer that trusts raw coordinates
  * misaligns every row. Line `points` are relative to x/y, so translation is safe.
