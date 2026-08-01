@@ -38,8 +38,9 @@ as build presets — see [Styles](#styles).
 npm install
 npm run build      # regenerate dist/
 npm run validate   # structural checks on dist/
+npm run typecheck  # tsc --noEmit
 npm test           # unit tests
-npm run check      # all three
+npm run check      # build + validate + typecheck + test
 npm run preset     # create a new style preset
 ```
 
@@ -90,3 +91,30 @@ reserved on top of that: they would collide with the default preset's own output
 for it" — 26 components are square for structural reasons (joined cells, inner bands) and
 stay square in every preset, because Excalidraw's corner radius scales with shape size and
 rounding them produces overhang and seam notches.
+
+## Use it from Claude Code
+
+The repo is also a Claude Code plugin:
+
+```bash
+/plugin marketplace add /path/to/excalidraw-components-library
+```
+
+Two skills come with it. **composing-scenes** builds a `.excalidraw` mockup from a
+row/column layout — ask for "a login screen with the comic components". **building-presets**
+wraps the preset and build CLIs.
+
+The composer works with no configuration, using the `dist/` committed here. To compose
+from a clone you build yourself, point it at that clone:
+
+```json
+// ~/.claude/excalidraw-lib.json
+{ "path": "/path/to/your/clone" }
+```
+
+Compose by hand without Claude:
+
+```bash
+node scripts/compose.mjs list
+node scripts/compose.mjs mockups/login.layout.json -o mockups/login.excalidraw
+```

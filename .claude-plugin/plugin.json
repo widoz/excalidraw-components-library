@@ -1,0 +1,6 @@
+{
+  "name": "excalidraw-comic",
+  "version": "0.1.0",
+  "description": "Compose Excalidraw mockups from the comic component library, and build style presets",
+  "author": { "name": "guido" }
+}

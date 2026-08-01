@@ -9,7 +9,8 @@
     "preset": "tsx src/preset.ts",
     "validate": "tsx src/validate.ts",
     "test": "vitest run",
-    "check": "npm run build && npm run validate && npm test"
+    "typecheck": "tsc --noEmit",
+    "check": "npm run build && npm run validate && npm run typecheck && npm test"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
