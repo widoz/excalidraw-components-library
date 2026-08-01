@@ -32,11 +32,30 @@ function candidates() {
 /**
  * 1. the config file, 2. the plugin's own root (dist/ is committed, so composing
  * needs no setup), 3. fail with the exact fix.
+ *
+ * A config file that exists but is unusable (bad JSON, or a path that is not a
+ * library) is an error, not a silent fallback: the user asked for a specific
+ * library and using a different one without saying so is worse than stopping.
  */
 export function resolveRoot({ configPath = CONFIG_PATH, pluginRoot = PLUGIN_ROOT } = {}) {
   if (existsSync(configPath)) {
-    const configured = JSON.parse(readFileSync(configPath, "utf8")).path;
-    if (isLibrary(configured)) return configured;
+    let parsed;
+    try {
+      parsed = JSON.parse(readFileSync(configPath, "utf8"));
+    } catch (err) {
+      throw new Error(
+        `Could not parse ${configPath} as JSON (${err.message}). Fix its contents, or delete the file ` +
+        `to use the plugin's own build.`,
+      );
+    }
+    const configured = parsed.path;
+    if (!isLibrary(configured)) {
+      throw new Error(
+        `${configPath} points at "${configured}", which is not a component library (no ${MARKER} there). ` +
+        `Fix "path" in ${configPath} to point at a real clone, or delete the file to use the plugin's own build.`,
+      );
+    }
+    return configured;
   }
   if (isLibrary(pluginRoot)) return pluginRoot;
 
@@ -58,23 +77,37 @@ function run(command, args, options) {
 
 /**
  * Preflight for both skills. Installing is only ever done in a directory whose
- * package name matches the plugin's own — derived, never hardcoded — and which
- * carries the library's source and output.
+ * package name matches the plugin's own — derived, never hardcoded — which carries
+ * the library's source and output, and which is a git clone (never an extracted
+ * copy or the installed plugin directory itself).
+ *
+ * @param {{ needsToolchain?: boolean, configPath?: string, pluginRoot?: string }} [options]
+ * @returns {Promise<string>}
  */
-export async function ensureLibrary({ needsToolchain = false, configPath, pluginRoot = PLUGIN_ROOT } = {}) {
+export async function ensureLibrary({ needsToolchain = false, configPath = undefined, pluginRoot = PLUGIN_ROOT } = {}) {
   const root = resolveRoot({ configPath, pluginRoot });
   if (!needsToolchain) return root;
 
   const expected = JSON.parse(readFileSync(join(pluginRoot, "package.json"), "utf8")).name;
   const pkgPath = join(root, "package.json");
-  const found = existsSync(pkgPath) ? JSON.parse(readFileSync(pkgPath, "utf8")).name : undefined;
+  let found;
+  if (existsSync(pkgPath)) {
+    try {
+      found = JSON.parse(readFileSync(pkgPath, "utf8")).name;
+    } catch (err) {
+      throw new Error(`Could not parse ${pkgPath} as JSON (${err.message}). Fix its contents to verify the clone.`);
+    }
+  }
   if (found !== expected || !existsSync(join(root, "src", "build.ts"))) {
     throw new Error(`${root} is not an ${expected} clone, so it cannot build presets.`);
   }
-  if (root === pluginRoot && !existsSync(join(root, ".git"))) {
+  if (!existsSync(join(root, ".git"))) {
     throw new Error(
-      `${root} is the installed plugin copy. Preset output belongs in a clone you can commit; ` +
-      `point ${CONFIG_PATH} at one.`,
+      root === pluginRoot
+        ? `${root} is the installed plugin copy. Preset output belongs in a clone you can commit; ` +
+          `point ${CONFIG_PATH} at one.`
+        : `${root} has no .git directory, so it cannot be verified as a clone. Point ${CONFIG_PATH} at ` +
+          `a git clone of ${expected} you can commit.`,
     );
   }
   if (!existsSync(join(root, "node_modules"))) {
@@ -102,10 +135,14 @@ function near(name, available) {
   return (close.length > 0 ? close : available).slice(0, 5).join(", ");
 }
 
+function buildCommand(preset) {
+  return preset === undefined || preset === "default" ? "npm run build" : `npm run build -- --preset ${preset}`;
+}
+
 export function loadVariant(root, preset, component, variant = "default") {
   const dir = componentsDir(root, preset);
   if (!existsSync(dir)) {
-    throw new Error(`No build at ${dir}. Run: npm run build -- --preset ${preset}`);
+    throw new Error(`No build at ${dir}. Run: ${buildCommand(preset)}`);
   }
 
   const componentDir = join(dir, component);
@@ -127,7 +164,7 @@ export function loadVariant(root, preset, component, variant = "default") {
 export function listComponents(root, preset) {
   const dir = componentsDir(root, preset);
   if (!existsSync(dir)) {
-    throw new Error(`No build at ${dir}. Run: npm run build -- --preset ${preset}`);
+    throw new Error(`No build at ${dir}. Run: ${buildCommand(preset)}`);
   }
   return readdirSync(dir, { withFileTypes: true })
     .filter((e) => e.isDirectory())

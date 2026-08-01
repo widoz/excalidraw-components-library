@@ -1,8 +1,8 @@
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { componentsDir, listComponents, loadVariant, measure, resolveRoot } from "../scripts/library.mjs";
+import { componentsDir, ensureLibrary, listComponents, loadVariant, measure, resolveRoot } from "../scripts/library.mjs";
 
 const ROOT = join(import.meta.dirname, "..");
 let fake: string;
@@ -51,6 +51,17 @@ describe("componentsDir", () => {
     expect(() => loadVariant(fake, "soft", "widget", "default"))
       .toThrow(/npm run build -- --preset soft/);
   });
+
+  it("says plain 'npm run build' (no '--preset undefined') for a missing default build", () => {
+    const noDist = mkdtempSync(join(tmpdir(), "nodist-"));
+    mkdirSync(join(noDist, "dist"), { recursive: true });
+    writeFileSync(join(noDist, "dist", "comic-ui.excalidrawlib"), "{}");
+
+    expect(() => loadVariant(noDist, undefined, "widget", "default")).toThrow(/Run: npm run build$/);
+    expect(() => listComponents(noDist, undefined)).toThrow(/Run: npm run build$/);
+
+    rmSync(noDist, { recursive: true, force: true });
+  });
 });
 
 describe("loadVariant", () => {
@@ -81,5 +92,91 @@ describe("listComponents", () => {
     expect(listComponents(fake)).toEqual([
       { name: "widget", variants: [{ name: "default", width: 40, height: 25 }] },
     ]);
+  });
+});
+
+describe("resolveRoot: broken config is an error, not a silent fallback", () => {
+  it("rejects a config file that is not valid JSON, naming the file", () => {
+    const cfgDir = mkdtempSync(join(tmpdir(), "cfgdir-"));
+    const cfg = join(cfgDir, "cfg.json");
+    writeFileSync(cfg, "{ this is not json");
+
+    expect(() => resolveRoot({ configPath: cfg, pluginRoot: ROOT })).toThrow(/Could not parse/);
+    try {
+      resolveRoot({ configPath: cfg, pluginRoot: ROOT });
+      throw new Error("expected resolveRoot to throw");
+    } catch (err) {
+      expect((err as Error).message).toContain(cfg);
+    }
+
+    rmSync(cfgDir, { recursive: true, force: true });
+  });
+
+  it("rejects a config file whose path does not point at a library, instead of falling back", () => {
+    const cfgDir = mkdtempSync(join(tmpdir(), "cfgdir-"));
+    const cfg = join(cfgDir, "cfg.json");
+    const missing = join(cfgDir, "nowhere");
+    writeFileSync(cfg, JSON.stringify({ path: missing }));
+
+    expect(() => resolveRoot({ configPath: cfg, pluginRoot: ROOT })).toThrow(/not a component library/);
+    try {
+      resolveRoot({ configPath: cfg, pluginRoot: ROOT });
+      throw new Error("expected resolveRoot to throw");
+    } catch (err) {
+      expect((err as Error).message).toContain(cfg);
+      expect((err as Error).message).toContain(missing);
+    }
+
+    rmSync(cfgDir, { recursive: true, force: true });
+  });
+});
+
+describe("ensureLibrary: only ever installs into a verified git clone", () => {
+  const pkgName = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")).name;
+
+  function makeCloneLike({ withGit = false, packageJson = JSON.stringify({ name: pkgName }) } = {}) {
+    const clone = mkdtempSync(join(tmpdir(), "clone-"));
+    mkdirSync(join(clone, "dist"), { recursive: true });
+    writeFileSync(join(clone, "dist", "comic-ui.excalidrawlib"), "{}");
+    mkdirSync(join(clone, "src"), { recursive: true });
+    writeFileSync(join(clone, "src", "build.ts"), "");
+    writeFileSync(join(clone, "package.json"), packageJson);
+    if (withGit) mkdirSync(join(clone, ".git"), { recursive: true });
+    return clone;
+  }
+
+  function configFor(root: string) {
+    const cfgDir = mkdtempSync(join(tmpdir(), "cfgdir-"));
+    const cfg = join(cfgDir, "cfg.json");
+    writeFileSync(cfg, JSON.stringify({ path: root }));
+    return { cfg, cfgDir };
+  }
+
+  it("refuses a config-pointed root with a matching package.json but no .git", async () => {
+    const clone = makeCloneLike({ withGit: false });
+    const { cfg, cfgDir } = configFor(clone);
+
+    await expect(ensureLibrary({ needsToolchain: true, configPath: cfg, pluginRoot: ROOT }))
+      .rejects.toThrow(/\.git/);
+
+    rmSync(clone, { recursive: true, force: true });
+    rmSync(cfgDir, { recursive: true, force: true });
+  });
+
+  it("names the target package.json when it is not valid JSON", async () => {
+    const clone = makeCloneLike({ withGit: true, packageJson: "{ not json" });
+    const { cfg, cfgDir } = configFor(clone);
+
+    await expect(ensureLibrary({ needsToolchain: true, configPath: cfg, pluginRoot: ROOT }))
+      .rejects.toThrow(/Could not parse/);
+    try {
+      await ensureLibrary({ needsToolchain: true, configPath: cfg, pluginRoot: ROOT });
+      throw new Error("expected ensureLibrary to reject");
+    } catch (err) {
+      expect((err as Error).message).toContain(join(clone, "package.json"));
+    }
+
+    rmSync(clone, { recursive: true, force: true });
+    rmSync(cfgDir, { recursive: true, force: true });
   });
 });
