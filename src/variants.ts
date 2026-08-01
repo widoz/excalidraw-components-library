@@ -53,7 +53,7 @@ export function toOutput(result: ExcalidrawElement[] | ComponentOutput): Compone
  * misaligns every row. Line `points` are relative to x/y, so translation is safe.
  */
 export function normalize(elements: ExcalidrawElement[]): ExcalidrawElement[] {
-  const minX = Math.min(...elements.map((e) => e.x));
-  const minY = Math.min(...elements.map((e) => e.y));
-  return elements.map((e) => ({ ...e, x: e.x - minX, y: e.y - minY }));
+  const minX = Math.min(...elements.map((e) => Number(e.x)));
+  const minY = Math.min(...elements.map((e) => Number(e.y)));
+  return elements.map((e) => ({ ...e, x: Number(e.x) - minX, y: Number(e.y) - minY }));
 }
