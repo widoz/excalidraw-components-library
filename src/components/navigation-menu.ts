@@ -1,6 +1,7 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { chevron, color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const PITCH = 130;
 const NAV_ROW_H = 40;
@@ -17,7 +18,7 @@ const CHEVRON_GAP = 8;
 const CHEVRON_S = 8;
 
 /** A nav row of three items ("Docs" open) with a mega-panel of two columns below. */
-export default function navigationMenu(theme: Theme): ExcalidrawElement[] {
+export default function navigationMenu(theme: Theme): ComponentOutput {
   const f = new Factory("navigation-menu", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -78,5 +79,5 @@ export default function navigationMenu(theme: Theme): ExcalidrawElement[] {
     });
   });
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

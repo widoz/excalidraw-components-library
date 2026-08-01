@@ -1,6 +1,7 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const CAP_H = 52;
 // Small default gap: used around the "+" glyph and between the two trailing caps,
@@ -15,7 +16,7 @@ const CAP2_W = 100; // "Shift"
 const CAP3_W = 56; // "↵"
 
 /** A row of key caps: "⌘ + K", a gap, then "Shift" and "↵". */
-export default function kbd(theme: Theme): ExcalidrawElement[] {
+export default function kbd(theme: Theme): ComponentOutput {
   const f = new Factory("kbd", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -55,5 +56,5 @@ export default function kbd(theme: Theme): ExcalidrawElement[] {
     align: "center",
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

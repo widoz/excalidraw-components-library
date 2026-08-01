@@ -1,6 +1,7 @@
 import { estimateTextWidth, Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, font, label, size, swash } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const PITCH = 44;
 const BLEED = 10;
@@ -12,7 +13,7 @@ const lines = [
 ];
 
 /** Three lines of sample copy, with two phrases highlighted by a swash drawn behind the words. */
-export default function marker(theme: Theme): ExcalidrawElement[] {
+export default function marker(theme: Theme): ComponentOutput {
   const f = new Factory("marker", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -39,5 +40,5 @@ export default function marker(theme: Theme): ExcalidrawElement[] {
     }));
   });
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }
