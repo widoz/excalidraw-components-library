@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { arc, color, label, size, stroke } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const PITCH = 90;
 const R = 26;
 
 /** Three spinners at increasing sweep, suggesting rotation, over a "Loading..." caption. */
-export default function spinner(theme: Theme): ExcalidrawElement[] {
+export default function spinner(theme: Theme): ComponentOutput {
   const f = new Factory("spinner", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -41,5 +42,5 @@ export default function spinner(theme: Theme): ExcalidrawElement[] {
     align: "center",
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

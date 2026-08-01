@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, inkBox, label, rule, size, stroke } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = size.control;
 const H = 180;
 
 /** Multi-line box with ruled placeholder lines and a corner resize grip. */
-export default function textarea(theme: Theme): ExcalidrawElement[] {
+export default function textarea(theme: Theme): ComponentOutput {
   const f = new Factory("textarea", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -39,5 +40,5 @@ export default function textarea(theme: Theme): ExcalidrawElement[] {
     }));
   }
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

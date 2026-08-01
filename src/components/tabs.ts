@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const TAB_W = 120;
 const TAB_H = 48;
@@ -8,7 +9,7 @@ const W = TAB_W * 3;
 const PANEL_H = 150;
 
 /** Three tab headers with the first active, plus the panel below. */
-export default function tabs(theme: Theme): ExcalidrawElement[] {
+export default function tabs(theme: Theme): ComponentOutput {
   const f = new Factory("tabs", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -49,5 +50,5 @@ export default function tabs(theme: Theme): ExcalidrawElement[] {
     stroke: color.mutedText,
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

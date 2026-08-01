@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { bubble, color, font, inkBox, label, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const BTN_W = 140;
 const BTN_H = 52;
@@ -8,7 +9,7 @@ const BUBBLE_W = 220;
 const BUBBLE_H = 60;
 
 /** A trigger button with a comic speech bubble pointing down at it. */
-export default function tooltip(theme: Theme): ExcalidrawElement[] {
+export default function tooltip(theme: Theme): ComponentOutput {
   const f = new Factory("tooltip", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -44,5 +45,5 @@ export default function tooltip(theme: Theme): ExcalidrawElement[] {
     align: "center",
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size, stroke, xMark } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 360;
 const H = 110;
@@ -8,7 +9,7 @@ const BTN_W = 80;
 const BTN_H = 40;
 
 /** A floating save-confirmation toast: heavier shadow, dismiss X, and an undo button. */
-export default function toast(theme: Theme): ExcalidrawElement[] {
+export default function toast(theme: Theme): ComponentOutput {
   const f = new Factory("toast", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -46,5 +47,5 @@ export default function toast(theme: Theme): ExcalidrawElement[] {
     align: "center",
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }
