@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size, stroke } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const CELL_W = 52;
 const CELL_H = 64;
@@ -21,7 +22,7 @@ function cellPositions(): number[] {
 }
 
 /** Six separate OTP cells, grouped 3 + 3, with the fourth cell showing focus. */
-export default function inputOtp(theme: Theme): ExcalidrawElement[] {
+export default function inputOtp(theme: Theme): ComponentOutput {
   const f = new Factory("input-otp", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -61,5 +62,5 @@ export default function inputOtp(theme: Theme): ExcalidrawElement[] {
     }
   });
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

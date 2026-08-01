@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 360;
 const H = 260;
@@ -14,7 +15,7 @@ const INSET = 20;
  * panel itself is drawn square (`rounded: false`) and a rounded grabber bar
  * stands in for the "sheet" affordance instead.
  */
-export default function drawer(theme: Theme): ExcalidrawElement[] {
+export default function drawer(theme: Theme): ComponentOutput {
   const f = new Factory("drawer", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -52,5 +53,5 @@ export default function drawer(theme: Theme): ExcalidrawElement[] {
     align: "center",
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

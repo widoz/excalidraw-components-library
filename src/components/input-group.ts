@@ -1,6 +1,7 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, font, label, size, stroke, style } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const LEAD_W = 50;
 const TRAIL_W = 90;
@@ -18,7 +19,7 @@ const TYPED = "guido";
  * button-group idiom: a leading "@" chip, a live input area, and a trailing
  * "Copy" action, seamed together by two full-height ink rules.
  */
-export default function inputGroup(theme: Theme): ExcalidrawElement[] {
+export default function inputGroup(theme: Theme): ComponentOutput {
   const f = new Factory("input-group", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -73,5 +74,5 @@ export default function inputGroup(theme: Theme): ExcalidrawElement[] {
   els.push(f.line({ x: SEAM_1_X, y: 0, points: [[0, 0], [0, H]], strokeWidth: stroke.outline }));
   els.push(f.line({ x: SEAM_2_X, y: 0, points: [[0, 0], [0, H]], strokeWidth: stroke.outline }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }
