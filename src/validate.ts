@@ -162,6 +162,59 @@ function checkElements(where: string, elements: El[], errors: string[], checks: 
   }
 }
 
+function checkVariants(
+  componentsDir: string,
+  sheetFile: string,
+  errors: string[],
+  checks: ThemeChecks,
+): void {
+  const name = sheetFile.replace(/\.excalidraw$/, "");
+  const dir = join(componentsDir, name);
+
+  let files: string[];
+  try {
+    files = readdirSync(dir).filter((f) => f.endsWith(".excalidraw")).sort();
+  } catch {
+    errors.push(`${name}: no variant directory`);
+    return;
+  }
+  if (files.length === 0) {
+    errors.push(`${name}: variant directory is empty`);
+    return;
+  }
+
+  const seen: string[] = [];
+
+  for (const file of files) {
+    const where = `${name}/${file}`;
+    const scene = JSON.parse(readFileSync(join(dir, file), "utf8")) as Record<string, unknown>;
+    const elements = (scene.elements ?? []) as El[];
+
+    checkElements(where, elements, errors, checks);
+
+    const xs = elements.map((e) => Number(e.x));
+    const ys = elements.map((e) => Number(e.y));
+    if (elements.length > 0 && (Math.min(...xs) !== 0 || Math.min(...ys) !== 0)) {
+      errors.push(`${where}: bounding box does not start at the origin`);
+    }
+
+    for (const el of elements) seen.push(String(el.id));
+  }
+
+  // The sheet is the union of the variants. Without this, a component can drop a
+  // shape from one variant and nothing else notices.
+  const sheet = JSON.parse(readFileSync(join(componentsDir, sheetFile), "utf8")) as Record<string, unknown>;
+  const sheetElements = sheet.elements;
+  // Malformed "elements" is already reported by checkElements(file, ...) in
+  // validateAll; skip the partition check here rather than throwing on .map.
+  if (Array.isArray(sheetElements)) {
+    const sheetIds = (sheetElements as El[]).map((e) => String(e.id)).sort();
+    if (seen.sort().join(",") !== sheetIds.join(",")) {
+      errors.push(`${name}: variants do not partition the sheet`);
+    }
+  }
+}
+
 export function validateAll(theme: Theme, outDir: string = DEFAULT_OUT): string[] {
   const errors: string[] = [];
   const componentsDir = join(outDir, "components");
@@ -193,6 +246,7 @@ export function validateAll(theme: Theme, outDir: string = DEFAULT_OUT): string[
     }
 
     checkElements(file, (scene.elements ?? []) as El[], errors, checks);
+    checkVariants(componentsDir, file, errors, checks);
   }
 
   const lib = JSON.parse(

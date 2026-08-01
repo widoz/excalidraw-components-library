@@ -44,6 +44,11 @@ function writeScene(
   const scene = { ...(toScene(elements, theme) as Record<string, unknown>), ...overrides?.scene };
   if (appStateOverride) scene.appState = appStateOverride;
   writeFileSync(join(componentsDir, "widget.excalidraw"), JSON.stringify(scene));
+  // checkVariants expects a matching variant directory for every sheet file; these
+  // elements already start at the origin, so the sheet doubles as its own "default" variant.
+  const variantDir = join(componentsDir, "widget");
+  mkdirSync(variantDir, { recursive: true });
+  writeFileSync(join(variantDir, "default.excalidraw"), JSON.stringify(toScene(elements, theme)));
   const library = {
     ...(toLibrary([{ name: "Widget", elements: makeElements() }]) as Record<string, unknown>),
     ...overrides?.library,
@@ -228,5 +233,45 @@ describe("theme-aware validation", () => {
     perturb(out, "button", (el) => { el.roughness = 1; });
     const errors = validateAll(resolveTheme({ name: "d" }), out);
     expect(errors.join("\n")).toMatch(/roughness "1" is not the theme's "2"/);
+  });
+
+  it("reports a variant file that is not at the origin", () => {
+    const dir = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    buildAll(theme, dir);
+    const file = join(dir, "components", "button", "default.excalidraw");
+    const scene = JSON.parse(readFileSync(file, "utf8"));
+    // Subtracting (rather than adding) guarantees the new value goes negative and
+    // becomes the new minimum, regardless of which element the bounding box's
+    // corner actually sits on (button's elements[0] is a drop-shadow rect, not
+    // the corner element, so a positive nudge wouldn't move the minimum at all).
+    scene.elements[0].x -= 12;
+    writeFileSync(file, JSON.stringify(scene, null, 2));
+
+    const errors = validateAll(theme, dir);
+    expect(errors.join("\n")).toMatch(/button\/default\.excalidraw.*origin/);
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("reports a variant whose elements are missing from the sheet", () => {
+    const dir = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    buildAll(theme, dir);
+    const file = join(dir, "components", "button", "default.excalidraw");
+    const scene = JSON.parse(readFileSync(file, "utf8"));
+    scene.elements[0].id = "not-in-the-sheet";
+    writeFileSync(file, JSON.stringify(scene, null, 2));
+
+    const errors = validateAll(theme, dir);
+    expect(errors.join("\n")).toMatch(/button: variants do not partition the sheet/);
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("reports a component with no variant directory", () => {
+    const dir = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    buildAll(theme, dir);
+    rmSync(join(dir, "components", "button"), { recursive: true, force: true });
+
+    const errors = validateAll(theme, dir);
+    expect(errors.join("\n")).toMatch(/button: no variant directory/);
+    rmSync(dir, { recursive: true, force: true });
   });
 });
