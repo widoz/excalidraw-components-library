@@ -1,4 +1,4 @@
-import { Factory, type ExcalidrawElement } from "../element.js";
+import { Factory } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, size } from "../comic.js";
 import { variants, type ComponentOutput } from "../variants.js";
