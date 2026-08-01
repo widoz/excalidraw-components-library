@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { checkMark, chevron, color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 320;
 const TRIGGER_H = 56;
@@ -11,7 +12,7 @@ const ITEMS = ["Excalifont", "Comic Shanns", "Nunito"];
 const SELECTED = "Excalifont";
 
 /** Trigger plus an open panel: a search row and three items, one selected with a check. */
-export default function combobox(theme: Theme): ExcalidrawElement[] {
+export default function combobox(theme: Theme): ComponentOutput {
   const f = new Factory("combobox", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -56,5 +57,5 @@ export default function combobox(theme: Theme): ExcalidrawElement[] {
     }
   });
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

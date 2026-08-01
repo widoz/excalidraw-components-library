@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { chevron, color, font, inkCircle, label, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 320;
 const HEADER_H = 48;
@@ -20,7 +21,7 @@ const SELECTED_DAY = 17;
 const TODAY = 24;
 
 /** Header, weekday row, and a 7x5 day grid with a selected day and a today marker. */
-export default function calendar(theme: Theme): ExcalidrawElement[] {
+export default function calendar(theme: Theme): ComponentOutput {
   const f = new Factory("calendar", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -96,5 +97,5 @@ export default function calendar(theme: Theme): ExcalidrawElement[] {
     }
   }
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

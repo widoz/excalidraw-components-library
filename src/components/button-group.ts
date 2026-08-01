@@ -1,13 +1,14 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, font, label, size, stroke, style } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const CELL_W = 110;
 const CELL_H = 56;
 const W = CELL_W * 3;
 
 /** Three square-cornered buttons joined edge to edge, sharing one hard shadow. */
-export default function buttonGroup(theme: Theme): ExcalidrawElement[] {
+export default function buttonGroup(theme: Theme): ComponentOutput {
   const f = new Factory("button-group", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -50,5 +51,5 @@ export default function buttonGroup(theme: Theme): ExcalidrawElement[] {
     }));
   });
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

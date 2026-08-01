@@ -1,6 +1,7 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const DASH_W = 300;
 const DASH_H = 160;
@@ -14,7 +15,7 @@ const MENU_Y = 60;
  * spilling past its bottom-right corner — the menu is drawn last so it paints
  * on top of the dashed area.
  */
-export default function contextMenu(theme: Theme): ExcalidrawElement[] {
+export default function contextMenu(theme: Theme): ComponentOutput {
   const f = new Factory("context-menu", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -63,5 +64,5 @@ export default function contextMenu(theme: Theme): ExcalidrawElement[] {
     }));
   });
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }

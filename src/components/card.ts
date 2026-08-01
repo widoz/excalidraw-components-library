@@ -1,12 +1,13 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
 import { color, font, inkBox, label, rule, size } from "../comic.js";
+import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 340;
 const H = 230;
 
 /** Title, description lines, and a footer button. */
-export default function card(theme: Theme): ExcalidrawElement[] {
+export default function card(theme: Theme): ComponentOutput {
   const f = new Factory("card", theme);
   const els: ExcalidrawElement[] = [];
 
@@ -46,5 +47,5 @@ export default function card(theme: Theme): ExcalidrawElement[] {
     align: "center",
   }));
 
-  return els;
+  return variants([{ name: "default", elements: els }]);
 }
