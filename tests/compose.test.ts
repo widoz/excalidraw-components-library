@@ -202,6 +202,19 @@ describe("compose", () => {
     expect(scene.elements[0].roughness).toBe(body.roughness);
   });
 
+  it("widens the panel to fit a long label without moving the children", () => {
+    const short = compose({ type: "column", frame: { label: "X" }, children: [leaf("badge")] }, { root });
+    const long = compose(
+      { type: "column", frame: { label: "Project settings and preferences" }, children: [leaf("badge")] },
+      { root },
+    );
+    const childLeft = (scene: typeof short) => bounds(scene.elements.slice(2)).left;
+    expect(childLeft(long)).toBeCloseTo(childLeft(short), 6);
+    expect((long.elements[0] as { width: number }).width).toBeGreaterThan(
+      (short.elements[0] as { width: number }).width,
+    );
+  });
+
   it("rejects a bad frame", () => {
     expect(() => compose(
       { type: "row", frame: { padding: -1 }, children: [leaf("button")] },

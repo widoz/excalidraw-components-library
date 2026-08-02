@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { dirname, join } from "node:path";
 import { componentsDir, listComponents, loadVariant, measure, resolveRoot } from "./library.mjs";
 import { applyText } from "./text.mjs";
-import { checkFrame, frameElements, frameInsets, sampleStyle } from "./frame.mjs";
+import { checkFrame, frameElements, frameInsets, frameMinWidth, sampleStyle } from "./frame.mjs";
 
 const LEAF_KEYS = new Set(["component", "variant", "text"]);
 const CONTAINER_KEYS = new Set(["type", "gap", "align", "children", "frame"]);
@@ -23,6 +23,8 @@ function check(node) {
   if (node.type !== "row" && node.type !== "column") {
     throw new Error(`Node must have "component", or "type" of "row" or "column". Got ${JSON.stringify(node)}`);
   }
+  // Relies on the "component" in node check above having already returned for leaves,
+  // so reaching here means node is a row or column and any "text" key is misplaced.
   if ("text" in node) {
     throw new Error(`"text" is only valid on a component node, not on a row or column.`);
   }
@@ -77,7 +79,13 @@ function size(node, load, style) {
 
   const innerWidth = node.type === "row" ? along : across;
   const innerHeight = node.type === "row" ? across : along;
+  // Hazard: style.get() is read mid-traversal, before every component in the layout has
+  // been sampled. A framed subtree with no text-bearing component of its own falls back
+  // to FALLBACK.fontSize here, so its label band could be undersized under a preset
+  // whose real font is larger than the fallback. Harmless today: both shipped presets
+  // use fontSize 20, matching the fallback.
   const insets = node.frame === undefined ? { padding: 0, band: 0 } : frameInsets(node.frame, style.get());
+  const minWidth = node.frame === undefined ? 0 : frameMinWidth(node.frame, style.get());
 
   return {
     node,
@@ -86,7 +94,7 @@ function size(node, load, style) {
     insets,
     innerWidth,
     innerHeight,
-    width: innerWidth + insets.padding * 2,
+    width: Math.max(minWidth, innerWidth + insets.padding * 2),
     height: innerHeight + insets.padding * 2 + insets.band,
   };
 }

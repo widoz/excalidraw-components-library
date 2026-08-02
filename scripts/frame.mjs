@@ -42,6 +42,12 @@ export function checkFrame(frame) {
  * blueprint-preset scene comes out thin-stroked and sharp-cornered for free. Rect and
  * text styling are sampled independently: separator/horizontal has no rectangle, so
  * "the first component" cannot be assumed to supply both.
+ *
+ * Within the first component that has any rectangle, the rect with the LARGEST
+ * strokeWidth is sampled, not the first one. Most components draw a drop-shadow rect
+ * first (thin) and the body rect second (thick); sampling the first would give frames a
+ * hairline border against components with a much heavier one. First-component-wins
+ * still holds: a later component's rectangles never override an earlier sample.
  */
 export function sampleStyle() {
   let box;
@@ -49,7 +55,12 @@ export function sampleStyle() {
 
   return {
     sample(elements) {
-      box ??= elements.find((e) => e.type === "rectangle");
+      if (box === undefined) {
+        const rects = elements.filter((e) => e.type === "rectangle");
+        if (rects.length > 0) {
+          box = rects.reduce((widest, r) => (r.strokeWidth > widest.strokeWidth ? r : widest));
+        }
+      }
       type ??= elements.find((e) => e.type === "text");
     },
     get() {
@@ -61,17 +72,35 @@ export function sampleStyle() {
         fillStyle: box?.fillStyle ?? FALLBACK.fillStyle,
         fontFamily: type?.fontFamily ?? FALLBACK.fontFamily,
         fontSize: type?.fontSize ?? FALLBACK.fontSize,
-        textColor: type?.strokeColor ?? box?.strokeColor ?? FALLBACK.textColor,
+        // The panel is an outline; its title should be the same ink as the outline, not
+        // the (often light-on-dark) ink of a label sampled from inside a filled component.
+        textColor: box?.strokeColor ?? type?.strokeColor ?? FALLBACK.textColor,
         advance: type === undefined ? FALLBACK.advance : advanceOf(type),
       };
     },
   };
 }
 
+/** An empty-string label is treated as no label: no band, no width contribution. */
+function hasLabel(frame) {
+  return frame.label !== undefined && frame.label !== "";
+}
+
 export function frameInsets(frame, style) {
   const padding = frame.padding ?? DEFAULT_PADDING;
-  const band = frame.label === undefined ? 0 : style.fontSize * LINE_HEIGHT + padding;
+  const band = hasLabel(frame) ? style.fontSize * LINE_HEIGHT + padding : 0;
   return { padding, band };
+}
+
+/**
+ * The minimum panel width needed for the label itself to fit inside the padding, so a
+ * long label never overhangs a panel sized only from its children. 0 when there is no
+ * label.
+ */
+export function frameMinWidth(frame, style) {
+  if (!hasLabel(frame)) return 0;
+  const padding = frame.padding ?? DEFAULT_PADDING;
+  return 2 * padding + frame.label.length * style.fontSize * style.advance;
 }
 
 /**
@@ -117,7 +146,7 @@ export function frameElements(frame, width, height, style) {
     roundness: style.roundness,
   })];
 
-  if (frame.label !== undefined) {
+  if (hasLabel(frame)) {
     elements.push(element("text", 1, {
       x: padding,
       y: padding,
