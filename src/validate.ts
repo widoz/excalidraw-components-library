@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { DEFAULT_OUT, loadPreset, outDirFor, selectPresets } from "./build.js";
+import { loadPreset, outDirFor, selectPresets } from "./build.js";
 import { paletteValues, resolveTheme, type Theme } from "./theme.js";
 import { SOURCE } from "./scene.js";
 
@@ -215,7 +215,7 @@ function checkVariants(
   }
 }
 
-export function validateAll(theme: Theme, outDir: string = DEFAULT_OUT): string[] {
+export function validateAll(theme: Theme, outDir: string = outDirFor(theme)): string[] {
   const errors: string[] = [];
   const componentsDir = join(outDir, "components");
 
@@ -227,7 +227,7 @@ export function validateAll(theme: Theme, outDir: string = DEFAULT_OUT): string[
   };
 
   const files = readdirSync(componentsDir).filter((f) => f.endsWith(".excalidraw"));
-  if (files.length === 0) errors.push("dist/components: no .excalidraw files");
+  if (files.length === 0) errors.push(`${componentsDir}: no .excalidraw files`);
 
   for (const file of files) {
     const scene = JSON.parse(readFileSync(join(componentsDir, file), "utf8")) as Record<string, unknown>;

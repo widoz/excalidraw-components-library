@@ -44,15 +44,6 @@ export const DEFAULT_PRESET: Required<Preset> = {
 const EDGES: readonly EdgesName[] = ["sharp", "round"];
 
 /**
- * These are the paths the default preset's own output lands on: `dist/components/`
- * and `dist/comic-ui.excalidrawlib`. A non-default preset named either of these would
- * resolve to an output directory (`dist/<name>/`) that collides with — and, since
- * `buildAll` starts with an `rmSync` of its output dir, would delete — that committed
- * output. Reserved so no preset can ever name its way into that collision.
- */
-const RESERVED_NAMES: readonly string[] = ["components", "comic-ui"];
-
-/**
  * A preset name becomes a path segment (`dist/<name>/`, `presets/<name>.json`), and
  * `buildAll` starts by recursively removing its output directory. A name containing
  * `..`, a slash, or a leading dot therefore resolves that removal outside `dist/` —
@@ -80,13 +71,6 @@ export function resolveTheme(preset: Preset): Theme {
       `start with a letter or digit and contain only letters, digits and hyphens.`,
     );
   }
-  if (RESERVED_NAMES.includes(preset.name)) {
-    throw new Error(
-      `Preset name "${preset.name}" is reserved: it would collide with the default preset's ` +
-      `own committed output (dist/${preset.name}). Choose a different name.`,
-    );
-  }
-
   const paletteName = pick("palette", preset.palette ?? DEFAULT_PRESET.palette,
     Object.keys(palettes) as PaletteName[]);
   const strokeName = pick("strokeWidth", preset.strokeWidth ?? DEFAULT_PRESET.strokeWidth,

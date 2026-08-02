@@ -125,8 +125,8 @@ describe("registry", () => {
 });
 
 describe("preset builds", () => {
-  it("writes the default preset to dist root", () => {
-    expect(outDirFor(resolveTheme(DEFAULT_PRESET))).toBe(DEFAULT_OUT);
+  it("writes the default preset to its own subdirectory, like any other preset", () => {
+    expect(outDirFor(resolveTheme(DEFAULT_PRESET))).toBe(join(DEFAULT_OUT, "default"));
   });
 
   it("writes a named preset to a subdirectory", () => {

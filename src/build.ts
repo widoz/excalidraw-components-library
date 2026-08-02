@@ -65,21 +65,15 @@ function assertInsideDist(dir: string): string {
 }
 
 export function outDirFor(theme: Theme): string {
-  return assertInsideDist(
-    theme.name === DEFAULT_PRESET.name ? DEFAULT_OUT : join(DEFAULT_OUT, theme.name),
-  );
+  return assertInsideDist(join(DEFAULT_OUT, theme.name));
 }
 
 export function buildAll(theme: Theme, outDir: string = outDirFor(theme)): void {
   const componentsDir = join(outDir, "components");
-  // Narrowed to exactly what this function writes — components/ and the library file —
-  // rather than the whole output directory. The default preset's output dir *is* dist/,
-  // so a wide rmSync there deleted every other preset's dist/<name>/ subdirectory:
-  // `--all` destroyed each preset that sorts before "default", and a plain default build
-  // silently removed any preset output built earlier. Nothing else is ever written here,
-  // so removing the components directory wholesale still leaves no stale files behind.
-  rmSync(componentsDir, { recursive: true, force: true });
-  rmSync(join(outDir, "comic-ui.excalidrawlib"), { force: true });
+  // Every output directory is now a dist/<name>/ holding nothing but this preset's
+  // output, so removing it wholesale leaves no stale file behind and cannot reach a
+  // sibling preset. (It could when the default preset's output dir *was* dist/.)
+  rmSync(outDir, { recursive: true, force: true });
   mkdirSync(componentsDir, { recursive: true });
 
   const items: LibraryItemInput[] = [];
