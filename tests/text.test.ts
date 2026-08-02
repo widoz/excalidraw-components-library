@@ -86,10 +86,19 @@ describe("applyText growing", () => {
     expect(out[1].points).toEqual([[0, 0], [120, 0]]);
   });
 
-  it("leaves a zero-width straddling line alone", () => {
+  it("shifts a zero-width line positioned past the cut", () => {
     const elements = [
       { type: "text", x: 10, y: 0, width: 40, height: 25, fontSize: 20, text: "aaaa", textAlign: "left" },
-      { type: "line", x: 20, y: 0, width: 0, height: 50, points: [[0, 0], [0, 50]] },
+      { type: "line", x: 51, y: 0, width: 0, height: 50, points: [[0, 0], [0, 50]] },
+    ];
+    const out = applyText(elements, "aaaaaa", "x/y");
+    expect(out[1].x).toBeCloseTo(71, 6); // delta = 20, shifts from 51 to 71
+  });
+
+  it("leaves unhandled straddling elements unchanged", () => {
+    const elements = [
+      { type: "text", x: 10, y: 0, width: 40, height: 25, fontSize: 20, text: "aaaa", textAlign: "left" },
+      { type: "freedraw", x: 0, y: 0, width: 100, height: 10 },
     ];
     const out = applyText(elements, "aaaaaa", "x/y");
     expect(out[1]).toEqual(elements[1]);

@@ -44,7 +44,7 @@ export function normalizeText(spec, texts, label) {
   }
 
   if (!Array.isArray(spec)) {
-    throw new Error(`"text" must be a string or an array of strings, got ${JSON.stringify(spec)}.`);
+    throw new Error(`${label} "text" must be a string or an array of strings, got ${JSON.stringify(spec)}.`);
   }
 
   if (spec.length > texts.length) {
