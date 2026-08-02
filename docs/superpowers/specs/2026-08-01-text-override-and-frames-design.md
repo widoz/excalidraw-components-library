@@ -102,7 +102,8 @@ deliberately over hugging the text: boxes only ever grow, so a layout's sizes st
 predictable as strings are edited.
 
 **Vertical geometry is never touched.** Text stays single-line; heights, y coordinates and
-font sizes are untouched. A `\n` in replacement text is an error, not a second line.
+font sizes are untouched. A `\n` in replacement text is an error, not a second line — for
+both the string form and every entry of the array form.
 
 **Multiple replacements in one leaf** are applied in element order, each seeing the
 coordinates the previous one produced.
@@ -110,6 +111,16 @@ coordinates the previous one produced.
 **Reflow is automatic.** `size()` calls `measure()`, which derives a component's box from
 real element extents (`library.mjs:125`). A grown component reports a wider box, so
 neighbours in the row or column move out of the way with no extra code.
+
+**Growth tears grid-shaped components.** The insert-space rule (above) is global to the
+component instance: it cuts at the replaced text's old right edge regardless of what else
+lives at that x-coordinate. On box-shaped components (button, input, card, badge) the cut
+only ever crosses the one box, so this is invisible. On a component whose elements form a
+horizontal grid — `calendar`, `table` — the same cut splits the grid at whatever column it
+lands in. Verified on `calendar/default`: replacing the month title moves the Thu→Fri gap
+from 44px to over 200px while the columns before the cut don't move. This is intended
+behaviour, not a bug, and the shrink path never has it (it only moves the text element).
+Workaround: on grid-shaped components, keep replacements no longer than the stock string.
 
 ## Feature 2: frames
 
@@ -128,15 +139,26 @@ current meaning.
 
 - `padding` — optional number, default `16`. Must be a finite number `>= 0`.
 - `label` — optional string. Drawn inside the panel at the top left, above the children.
+  An empty string (`""`) is treated the same as omitting it: no band, no width
+  contribution, no text element emitted.
 
 Frames nest freely, including a framed row inside a framed column.
 
 ### Geometry
 
-Let `labelBand` be `0` when there is no label, and `labelHeight + padding` when there is —
-where `labelHeight` is `fontSize * 1.25`, matching `Factory.text` (`src/element.ts:242`).
+Let `labelBand` be `0` when there is no label (an empty string counts as no label), and
+`labelHeight + padding` when there is — where `labelHeight` is `fontSize * 1.25`, matching
+`Factory.text` (`src/element.ts:242`).
 
-`size()` inflates the container: `width += 2 * padding`, `height += 2 * padding + labelBand`.
+A label also has to fit inside the panel it sits on top of: `minWidth` is `0` without a
+label, and `2 * padding + label.length * fontSize * advance` with one — the same formula
+`size()` uses everywhere else to turn a string into a width.
+
+`size()` inflates the container: `width = max(minWidth, innerWidth + 2 * padding)`,
+`height = innerHeight + 2 * padding + labelBand`. A long label can therefore widen the
+panel beyond what its children need, but children are placed from `innerWidth` /
+`innerHeight`, not the padded `width` / `height`, so a widened panel never drags its
+children off their own alignment.
 
 `place()` offsets children by `(padding, padding + labelBand)` and emits the panel rectangle
 **before** descending into children. `index` is assigned in emit order (`compose.mjs:132`),
@@ -145,14 +167,25 @@ so the panel lands behind its contents.
 ### Styling
 
 Sampled from the loaded components, never hardcoded, so a frame matches whichever preset is
-in play with no changes to `presets/` or `src/`:
+in play with no changes to `presets/` or `src/`. Rect and text styling are sampled
+independently, since some components (e.g. `separator/horizontal`) have text but no
+rectangle:
 
-- **Panel rect** — copies `strokeColor`, `strokeWidth`, `roughness`, `roundness` and
-  `fillStyle` from the first rectangle of the first component loaded during this compose;
-  `backgroundColor` is `"transparent"`.
-- **Label text** — copies `fontFamily`, `fontSize` and `strokeColor` from the first text
-  element of the first component loaded, and is measured with that element's recovered
-  `advance`.
+- **Panel rect** — within the first component loaded during this compose that has any
+  rectangle, copies `strokeColor`, `strokeWidth`, `roughness`, `roundness` and `fillStyle`
+  from the rectangle with the **largest `strokeWidth`**, not the first rectangle in the
+  component. Most components draw a thin drop-shadow rect before their body rect (e.g.
+  `button/default`: shadow `strokeWidth: 1`, body `strokeWidth: 4`), and it is the body's
+  weight a panel border should match. `backgroundColor` is `"transparent"`.
+- **Label text** — copies `fontFamily`, `fontSize` from the first text element of the
+  first component loaded, and is measured with that element's recovered `advance`. Ink
+  is different: it takes the sampled panel rectangle's `strokeColor`
+  (`box?.strokeColor ?? type?.strokeColor ?? fallback`), not the text element's own
+  `strokeColor`. The panel is an outline, so its title should read in the same ink as the
+  outline — not in a label's own ink, which in this library is frequently light-on-dark
+  (`button/default`, `tabs/default`, `badge/default`, `toggle/on`, `message/outgoing`,
+  `hover-card/default`, `avatar/initials` all have a `#fafafa` text stroke against a
+  `#18181b` rect stroke) and would render near-invisible against a white canvas.
 
 A blueprint-preset frame therefore comes out thin-stroked and sharp-cornered for free.
 

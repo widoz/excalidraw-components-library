@@ -69,6 +69,15 @@ result in Excalidraw with **Menu → Open**.
 - **Text is single-line and re-measured, not re-flowed.** Replacement strings widen or
   narrow their own box; they never wrap, and nothing grows vertically. A very long string
   in a small component makes a very wide component.
+- **Growing text tears grid-shaped components.** The insert-space rule applies to the
+  whole component instance, cutting at the replaced text's old right edge. On a
+  box-shaped component (button, input, card, badge) that cut only ever crosses the one
+  box, so it reflows cleanly. On a component whose elements form a horizontal grid
+  (`calendar`, `table`) the same cut lands wherever the replaced text sits and splits the
+  grid there — e.g. widening `calendar`'s month title moves the Thu→Fri gap from 44px to
+  over 200px while the columns before it don't move. Shrinking text never has this
+  problem, since the shrink path only moves the text itself. Workaround: on grid-shaped
+  components, keep replacements no longer than the stock string.
 - **Rows and columns only.** No overlap, no absolute coordinates, no z-order.
 - **One widget per leaf.** `{"component": "button"}` is the default variant, not the
   three-button sheet.
