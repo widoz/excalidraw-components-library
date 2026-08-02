@@ -34,7 +34,8 @@ to point it at. Run every later command from the printed root.
 npm run preset -- --name soft --palette stone --edges sharp   # writes presets/soft.json
 npm run build -- --preset soft                                 # writes dist/soft/
 npm run validate -- --preset soft                              # checks dist/soft/
-npm run build -- --all                                         # every preset
+npm run build                                                  # every preset, prunes orphans
+npm run validate                                               # checks every preset
 ```
 
 `npm run preset` with no flags prompts interactively — only use that form when the
@@ -45,7 +46,7 @@ user is at the terminal.
 - The filename and the `name` field must match; the filename is what `--preset`
   selects, the field picks the output directory.
 - A name must be a plain path segment: `[a-z0-9][a-z0-9-]*`.
-- `components` and `comic-ui` are reserved — they collide with the default preset's
-  own output paths.
+- Every preset builds to `dist/<name>/`, including `default`. Deleting a preset file
+  and running a full build removes its output directory.
 
 Report what the CLIs print. Do not paraphrase their errors.

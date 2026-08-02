@@ -8,9 +8,9 @@ Bold wobbly ink, flat fills, hard offset shadows. Colours are the shadcn **zinc*
 ## Use it
 
 **Whole library:** in Excalidraw open **Library → Load from file** and pick
-`dist/comic-ui.excalidrawlib`. All 58 components land in your library panel.
+`dist/default/comic-ui.excalidrawlib`. All 58 components land in your library panel.
 
-**One component:** open `dist/components/<name>.excalidraw` via **Menu → Open**,
+**One component:** open `dist/default/components/<name>.excalidraw` via **Menu → Open**,
 then copy what you need.
 
 Each component is a single group — click once to select and drag the whole thing.
@@ -52,8 +52,8 @@ tokens (colour, font, stroke weight) into concrete values.
 `src/theme.ts` resolves a preset file into a `Theme`; `src/build.ts` and `src/preset.ts`
 are the CLI entry points.
 `src/components/*.ts` is one file per component.
-`dist/` is generated but committed, so the library works without a build. Only the
-default preset's output is committed — see [Styles](#styles).
+`dist/` is generated but committed, so the library works without a build. Every preset's
+output is committed, one directory per preset — see [Styles](#styles).
 
 ## Styles
 
@@ -71,21 +71,22 @@ picks five things:
 ```bash
 npm run preset                    # prompts, writes presets/<name>.json
 npm run preset -- --name soft --palette stone --edges sharp
-npm run build                     # default preset → dist/
-npm run build -- --preset soft    # → dist/soft/
-npm run build -- --all            # every preset in presets/
-npm run validate -- --preset soft # checks dist/soft/ (--all also works)
+npm run build                     # every preset → dist/<name>/
+npm run build -- --preset soft    # just soft → dist/soft/
+npm run validate                  # checks every preset
+npm run validate -- --preset soft # checks dist/soft/
 ```
 
-`presets/` is committed so a style is reproducible. Only the default preset's `dist/` is
-committed; other presets are build artifacts you regenerate.
+`presets/` and `dist/` are both committed, so every style is reproducible and usable
+without a build. `dist/` mirrors `presets/` exactly: a full build writes one directory
+per preset and removes any directory no preset backs, so deleting a preset and
+rebuilding cleans up after itself. A `--preset` build only ever touches its own
+directory.
 
 A preset's filename and its `name` field must match — the filename is what `--preset`
 selects, the field is what picks the output directory. A name must also be a plain path
 segment (`[a-z0-9][a-z0-9-]*`): it becomes a directory under `dist/`, and building a
-preset removes and rewrites that directory. Names `components` and `comic-ui` are
-reserved on top of that: they would collide with the default preset's own output paths
-(`dist/components/`, `dist/comic-ui.excalidrawlib`).
+preset removes and rewrites that directory.
 
 `edges: sharp` squares every corner. `edges: round` means "round where the component asks
 for it" — 26 components are square for structural reasons (joined cells, inner bands) and
