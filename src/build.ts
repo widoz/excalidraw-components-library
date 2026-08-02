@@ -135,6 +135,15 @@ export function buildAll(theme: Theme, outDir: string = outDirFor(theme)): void 
   console.log(`Wrote ${items.length} components to ${outDir}`);
 }
 
+// Single source of truth for "is this a full build?". selectPresets and the CLI's
+// prune guard both need this answer; deciding it in two places let them drift silently
+// (e.g. if --preset later grew a --preset=name form, only one site would learn about
+// it), which is exactly what could break the "a --preset build never touches a
+// sibling" safety property this feature depends on.
+function isFullBuild(args: string[]): boolean {
+  return args.indexOf("--preset") === -1;
+}
+
 /**
  * Which presets a `--preset <name>` / `--all` / bare invocation selects. Shared so
  * `validate.ts` answers the same question the same way: before this existed, only
@@ -145,10 +154,9 @@ export function buildAll(theme: Theme, outDir: string = outDirFor(theme)): void 
  * others stale in git. `--all` stays accepted as an alias for that same full build.
  */
 export function selectPresets(args: string[]): string[] {
-  const presetFlag = args.indexOf("--preset");
-  if (presetFlag === -1) return listPresets();
+  if (isFullBuild(args)) return listPresets();
 
-  const presetName = args[presetFlag + 1];
+  const presetName = args[args.indexOf("--preset") + 1];
   if (presetName === undefined || presetName.startsWith("--")) {
     throw new Error("--preset requires a preset name.");
   }
@@ -157,13 +165,13 @@ export function selectPresets(args: string[]): string[] {
 
 // Only run when executed directly, not when imported by validate.ts or a test.
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const selected = selectPresets(process.argv.slice(2));
-  for (const name of selected) {
+  const args = process.argv.slice(2);
+  for (const name of selectPresets(args)) {
     buildAll(resolveTheme(loadPreset(name)));
   }
 
   // Only a full build prunes: a narrowed one was not asked about its siblings.
-  if (!process.argv.includes("--preset")) {
+  if (isFullBuild(args)) {
     const removed = pruneOrphans();
     if (removed.length > 0) console.log(`Pruned orphaned output: ${removed.join(", ")}`);
   }
