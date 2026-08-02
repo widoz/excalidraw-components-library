@@ -179,6 +179,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       for (const component of listComponents(root, args.preset)) {
         const variants = component.variants.map((v) => `${v.name} (${v.width}x${v.height})`).join(", ");
         console.log(`${component.name}: ${variants}`);
+        for (const variant of component.variants) {
+          if (variant.texts.length === 0) continue;
+          console.log(`    ${variant.name} text: ${variant.texts.map((t) => JSON.stringify(t)).join(", ")}`);
+        }
       }
     } else {
       const layout = JSON.parse(readFileSync(args.layoutPath, "utf8"));

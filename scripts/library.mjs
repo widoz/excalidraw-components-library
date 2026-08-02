@@ -3,6 +3,7 @@ import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
+import { textSlots } from "./text.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const PLUGIN_ROOT = join(HERE, "..");
@@ -176,6 +177,9 @@ export function listComponents(root, preset) {
         .filter((f) => f.endsWith(".excalidraw"))
         .map((f) => f.replace(/\.excalidraw$/, ""))
         .sort()
-        .map((variant) => ({ name: variant, ...measure(loadVariant(root, preset, name, variant).elements) })),
+        .map((variant) => {
+          const { elements } = loadVariant(root, preset, name, variant);
+          return { name: variant, ...measure(elements), texts: textSlots(elements).map((e) => e.text) };
+        }),
     }));
 }

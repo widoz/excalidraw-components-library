@@ -5,6 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { componentsDir, ensureLibrary, listComponents, loadVariant, measure, resolveRoot } from "../scripts/library.mjs";
 
 const ROOT = join(import.meta.dirname, "..");
+const root = ROOT;
 let fake: string;
 
 beforeAll(() => {
@@ -90,8 +91,19 @@ describe("measure", () => {
 describe("listComponents", () => {
   it("reports each component's variants with sizes", () => {
     expect(listComponents(fake)).toEqual([
-      { name: "widget", variants: [{ name: "default", width: 40, height: 25 }] },
+      { name: "widget", variants: [{ name: "default", width: 40, height: 25, texts: [] }] },
     ]);
+  });
+
+  it("reports each variant's current strings", () => {
+    const tabs = listComponents(root).find((c) => c.name === "tabs")!;
+    const variant = tabs.variants.find((v) => v.name === "default")!;
+    expect(variant.texts).toEqual(["Preview", "Code", "Notes", "Panel content lives here."]);
+  });
+
+  it("reports an empty list for a variant with no text", () => {
+    const skeleton = listComponents(root).find((c) => c.name === "skeleton")!;
+    expect(skeleton.variants.find((v) => v.name === "default")!.texts).toEqual([]);
   });
 });
 
