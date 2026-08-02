@@ -27,6 +27,16 @@ function quote(texts) {
   return texts.map((t) => JSON.stringify(t.text)).join(", ");
 }
 
+/** Validate one replacement entry. Shared by both the string and array forms. */
+function checkEntry(entry) {
+  if (typeof entry !== "string") {
+    throw new Error(`Replacement text must be a string or null, got ${JSON.stringify(entry)}.`);
+  }
+  if (entry.includes("\n")) {
+    throw new Error(`Replacement text must be a single line; ${JSON.stringify(entry)} contains a newline.`);
+  }
+}
+
 /**
  * Validate a leaf's `text` and return it as an array aligned with the slots.
  * `label` is "<component>/<variant>", used so every message says which leaf is wrong.
@@ -35,11 +45,15 @@ export function normalizeText(spec, texts, label) {
   const current = texts.length > 0 ? ` Current: ${quote(texts)}` : "";
 
   if (typeof spec === "string") {
+    if (texts.length === 0) {
+      throw new Error(`${label} has no text elements to replace.`);
+    }
     if (texts.length !== 1) {
       throw new Error(
         `${label} has ${texts.length} text elements; pass an array, not a string.${current}`,
       );
     }
+    checkEntry(spec);
     return [spec];
   }
 
@@ -48,19 +62,19 @@ export function normalizeText(spec, texts, label) {
   }
 
   if (spec.length > texts.length) {
+    if (texts.length === 0) {
+      throw new Error(`${label} has no text elements to replace.`);
+    }
+    const elementsWord = texts.length === 1 ? "element" : "elements";
+    const replacementsPhrase = spec.length === 1 ? "1 replacement was given" : `${spec.length} replacements were given`;
     throw new Error(
-      `${label} has ${texts.length} text elements but ${spec.length} replacements were given.${current}`,
+      `${label} has ${texts.length} text ${elementsWord} but ${replacementsPhrase}.${current}`,
     );
   }
 
   for (const entry of spec) {
     if (entry === null || entry === undefined) continue;
-    if (typeof entry !== "string") {
-      throw new Error(`Replacement text must be a string or null, got ${JSON.stringify(entry)}.`);
-    }
-    if (entry.includes("\n")) {
-      throw new Error(`Replacement text must be a single line; ${JSON.stringify(entry)} contains a newline.`);
-    }
+    checkEntry(entry);
   }
 
   return spec;
@@ -117,9 +131,9 @@ function replaceOne(elements, index, next) {
 }
 
 /**
- * Apply a leaf's `text` to a component's elements. Returns a new array; the input is
- * never mutated, because the caller's elements come straight from the loaded scene and
- * may be reused by another instance of the same component.
+ * Apply a leaf's `text` to a component's elements. Never mutates its input — the
+ * caller's elements come straight from the loaded scene and may be reused by another
+ * instance of the same component.
  */
 export function applyText(elements, spec, label) {
   const replacements = normalizeText(spec, textSlots(elements), label);

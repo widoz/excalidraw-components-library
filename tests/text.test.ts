@@ -64,7 +64,7 @@ describe("applyText growing", () => {
       { type: "text", x: 20, y: 0, width: 40, height: 25, fontSize: 20, text: "aaaa", textAlign: "left" },
     ];
     const out = applyText(elements, "aaaaaa", "x/y");
-    expect(out[0]).toEqual(elements[0]);
+    expect(out[0]).toBe(elements[0]);
   });
 
   it("shifts elements that start at or past the cut", () => {
@@ -101,7 +101,15 @@ describe("applyText growing", () => {
       { type: "freedraw", x: 0, y: 0, width: 100, height: 10 },
     ];
     const out = applyText(elements, "aaaaaa", "x/y");
-    expect(out[1]).toEqual(elements[1]);
+    expect(out[1]).toBe(elements[1]);
+  });
+
+  it("never changes the text element's y or height", () => {
+    const before = button().find((e: any) => e.type === "text")!;
+    const out = applyText(button(), "Featured image", "button/default");
+    const text = out.find((e: any) => e.type === "text")!;
+    expect(text.y).toBe(before.y);
+    expect(text.height).toBe(before.height);
   });
 });
 
@@ -183,8 +191,25 @@ describe("normalizeText errors", () => {
       .toThrow(/single line/);
   });
 
+  it("rejects a newline given as the string form", () => {
+    expect(() => normalizeText("a\nb", textSlots(button()), "button/default"))
+      .toThrow(/Replacement text must be a single line; "a\\nb" contains a newline\./);
+  });
+
   it("rejects a spec that is neither string nor array", () => {
     expect(() => normalizeText({ label: "a" } as never, textSlots(button()), "button/default"))
       .toThrow(/must be a string or an array/);
+  });
+
+  it("gives a dedicated message for a component with no text elements", () => {
+    expect(() => normalizeText("Post", [], "icon/default"))
+      .toThrow(/icon\/default has no text elements to replace\./);
+    expect(() => normalizeText(["Post"], [], "icon/default"))
+      .toThrow(/icon\/default has no text elements to replace\./);
+  });
+
+  it("uses grammatical singular wording for one text element and two replacements", () => {
+    expect(() => normalizeText(["a", "b"], textSlots(button()), "button/default"))
+      .toThrow(/has 1 text element but 2 replacements were given\./);
   });
 });
