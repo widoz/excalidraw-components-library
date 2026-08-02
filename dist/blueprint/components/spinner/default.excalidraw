@@ -1,0 +1,364 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "excalidraw-comic-components",
+  "elements": [
+    {
+      "id": "spinner-group-0-a27afi",
+      "type": "line",
+      "x": 0,
+      "y": 8.89,
+      "width": 26,
+      "height": 26,
+      "angle": 0,
+      "strokeColor": "#161b1d",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "spinner-group"
+      ],
+      "frameId": null,
+      "index": "a00000V",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 474651239,
+      "version": 1,
+      "versionNonce": 480832165,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -0.5,
+          5.07
+        ],
+        [
+          -1.9799999999999969,
+          9.950000000000003
+        ],
+        [
+          -4.380000000000003,
+          14.439999999999998
+        ],
+        [
+          -7.619999999999997,
+          18.380000000000003
+        ],
+        [
+          -11.560000000000002,
+          21.619999999999997
+        ],
+        [
+          -16.049999999999997,
+          24.020000000000003
+        ],
+        [
+          -20.93,
+          25.5
+        ],
+        [
+          -26,
+          26
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "spinner-group-1-neffrb",
+      "type": "line",
+      "x": 59.489999999999995,
+      "y": 34.5,
+      "width": 30.450000000000003,
+      "height": 51.589999999999996,
+      "angle": 0,
+      "strokeColor": "#161b1d",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "spinner-group"
+      ],
+      "frameId": null,
+      "index": "a00001V",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 583035252,
+      "version": 1,
+      "versionNonce": 722058655,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -5.22999999999999,
+          -1.5
+        ],
+        [
+          -10.030000000000001,
+          -4.060000000000002
+        ],
+        [
+          -14.189999999999998,
+          -7.549999999999997
+        ],
+        [
+          -17.539999999999992,
+          -11.829999999999998
+        ],
+        [
+          -19.92,
+          -16.72
+        ],
+        [
+          -21.239999999999995,
+          -21.99
+        ],
+        [
+          -21.429999999999993,
+          -27.419999999999998
+        ],
+        [
+          -20.47999999999999,
+          -32.78
+        ],
+        [
+          -18.44999999999999,
+          -37.82
+        ],
+        [
+          -15.409999999999997,
+          -42.32
+        ],
+        [
+          -11.5,
+          -46.1
+        ],
+        [
+          -6.890000000000001,
+          -48.98
+        ],
+        [
+          -1.7800000000000011,
+          -50.839999999999996
+        ],
+        [
+          3.6000000000000085,
+          -51.589999999999996
+        ],
+        [
+          9.02000000000001,
+          -51.22
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "spinner-group-2-2dwrxi",
+      "type": "line",
+      "x": 129.57,
+      "y": 0,
+      "width": 50.360000000000014,
+      "height": 51.95,
+      "angle": 0,
+      "strokeColor": "#161b1d",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "spinner-group"
+      ],
+      "frameId": null,
+      "index": "a00002V",
+      "roundness": {
+        "type": 2
+      },
+      "seed": 221363609,
+      "version": 1,
+      "versionNonce": 1203915369,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          2.319999999999993,
+          -4.789999999999999
+        ],
+        [
+          5.560000000000002,
+          -9
+        ],
+        [
+          9.599999999999994,
+          -12.459999999999999
+        ],
+        [
+          14.25,
+          -15.04
+        ],
+        [
+          19.330000000000013,
+          -16.61
+        ],
+        [
+          24.629999999999995,
+          -17.11
+        ],
+        [
+          29.909999999999997,
+          -16.53
+        ],
+        [
+          34.97,
+          -14.879999999999999
+        ],
+        [
+          39.58000000000001,
+          -12.239999999999998
+        ],
+        [
+          43.56999999999999,
+          -8.709999999999999
+        ],
+        [
+          46.75,
+          -4.449999999999999
+        ],
+        [
+          48.99000000000001,
+          0.370000000000001
+        ],
+        [
+          50.21000000000001,
+          5.550000000000001
+        ],
+        [
+          50.360000000000014,
+          10.86
+        ],
+        [
+          49.41,
+          16.090000000000003
+        ],
+        [
+          47.420000000000016,
+          21.03
+        ],
+        [
+          44.47,
+          25.450000000000003
+        ],
+        [
+          40.68000000000001,
+          29.18
+        ],
+        [
+          36.22,
+          32.07
+        ],
+        [
+          31.25,
+          33.980000000000004
+        ],
+        [
+          26.01000000000002,
+          34.84
+        ],
+        [
+          20.689999999999998,
+          34.62
+        ],
+        [
+          15.54000000000002,
+          33.32
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null
+    },
+    {
+      "id": "spinner-group-3-vz2k1k",
+      "type": "text",
+      "x": 24,
+      "y": 50.89,
+      "width": 80,
+      "height": 20,
+      "angle": 0,
+      "strokeColor": "#67787c",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "spinner-group"
+      ],
+      "frameId": null,
+      "index": "a00003V",
+      "roundness": null,
+      "seed": 1536057669,
+      "version": 1,
+      "versionNonce": 1093042927,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "Loading...",
+      "originalText": "Loading...",
+      "fontSize": 16,
+      "fontFamily": 6,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}

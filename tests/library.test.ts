@@ -10,9 +10,9 @@ let fake: string;
 
 beforeAll(() => {
   fake = mkdtempSync(join(tmpdir(), "lib-"));
-  mkdirSync(join(fake, "dist", "components", "widget"), { recursive: true });
-  writeFileSync(join(fake, "dist", "comic-ui.excalidrawlib"), "{}");
-  writeFileSync(join(fake, "dist", "components", "widget", "default.excalidraw"), JSON.stringify({
+  mkdirSync(join(fake, "dist", "default", "components", "widget"), { recursive: true });
+  writeFileSync(join(fake, "dist", "default", "comic-ui.excalidrawlib"), "{}");
+  writeFileSync(join(fake, "dist", "default", "components", "widget", "default.excalidraw"), JSON.stringify({
     elements: [{ id: "a", x: 0, y: 0, width: 30, height: 10 }, { id: "b", x: 10, y: 5, width: 30, height: 20 }],
     appState: { gridSize: null, viewBackgroundColor: "#ffffff" },
   }));
@@ -40,12 +40,16 @@ describe("resolveRoot", () => {
 });
 
 describe("componentsDir", () => {
-  it("uses dist/components for the default preset", () => {
-    expect(componentsDir(fake)).toBe(join(fake, "dist", "components"));
+  it("uses dist/default/components when no preset is named", () => {
+    expect(componentsDir(fake)).toBe(join(fake, "dist", "default", "components"));
   });
 
   it("uses dist/<preset>/components for a named preset", () => {
     expect(componentsDir(fake, "soft")).toBe(join(fake, "dist", "soft", "components"));
+  });
+
+  it("derives both the same way: 'default' is a fallback name, not a special path", () => {
+    expect(componentsDir(fake, "default")).toBe(componentsDir(fake));
   });
 
   it("says how to build a preset that is not there", () => {
@@ -53,13 +57,15 @@ describe("componentsDir", () => {
       .toThrow(/npm run build -- --preset soft/);
   });
 
-  it("says plain 'npm run build' (no '--preset undefined') for a missing default build", () => {
+  it("names the preset in the build command for a missing default build", () => {
     const noDist = mkdtempSync(join(tmpdir(), "nodist-"));
-    mkdirSync(join(noDist, "dist"), { recursive: true });
-    writeFileSync(join(noDist, "dist", "comic-ui.excalidrawlib"), "{}");
+    mkdirSync(join(noDist, "dist", "default"), { recursive: true });
+    writeFileSync(join(noDist, "dist", "default", "comic-ui.excalidrawlib"), "{}");
 
-    expect(() => loadVariant(noDist, undefined, "widget", "default")).toThrow(/Run: npm run build$/);
-    expect(() => listComponents(noDist, undefined)).toThrow(/Run: npm run build$/);
+    expect(() => loadVariant(noDist, undefined, "widget", "default"))
+      .toThrow(/Run: npm run build -- --preset default$/);
+    expect(() => listComponents(noDist, undefined))
+      .toThrow(/Run: npm run build -- --preset default$/);
 
     rmSync(noDist, { recursive: true, force: true });
   });
@@ -148,8 +154,8 @@ describe("ensureLibrary: only ever installs into a verified git clone", () => {
 
   function makeCloneLike({ withGit = false, packageJson = JSON.stringify({ name: pkgName }) } = {}) {
     const clone = mkdtempSync(join(tmpdir(), "clone-"));
-    mkdirSync(join(clone, "dist"), { recursive: true });
-    writeFileSync(join(clone, "dist", "comic-ui.excalidrawlib"), "{}");
+    mkdirSync(join(clone, "dist", "default"), { recursive: true });
+    writeFileSync(join(clone, "dist", "default", "comic-ui.excalidrawlib"), "{}");
     mkdirSync(join(clone, "src"), { recursive: true });
     writeFileSync(join(clone, "src", "build.ts"), "");
     writeFileSync(join(clone, "package.json"), packageJson);

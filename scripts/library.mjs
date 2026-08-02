@@ -9,7 +9,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 export const PLUGIN_ROOT = join(HERE, "..");
 export const CONFIG_PATH = join(homedir(), ".claude", "excalidraw-lib.json");
 
-const MARKER = join("dist", "comic-ui.excalidrawlib");
+const MARKER = join("dist", "default", "comic-ui.excalidrawlib");
 
 function isLibrary(dir) {
   return typeof dir === "string" && existsSync(join(dir, MARKER));
@@ -31,8 +31,8 @@ function candidates() {
 }
 
 /**
- * 1. the config file, 2. the plugin's own root (dist/ is committed, so composing
- * needs no setup), 3. fail with the exact fix.
+ * 1. the config file, 2. the plugin's own root (dist/ is committed for every preset,
+ * so composing needs no setup), 3. fail with the exact fix.
  *
  * A config file that exists but is unusable (bad JSON, or a path that is not a
  * library) is an error, not a silent fallback: the user asked for a specific
@@ -118,9 +118,7 @@ export async function ensureLibrary({ needsToolchain = false, configPath = undef
 }
 
 export function componentsDir(root, preset) {
-  return preset === undefined || preset === "default"
-    ? join(root, "dist", "components")
-    : join(root, "dist", preset, "components");
+  return join(root, "dist", preset ?? "default", "components");
 }
 
 export function measure(elements) {
@@ -137,7 +135,7 @@ function near(name, available) {
 }
 
 function buildCommand(preset) {
-  return preset === undefined || preset === "default" ? "npm run build" : `npm run build -- --preset ${preset}`;
+  return `npm run build -- --preset ${preset ?? "default"}`;
 }
 
 export function loadVariant(root, preset, component, variant = "default") {

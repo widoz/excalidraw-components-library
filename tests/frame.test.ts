@@ -5,7 +5,7 @@ import { checkFrame, frameElements, frameInsets, frameMinWidth, sampleStyle } fr
 
 const root = join(import.meta.dirname, "..");
 const load = (component: string, variant: string) =>
-  JSON.parse(readFileSync(join(root, "dist", "components", component, `${variant}.excalidraw`), "utf8"))
+  JSON.parse(readFileSync(join(root, "dist", "default", "components", component, `${variant}.excalidraw`), "utf8"))
     .elements as Array<Record<string, any>>;
 
 const styleFrom = (...components: Array<[string, string]>) => {
