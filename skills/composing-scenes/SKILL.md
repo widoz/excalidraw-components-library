@@ -30,8 +30,19 @@ result in Excalidraw with **Menu → Open**.
            { "component": "button" } ] } ] }
    ```
 
-   - A leaf is `{ "component": "<name>", "variant": "<name>" }`. Omitting `variant`
-     means `default`.
+   - A leaf is `{ "component": "<name>", "variant": "<name>", "text": ... }`. Omitting
+     `variant` means `default`.
+   - `text` replaces the component's baked-in strings. A string replaces the only text in
+     a single-text component; an array replaces them positionally, and `null` skips one:
+
+     ```json
+     { "component": "button", "text": "Publish" }
+     { "component": "tabs", "text": ["Post", "Block", null, "Draft saved"] }
+     ```
+
+     `list` prints every variant's current strings, in the order the array uses — read it
+     rather than guessing. Text must be a single line. Longer text widens its box and
+     reflows its neighbours; shorter text leaves the box alone and just re-centres.
    - Five components have no `default` variant, so a leaf for them must name one:
      `accordion` (collapsed, expanded), `collapsible` (collapsed, expanded),
      `separator` (horizontal, vertical), `switch` (off, on), `toggle` (off, on).
@@ -39,6 +50,9 @@ result in Excalidraw with **Menu → Open**.
      e.g. `switch has no default variant; pick one of: off, on`.
    - A container is `{ "type": "row" | "column", "gap": 24, "align": "start",
      "children": [...] }`. `align` is the cross axis: `start`, `center`, or `end`.
+   - Any container may carry `"frame": { "padding": 16, "label": "Settings" }`, which draws
+     a bordered panel behind its children with that much space around them. Both keys are
+     optional; padding defaults to 16. Frames nest.
    - Containers nest. The root may be either kind.
 
 3. Compose:
@@ -52,9 +66,9 @@ result in Excalidraw with **Menu → Open**.
 
 ## Limits, state them rather than working around them
 
-- **Text is fixed.** Components carry stock labels ("Click me!", "your@email.com").
-  Changing them means editing in Excalidraw after opening. Do not hand-edit the scene
-  JSON to fake it.
+- **Text is single-line and re-measured, not re-flowed.** Replacement strings widen or
+  narrow their own box; they never wrap, and nothing grows vertically. A very long string
+  in a small component makes a very wide component.
 - **Rows and columns only.** No overlap, no absolute coordinates, no z-order.
 - **One widget per leaf.** `{"component": "button"}` is the default variant, not the
   three-button sheet.
