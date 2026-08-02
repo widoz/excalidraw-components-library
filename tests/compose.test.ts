@@ -124,6 +124,94 @@ describe("compose", () => {
       { root },
     )).toThrow(/only valid on a component node/);
   });
+
+  const bounds = (elements: Array<{ x: number; y: number; width: number; height: number }>) => ({
+    left: Math.min(...elements.map((e) => e.x)),
+    top: Math.min(...elements.map((e) => e.y)),
+    right: Math.max(...elements.map((e) => e.x + e.width)),
+    bottom: Math.max(...elements.map((e) => e.y + e.height)),
+  });
+
+  const panels = (scene: { elements: Array<{ groupIds: string[]; width: number }> }) =>
+    scene.elements.filter((e) => e.groupIds[0]!.startsWith("frame-group"));
+
+  it("inflates a framed container by its padding", () => {
+    const children = [leaf("button"), leaf("input")];
+    const plain = compose({ type: "column", gap: 10, children }, { root });
+    const framed = compose({ type: "column", gap: 10, frame: { padding: 20 }, children }, { root });
+    const panel = framed.elements[0];
+    const inner = bounds(plain.elements);
+    expect(panel.width).toBeCloseTo(inner.right - inner.left + 40, 6);
+    expect(panel.height).toBeCloseTo(inner.bottom - inner.top + 40, 6);
+  });
+
+  it("offsets children by the padding", () => {
+    const framed = compose(
+      { type: "column", frame: { padding: 20 }, children: [leaf("button")] },
+      { root },
+    );
+    const children = framed.elements.slice(1);
+    expect(bounds(children).left).toBeCloseTo(20, 6);
+    expect(bounds(children).top).toBeCloseTo(20, 6);
+  });
+
+  it("puts the panel behind its children", () => {
+    const framed = compose({ type: "column", frame: {}, children: [leaf("button")] }, { root });
+    expect(framed.elements[0].type).toBe("rectangle");
+    expect(framed.elements[0].backgroundColor).toBe("transparent");
+    const indexes = framed.elements.map((e: { index: string }) => e.index);
+    expect([...indexes].sort()).toEqual(indexes);
+  });
+
+  it("adds a label band above the children", () => {
+    const plain = compose({ type: "column", frame: { padding: 10 }, children: [leaf("button")] }, { root });
+    const titled = compose(
+      { type: "column", frame: { padding: 10, label: "Settings" }, children: [leaf("button")] },
+      { root },
+    );
+    expect(titled.elements[0].height).toBeCloseTo(plain.elements[0].height + 20 * 1.25 + 10, 6);
+    expect(titled.elements[1].text).toBe("Settings");
+    expect(bounds(titled.elements.slice(2)).top).toBeCloseTo(10 + 20 * 1.25 + 10, 6);
+  });
+
+  it("nests frames", () => {
+    const scene = compose({
+      type: "column",
+      frame: { padding: 10 },
+      children: [{ type: "row", frame: { padding: 5 }, children: [leaf("button")] }],
+    }, { root });
+    const found = panels(scene);
+    expect(found).toHaveLength(2);
+    expect(found[0]!.width).toBeCloseTo(found[1]!.width + 20, 6);
+  });
+
+  it("gives each frame its own group", () => {
+    const scene = compose({
+      type: "column",
+      frame: { padding: 10 },
+      children: [{ type: "row", frame: { padding: 5 }, children: [leaf("button")] }],
+    }, { root });
+    const found = panels(scene);
+    expect(found[0]!.groupIds[0]).not.toBe(found[1]!.groupIds[0]);
+  });
+
+  it("styles the frame from the components it contains", () => {
+    const scene = compose({ type: "column", frame: {}, children: [leaf("button")] }, { root });
+    const body = scene.elements.find((e: { type: string; width: number }) => e.type === "rectangle" && e.width === 200);
+    expect(scene.elements[0].strokeColor).toBe(body.strokeColor);
+    expect(scene.elements[0].roughness).toBe(body.roughness);
+  });
+
+  it("rejects a bad frame", () => {
+    expect(() => compose(
+      { type: "row", frame: { padding: -1 }, children: [leaf("button")] },
+      { root },
+    )).toThrow(/padding must be a number >= 0/);
+  });
+
+  it("rejects a frame on a leaf", () => {
+    expect(() => compose({ component: "button", frame: {} } as never, { root })).toThrow(/frame/);
+  });
 });
 
 describe("parseArgs", () => {

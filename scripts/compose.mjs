@@ -2,9 +2,10 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { dirname, join } from "node:path";
 import { componentsDir, listComponents, loadVariant, measure, resolveRoot } from "./library.mjs";
 import { applyText } from "./text.mjs";
+import { checkFrame, frameElements, frameInsets, sampleStyle } from "./frame.mjs";
 
 const LEAF_KEYS = new Set(["component", "variant", "text"]);
-const CONTAINER_KEYS = new Set(["type", "gap", "align", "children"]);
+const CONTAINER_KEYS = new Set(["type", "gap", "align", "children", "frame"]);
 const ALIGNS = new Set(["start", "center", "end"]);
 
 function check(node) {
@@ -34,6 +35,7 @@ function check(node) {
   if (!Array.isArray(node.children) || node.children.length === 0) {
     throw new Error(`A ${node.type} needs at least one child.`);
   }
+  if (node.frame !== undefined) checkFrame(node.frame);
   node.children.forEach(check);
 }
 
@@ -61,29 +63,48 @@ function resolveVariant(root, preset, component, variant) {
 }
 
 /** Bottom-up sizing. Returns a tree mirroring the layout with sizes attached. */
-function size(node, load) {
+function size(node, load, style) {
   if ("component" in node) {
     const elements = load(node.component, node.variant, node.text);
     return { node, elements, ...measure(elements) };
   }
 
   const gap = node.gap ?? 24;
-  const children = node.children.map((child) => size(child, load));
+  const children = node.children.map((child) => size(child, load, style));
   const along = children.reduce((sum, c) => sum + (node.type === "row" ? c.width : c.height), 0)
     + gap * (children.length - 1);
   const across = Math.max(...children.map((c) => (node.type === "row" ? c.height : c.width)));
 
-  return node.type === "row"
-    ? { node, children, gap, width: along, height: across }
-    : { node, children, gap, width: across, height: along };
+  const innerWidth = node.type === "row" ? along : across;
+  const innerHeight = node.type === "row" ? across : along;
+  const insets = node.frame === undefined ? { padding: 0, band: 0 } : frameInsets(node.frame, style.get());
+
+  return {
+    node,
+    children,
+    gap,
+    insets,
+    innerWidth,
+    innerHeight,
+    width: innerWidth + insets.padding * 2,
+    height: innerHeight + insets.padding * 2 + insets.band,
+  };
 }
 
 /** Top-down placement. Returns [{ elements, x, y }] for every leaf. */
-function place(sized, x, y, out) {
+function place(sized, x, y, out, style) {
   if (sized.elements) {
     out.push({ elements: sized.elements, x, y });
     return out;
   }
+
+  if (sized.node.frame !== undefined) {
+    out.push({ elements: frameElements(sized.node.frame, sized.width, sized.height, style.get()), x, y });
+  }
+
+  const { padding, band } = sized.insets;
+  const originX = x + padding;
+  const originY = y + padding + band;
 
   const align = sized.node.align ?? "start";
   const offset = (childExtent, containerExtent) =>
@@ -94,10 +115,10 @@ function place(sized, x, y, out) {
   let cursor = 0;
   for (const child of sized.children) {
     if (sized.node.type === "row") {
-      place(child, x + cursor, y + offset(child.height, sized.height), out);
+      place(child, originX + cursor, originY + offset(child.height, sized.innerHeight), out, style);
       cursor += child.width + sized.gap;
     } else {
-      place(child, x + offset(child.width, sized.width), y + cursor, out);
+      place(child, originX + offset(child.width, sized.innerWidth), originY + cursor, out, style);
       cursor += child.height + sized.gap;
     }
   }
@@ -112,16 +133,18 @@ export function compose(layout, { root = resolveRoot(), preset } = {}) {
 
   /** @type {any} */
   let appState;
+  const style = sampleStyle();
   const load = (component, variant, text) => {
     const resolved = resolveVariant(root, preset, component, variant);
     const loaded = loadVariant(root, preset, component, resolved);
     appState ??= loaded.appState;
+    style.sample(loaded.elements);
     return text === undefined
       ? loaded.elements
       : applyText(loaded.elements, text, `${component}/${resolved}`);
   };
 
-  const placements = place(size(layout, load), 0, 0, []);
+  const placements = place(size(layout, load, style), 0, 0, [], style);
   const elements = [];
 
   placements.forEach((placement, instance) => {
