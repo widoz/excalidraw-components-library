@@ -39,6 +39,10 @@ describe("sampleStyle", () => {
     expect(styleFrom(["button", "default"], ["separator", "horizontal"]).fontSize).toBe(20);
     expect(styleFrom(["separator", "horizontal"], ["button", "default"]).fontSize).toBe(28);
   });
+
+  it("preserves a sampled null roundness rather than falling back", () => {
+    expect(styleFrom(["tabs", "default"]).roundness).toBeNull();
+  });
 });
 
 describe("frameInsets", () => {
