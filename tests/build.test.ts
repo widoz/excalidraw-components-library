@@ -1,9 +1,9 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { buildAll, DEFAULT_OUT, loadPreset, listPresets, outDirFor, PRESETS_DIR, selectPresets } from "../src/build.js";
+import { buildAll, DEFAULT_OUT, loadPreset, listPresets, outDirFor, PRESETS_DIR, pruneOrphans, selectPresets } from "../src/build.js";
 import { validateAll } from "../src/validate.js";
 import { registry } from "../src/registry.js";
 import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
@@ -192,6 +192,31 @@ describe("preset builds", () => {
     ).toHaveLength(58);
     rmSync(tmp, { recursive: true, force: true });
   });
+
+  it("prunes a dist subdirectory with no backing preset file, and keeps the backed ones", () => {
+    const dist = mkdtempSync(join(tmpdir(), "prune-"));
+    for (const name of [...listPresets(), "gone"]) {
+      mkdirSync(join(dist, name, "components"), { recursive: true });
+    }
+    // A loose file is not a preset's output directory and must survive.
+    writeFileSync(join(dist, "notes.txt"), "keep me");
+
+    expect(pruneOrphans(dist)).toEqual(["gone"]);
+    expect(existsSync(join(dist, "gone"))).toBe(false);
+    for (const name of listPresets()) {
+      expect(existsSync(join(dist, name)), name).toBe(true);
+    }
+    expect(existsSync(join(dist, "notes.txt"))).toBe(true);
+
+    rmSync(dist, { recursive: true, force: true });
+  });
+
+  it("reports nothing to prune when dist mirrors presets", () => {
+    const dist = mkdtempSync(join(tmpdir(), "prune-clean-"));
+    for (const name of listPresets()) mkdirSync(join(dist, name), { recursive: true });
+    expect(pruneOrphans(dist)).toEqual([]);
+    rmSync(dist, { recursive: true, force: true });
+  });
 });
 
 describe("preset CLI", () => {
@@ -252,5 +277,29 @@ describe("preset CLI", () => {
       encoding: "utf8",
     });
     expect(stdout).toContain("All generated files are valid.");
+  });
+
+  it("a bare build prunes an orphaned output directory", () => {
+    const orphan = join(PRESETS_DIR, "..", "dist", "_orphan-test");
+    mkdirSync(join(orphan, "components"), { recursive: true });
+    try {
+      execFileSync("npx", ["tsx", "src/build.ts"], { cwd: REPO_ROOT, encoding: "utf8" });
+      expect(existsSync(orphan)).toBe(false);
+    } finally {
+      // The build should have removed it; clean up anyway so a failure here does not
+      // leave an untracked directory behind in the real dist/.
+      rmSync(orphan, { recursive: true, force: true });
+    }
+  });
+
+  it("a narrowed build leaves an orphaned output directory alone", () => {
+    const orphan = join(PRESETS_DIR, "..", "dist", "_orphan-test");
+    mkdirSync(join(orphan, "components"), { recursive: true });
+    try {
+      execFileSync("npx", ["tsx", "src/build.ts", "--preset", "default"], { cwd: REPO_ROOT, encoding: "utf8" });
+      expect(existsSync(orphan)).toBe(true);
+    } finally {
+      rmSync(orphan, { recursive: true, force: true });
+    }
   });
 });

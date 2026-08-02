@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync, type Dirent } from "node:fs";
 import { dirname, isAbsolute, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { registry } from "./registry.js";
@@ -68,6 +68,33 @@ export function outDirFor(theme: Theme): string {
   return assertInsideDist(join(DEFAULT_OUT, theme.name));
 }
 
+/**
+ * Removes output directories with no backing preset file. Every preset's dist/ is
+ * committed, so deleting presets/<name>.json without this would leave dist/<name>/
+ * tracked in git forever, describing a style that no longer exists.
+ *
+ * Only immediate directories are considered, and only a full build calls this — a
+ * `--preset X` build must never reach a sibling. Loose files are left alone.
+ */
+export function pruneOrphans(distDir: string = DEFAULT_OUT): string[] {
+  const keep = new Set(listPresets());
+
+  let entries: Dirent[];
+  try {
+    entries = readdirSync(distDir, { withFileTypes: true });
+  } catch {
+    return []; // nothing built yet
+  }
+
+  const removed: string[] = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory() || keep.has(entry.name)) continue;
+    rmSync(join(distDir, entry.name), { recursive: true, force: true });
+    removed.push(entry.name);
+  }
+  return removed.sort();
+}
+
 export function buildAll(theme: Theme, outDir: string = outDirFor(theme)): void {
   const componentsDir = join(outDir, "components");
   // Every output directory is now a dist/<name>/ holding nothing but this preset's
@@ -130,7 +157,14 @@ export function selectPresets(args: string[]): string[] {
 
 // Only run when executed directly, not when imported by validate.ts or a test.
 if (import.meta.url === `file://${process.argv[1]}`) {
-  for (const name of selectPresets(process.argv.slice(2))) {
+  const selected = selectPresets(process.argv.slice(2));
+  for (const name of selected) {
     buildAll(resolveTheme(loadPreset(name)));
+  }
+
+  // Only a full build prunes: a narrowed one was not asked about its siblings.
+  if (!process.argv.includes("--preset")) {
+    const removed = pruneOrphans();
+    if (removed.length > 0) console.log(`Pruned orphaned output: ${removed.join(", ")}`);
   }
 }
