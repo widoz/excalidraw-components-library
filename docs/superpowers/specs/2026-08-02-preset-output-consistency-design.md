@@ -157,8 +157,9 @@ step.
   - A `--preset X` build leaves sibling directories untouched.
   - The existing "builds every preset without destroying the others" test still passes,
     now without relying on the narrowed removal.
-- `tests/theme.test.ts` — the reserved-name cases are removed; `components` and
-  `comic-ui` resolve like any other name. The `NAME_PATTERN` cases stay.
+- `tests/theme.test.ts` — `RESERVED_NAMES` has no test today, so there is nothing to
+  remove. Add one asserting `components` and `comic-ui` now resolve like any other
+  name. The `NAME_PATTERN` traversal cases in `tests/build.test.ts` stay.
 - `tests/library.test.ts` — the fixture writes `dist/default/…`; `componentsDir(fake)`
   is `dist/default/components`; the marker and its error messages follow.
 - `tests/frame.test.ts`, `tests/text.test.ts` — read from `dist/default/components/`.
