@@ -36,7 +36,7 @@ as build presets — see [Styles](#styles).
 
 ```bash
 npm install
-npm run build      # regenerate dist/
+npm run build      # regenerate every preset's dist/<name>/
 npm run validate   # structural checks on dist/
 npm run typecheck  # tsc --noEmit
 npm test           # unit tests
@@ -72,6 +72,7 @@ picks five things:
 npm run preset                    # prompts, writes presets/<name>.json
 npm run preset -- --name soft --palette stone --edges sharp
 npm run build                     # every preset → dist/<name>/
+npm run build -- --all            # same as a bare build
 npm run build -- --preset soft    # just soft → dist/soft/
 npm run validate                  # checks every preset
 npm run validate -- --preset soft # checks dist/soft/

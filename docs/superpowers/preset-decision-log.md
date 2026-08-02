@@ -107,3 +107,12 @@ CONTROLLER VISUAL VERIFICATION: blueprint preset (thin/architect/sharp/nunito/mi
   with mist values instead of zinc: same elements, same roles, different palette. All rectangles
   square under edges:sharp; only line elements keep roundness (the linear-curve setting).
 BRANCH COMPLETE. 402 tests.
+PRESET OUTPUT CONSISTENCY FINAL FIX WAVE: `RESERVED_NAMES` (Task 8's `["components", "comic-ui"]`
+  guard in `resolveTheme`) has been removed. It existed only because those two names collided with
+  the default preset's flat `dist/` output and `dist/components`; since this branch made every
+  preset — including `default` — build to its own `dist/<name>/`, no preset name can collide with
+  anything any more, so `components` and `comic-ui` are legal preset names today. The traversal
+  concern the guard was never meant to cover (a name like `..`) is unaffected: that is `NAME_PATTERN`'s
+  charset restriction and `assertInsideDist`'s containment check, neither of which is a list of names
+  and neither of which changed. A list of forbidden names was never what made a traversal
+  inexpressible; a restricted charset is.

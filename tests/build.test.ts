@@ -195,14 +195,20 @@ describe("preset builds", () => {
 
   it("prunes a dist subdirectory with no backing preset file, and keeps the backed ones", () => {
     const dist = mkdtempSync(join(tmpdir(), "prune-"));
-    for (const name of [...listPresets(), "gone"]) {
+    // Created out of sorted order (zzz before aaa) so a returned .sort() actually
+    // gets exercised — a single-orphan test would pass just as well without it.
+    for (const name of ["zzz", "aaa"]) {
+      mkdirSync(join(dist, name, "components"), { recursive: true });
+    }
+    for (const name of listPresets()) {
       mkdirSync(join(dist, name, "components"), { recursive: true });
     }
     // A loose file is not a preset's output directory and must survive.
     writeFileSync(join(dist, "notes.txt"), "keep me");
 
-    expect(pruneOrphans(dist)).toEqual(["gone"]);
-    expect(existsSync(join(dist, "gone"))).toBe(false);
+    expect(pruneOrphans(dist)).toEqual(["aaa", "zzz"]);
+    expect(existsSync(join(dist, "zzz"))).toBe(false);
+    expect(existsSync(join(dist, "aaa"))).toBe(false);
     for (const name of listPresets()) {
       expect(existsSync(join(dist, name)), name).toBe(true);
     }
@@ -219,6 +225,11 @@ describe("preset builds", () => {
   });
 });
 
+// This suite shells out to the real build/validate CLIs against the repo's actual
+// dist/, including a full build's prune step — it deletes any dist/<name>/ with no
+// backing preset file. It cleans up its own "_orphan-test", but an unrelated
+// directory (e.g. a developer's dist/experiment/) left under dist/ would be destroyed
+// by simply running the suite.
 describe("preset CLI", () => {
   const REPO_ROOT = join(PRESETS_DIR, "..");
 
@@ -232,6 +243,21 @@ describe("preset CLI", () => {
   });
 
   it("does not take a following flag as the preset name", () => {
+    expect(() => selectPresets(["--preset", "--quiet"])).toThrow(/--preset requires a preset name/);
+  });
+
+  it("rejects an unknown flag rather than silently running a full, pruning build", () => {
+    // The bug this guards: "--preset=soft" and "--presset soft" both contain no
+    // "--preset" token, so isFullBuild's indexOf check used to read them as a bare
+    // (full, pruning) build — a typo in the narrowing flag reached the destructive path.
+    expect(() => selectPresets(["--preset=soft"])).toThrow(/--preset=soft/);
+    expect(() => selectPresets(["--presset", "soft"])).toThrow(/--presset/);
+  });
+
+  it("still accepts every previously-accepted form after adding unknown-flag rejection", () => {
+    expect(() => selectPresets([])).not.toThrow();
+    expect(() => selectPresets(["--all"])).not.toThrow();
+    expect(() => selectPresets(["--preset", "blueprint"])).not.toThrow();
     expect(() => selectPresets(["--preset", "--quiet"])).toThrow(/--preset requires a preset name/);
   });
 

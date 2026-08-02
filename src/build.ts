@@ -82,8 +82,12 @@ export function pruneOrphans(distDir: string = DEFAULT_OUT): string[] {
   let entries: Dirent[];
   try {
     entries = readdirSync(distDir, { withFileTypes: true });
-  } catch {
-    return []; // nothing built yet
+  } catch (err) {
+    // Only a missing dist/ means "nothing built yet". Anything else (EACCES,
+    // ENOTDIR, ...) swallowed here would print a successful build with the failure
+    // hidden as an empty prune list, so only ENOENT is treated as "nothing to prune".
+    if ((err as NodeJS.ErrnoException).code === "ENOENT") return [];
+    throw err;
   }
 
   const removed: string[] = [];
@@ -144,6 +148,37 @@ function isFullBuild(args: string[]): boolean {
   return args.indexOf("--preset") === -1;
 }
 
+const KNOWN_FLAGS = new Set(["--preset", "--all"]);
+
+/**
+ * Rejects anything that looks like a flag but isn't `--preset` or `--all`. This is
+ * what closes the isFullBuild bug: "--preset=soft" and "--presset soft" both contain
+ * no literal "--preset" token, so isFullBuild's indexOf check used to read either one
+ * as a bare invocation and run the full, pruning build — a typo in the flag meant to
+ * *narrow* the build was the way into the one path that touches sibling directories.
+ * One spelling only (no "=" form) so there is exactly one way to say it.
+ *
+ * The token immediately after "--preset" is skipped rather than validated, because
+ * it's that flag's value position, not a flag itself — `selectPresets(["--preset",
+ * "--quiet"])` must still fail with "--preset requires a preset name", not an unknown-
+ * flag error, so the missing-value check below keeps the last word on that token.
+ */
+function assertKnownFlags(args: string[]): void {
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === undefined) continue;
+    if (arg === "--preset") {
+      i++; // value position: not a flag, so it is never checked against KNOWN_FLAGS
+      continue;
+    }
+    if (arg.startsWith("--") && !KNOWN_FLAGS.has(arg)) {
+      throw new Error(
+        `Unknown flag "${arg}". Known flags: --preset <name>, --all.`,
+      );
+    }
+  }
+}
+
 /**
  * Which presets a `--preset <name>` / `--all` / bare invocation selects. Shared so
  * `validate.ts` answers the same question the same way: before this existed, only
@@ -154,6 +189,8 @@ function isFullBuild(args: string[]): boolean {
  * others stale in git. `--all` stays accepted as an alias for that same full build.
  */
 export function selectPresets(args: string[]): string[] {
+  assertKnownFlags(args);
+
   if (isFullBuild(args)) return listPresets();
 
   const presetName = args[args.indexOf("--preset") + 1];
