@@ -1,8 +1,9 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { componentsDir, listComponents, loadVariant, measure, resolveRoot } from "./library.mjs";
+import { applyText } from "./text.mjs";
 
-const LEAF_KEYS = new Set(["component", "variant"]);
+const LEAF_KEYS = new Set(["component", "variant", "text"]);
 const CONTAINER_KEYS = new Set(["type", "gap", "align", "children"]);
 const ALIGNS = new Set(["start", "center", "end"]);
 
@@ -20,6 +21,9 @@ function check(node) {
 
   if (node.type !== "row" && node.type !== "column") {
     throw new Error(`Node must have "component", or "type" of "row" or "column". Got ${JSON.stringify(node)}`);
+  }
+  if ("text" in node) {
+    throw new Error(`"text" is only valid on a component node, not on a row or column.`);
   }
   for (const key of Object.keys(node)) {
     if (!CONTAINER_KEYS.has(key)) throw new Error(`Unknown key "${key}" on a ${node.type} node.`);
@@ -59,7 +63,7 @@ function resolveVariant(root, preset, component, variant) {
 /** Bottom-up sizing. Returns a tree mirroring the layout with sizes attached. */
 function size(node, load) {
   if ("component" in node) {
-    const { elements } = load(node.component, node.variant);
+    const elements = load(node.component, node.variant, node.text);
     return { node, elements, ...measure(elements) };
   }
 
@@ -108,11 +112,13 @@ export function compose(layout, { root = resolveRoot(), preset } = {}) {
 
   /** @type {any} */
   let appState;
-  const load = (component, variant) => {
+  const load = (component, variant, text) => {
     const resolved = resolveVariant(root, preset, component, variant);
     const loaded = loadVariant(root, preset, component, resolved);
     appState ??= loaded.appState;
-    return loaded;
+    return text === undefined
+      ? loaded.elements
+      : applyText(loaded.elements, text, `${component}/${resolved}`);
   };
 
   const placements = place(size(layout, load), 0, 0, []);

@@ -77,6 +77,53 @@ describe("compose", () => {
     const scene = compose(leaf("button"), { root });
     expect(scene.elements.length).toBeGreaterThan(0);
   });
+
+  it("replaces a leaf's text", () => {
+    const scene = compose({ component: "button", text: "Publish" }, { root });
+    const text = scene.elements.find((e: { type: string }) => e.type === "text");
+    expect(text.text).toBe("Publish");
+  });
+
+  it("reflows neighbours when text grows the component", () => {
+    const plain = compose({ type: "row", gap: 10, children: [leaf("button"), leaf("input")] }, { root });
+    const grown = compose(
+      { type: "row", gap: 10, children: [{ component: "button", text: "Featured image" }, leaf("input")] },
+      { root },
+    );
+    const inputX = (scene: { elements: Array<{ groupIds: string[]; x: number }> }) => {
+      const last = scene.elements[scene.elements.length - 1]!.groupIds[0];
+      return Math.min(...scene.elements.filter((e) => e.groupIds[0] === last).map((e) => e.x));
+    };
+    expect(inputX(grown)).toBeGreaterThan(inputX(plain));
+  });
+
+  it("moves nothing but the text when it shrinks", () => {
+    const plain = compose(leaf("button"), { root });
+    const short = compose({ component: "button", text: "Go" }, { root });
+    const rects = (s: { elements: Array<{ type: string; x: number; width: number }> }) =>
+      s.elements.filter((e) => e.type === "rectangle").map((e) => [e.x, e.width]);
+    expect(rects(short)).toEqual(rects(plain));
+  });
+
+  it("keeps two instances of one component independent", () => {
+    const scene = compose(
+      { type: "row", children: [{ component: "button", text: "Publish" }, leaf("button")] },
+      { root },
+    );
+    const texts = scene.elements.filter((e: { type: string }) => e.type === "text").map((e) => e.text);
+    expect(texts).toEqual(["Publish", "Click me!"]);
+  });
+
+  it("names the component when a text spec is wrong", () => {
+    expect(() => compose({ component: "tabs", text: "Post" }, { root })).toThrow(/tabs\/default/);
+  });
+
+  it("rejects text on a container", () => {
+    expect(() => compose(
+      { type: "row", text: "no", children: [leaf("button")] } as never,
+      { root },
+    )).toThrow(/only valid on a component node/);
+  });
 });
 
 describe("parseArgs", () => {
