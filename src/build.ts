@@ -3,7 +3,7 @@ import { dirname, isAbsolute, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { registry } from "./registry.js";
 import { toLibrary, toScene, type LibraryItemInput } from "./scene.js";
-import { DEFAULT_PRESET, resolveTheme, type Preset, type Theme } from "./theme.js";
+import { resolveTheme, type Preset, type Theme } from "./theme.js";
 import { normalize } from "./variants.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -112,12 +112,14 @@ export function buildAll(theme: Theme, outDir: string = outDirFor(theme)): void 
  * Which presets a `--preset <name>` / `--all` / bare invocation selects. Shared so
  * `validate.ts` answers the same question the same way: before this existed, only
  * `build.ts` understood the flags and `npm run validate` always checked the default.
+ *
+ * A bare invocation means every preset. No preset is privileged, and since every
+ * preset's output is committed, a bare build that meant "default only" left the
+ * others stale in git. `--all` stays accepted as an alias for that same full build.
  */
 export function selectPresets(args: string[]): string[] {
-  if (args.includes("--all")) return listPresets();
-
   const presetFlag = args.indexOf("--preset");
-  if (presetFlag === -1) return [DEFAULT_PRESET.name];
+  if (presetFlag === -1) return listPresets();
 
   const presetName = args[presetFlag + 1];
   if (presetName === undefined || presetName.startsWith("--")) {

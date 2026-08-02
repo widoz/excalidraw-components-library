@@ -210,15 +210,21 @@ describe("preset CLI", () => {
     expect(() => selectPresets(["--preset", "--quiet"])).toThrow(/--preset requires a preset name/);
   });
 
-  it("selects the default, one named preset, or every preset", () => {
-    expect(selectPresets([])).toEqual([DEFAULT_PRESET.name]);
-    expect(selectPresets(["--preset", "blueprint"])).toEqual(["blueprint"]);
+  it("selects every preset by default, every preset for --all, or one named preset", () => {
+    expect(selectPresets([])).toEqual(listPresets());
     expect(selectPresets(["--all"])).toEqual(listPresets());
+    expect(selectPresets(["--preset", "blueprint"])).toEqual(["blueprint"]);
   });
 
-  // `--all` iterates listPresets() in sorted order, so "blueprint" is built before
-  // "default" — and "default" writes to dist/ itself. A whole-directory rmSync there
-  // deleted dist/blueprint again, leaving only the default behind.
+  it("selects more than one preset for a bare build, so no preset is privileged", () => {
+    // Guards the regression this change exists to prevent: a bare build that quietly
+    // means "default only" leaves every other preset's committed output stale.
+    expect(selectPresets([]).length).toBeGreaterThan(1);
+    expect(selectPresets([])).toContain("default");
+  });
+
+  // A full build iterates listPresets() in sorted order. Each preset owns its own
+  // dist/<name>/, so building one never reaches a sibling.
   beforeAll(() => {
     execFileSync("npx", ["tsx", "src/build.ts", "--all"], { cwd: REPO_ROOT, encoding: "utf8" });
   });
@@ -234,9 +240,9 @@ describe("preset CLI", () => {
     }
   });
 
-  it("building only the default preset leaves other presets' output alone", () => {
+  it("building one named preset leaves other presets' output alone", () => {
     const blueprint = outDirFor(resolveTheme(loadPreset("blueprint")));
-    execFileSync("npx", ["tsx", "src/build.ts"], { cwd: REPO_ROOT, encoding: "utf8" });
+    execFileSync("npx", ["tsx", "src/build.ts", "--preset", "default"], { cwd: REPO_ROOT, encoding: "utf8" });
     expect(existsSync(join(blueprint, "comic-ui.excalidrawlib"))).toBe(true);
   });
 
