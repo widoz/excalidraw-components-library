@@ -49,7 +49,7 @@ const EDGES: readonly EdgesName[] = ["sharp", "round"];
  * `..`, a slash, or a leading dot therefore resolves that removal outside `dist/` —
  * `{"name": ".."}` resolves to the repository root. Restricting the charset to a
  * single safe path segment is what makes the name unable to express a traversal at
- * all; the reserved-name list above only ever covered two spellings of this hazard.
+ * all.
  */
 const NAME_PATTERN = /^[a-z0-9][a-z0-9-]*$/i;
 
