@@ -26,7 +26,7 @@ to point it at. Run every later command from the printed root.
 | `sloppiness` | `architect` (0) · `artist` (1) · `cartoonist` (2, default) |
 | `edges` | `sharp` · `round` (default) |
 | `font` | `excalifont` (default) · `comic-shanns` · `nunito` — body text only |
-| `palette` | any of 26 scales, grouped: neutral · warm · green · cool · purple · custom |
+| `palette` | any of 26 scales, grouped: neutral · warm · green · cool · purple · shadcn |
 | `accent` | any of the same 26 — colours buttons, badges, focus rings and secondary text. Defaults to `palette` |
 
 ## Choosing palettes
@@ -38,7 +38,7 @@ Ask the user for both, rather than assuming. Offer the groups:
 - **green** — lime, green, emerald, teal
 - **cool** — cyan, sky, blue, indigo
 - **purple** — violet, purple, fuchsia, pink, rose
-- **custom** — mauve, olive, mist, taupe
+- **shadcn** — mauve, olive, mist, taupe (shadcn additions beyond Tailwind's 22)
 
 A neutral base with a coloured accent is the usual choice: gray chrome, coloured
 buttons. A coloured base tints every stroke and panel, which is a much stronger look.

@@ -98,8 +98,14 @@ export function resolveTheme(preset: Preset): Theme {
       surface: base[50],
       muted: base[200],
       border: base[300],
+      // On the base scale, not the accent: this is the only one of the four
+      // accent-eligible roles rendered as plain secondary body text on `surface`
+      // (placeholders, card descriptions, breadcrumbs, pagination, help text). Measured
+      // against a light or high-chroma accent it falls below 4.5:1 (WCAG AA) — e.g.
+      // wp-admin's blue accent measures 3.60. `subtle`, `accent` and `accentText` stay
+      // on the accent scale because they all sit on controlled backgrounds, not text.
+      mutedText: base[500],
       subtle: accent[400],
-      mutedText: accent[500],
       accent: accent[700],
       accentText: accent[50],
       transparent: TRANSPARENT,

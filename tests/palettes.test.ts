@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { palettes, paletteGroups, zinc } from "../src/palettes.js";
 
@@ -34,13 +35,22 @@ describe("palettes", () => {
   });
 });
 
-describe("palettes", () => {
+describe("the fetched Tailwind scales", () => {
   it("pins a sample of the fetched Tailwind scales", () => {
     // Spot checks against the fetched source. These exist so a hand-edit to the table
     // is caught; they are not a substitute for the fetch being right in the first place.
     expect(palettes.blue[700]).toBe("#1447e6");
     expect(palettes.red[500]).toBe("#fb2c36");
     expect(palettes.slate[900]).toBe("#0f172b");
+  });
+
+  // 209 of the 242 values in `palettes` are guarded by nothing else but the
+  // `/^#[0-9a-f]{6}$/` format regex above: a one-character edit (`#fb2c36` ->
+  // `#fb2c37`) passes every other check in this file and silently renders differently.
+  // Regenerate this digest only when you meant to change a colour.
+  it("pins the whole colour table", () => {
+    const digest = createHash("sha256").update(JSON.stringify(palettes)).digest("hex");
+    expect(digest).toBe("31064e9e792ee5ca43e5537f8605ad7acf48a5a1f0a8e9c22218fbb784e7d51e");
   });
 });
 
@@ -55,7 +65,7 @@ describe("paletteGroups", () => {
 });
 
 describe("the palette set", () => {
-  it("carries all 22 Tailwind scales plus the 4 custom ones", () => {
+  it("carries all 22 Tailwind scales plus the 4 shadcn-only ones", () => {
     expect(Object.keys(palettes)).toHaveLength(26);
     for (const name of ["slate", "gray", "blue", "red", "green", "rose"]) {
       expect(Object.keys(palettes), name).toContain(name);

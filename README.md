@@ -29,8 +29,8 @@ Textarea, Toast, Toggle, Toggle Group, Tooltip.
 ## Palette
 
 The default style is shadcn zinc. `#18181b` for ink and shadows, `#fafafa` for surfaces,
-`#e4e4e7` for muted fills, `#3f3f46` for accents. 25 other scales are available as build
-presets, and a preset can pair a second scale as its accent — see [Styles](#styles).
+`#e4e4e7` for muted fills, `#3f3f46` for accents. 25 other scales are available, and a
+preset can pair a second scale as its accent — see [Styles](#styles).
 
 ## Develop
 

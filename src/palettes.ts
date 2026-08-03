@@ -28,8 +28,11 @@ export const zinc = {
  * which defines them in OKLCH; the values here are the sRGB conversion, cross-checked
  * against the already-pinned `zinc`, `neutral` and `stone` hex before being trusted.
  *
- * `mauve`, `olive`, `mist` and `taupe` are custom to this repository — they are not
- * shadcn or Tailwind scales. `blueprint` uses `mist`.
+ * `mauve`, `olive`, `mist` and `taupe` are shadcn scales too — they are defined in the
+ * same `colors.ts` (around lines 337, 350, 363, 376), in OKLCH, round-tripping exactly
+ * to the hex below. They are not upstream Tailwind families, though: Tailwind v4 ships
+ * 22 neutral/colour scales, and these four are shadcn additions beyond that set.
+ * `blueprint` uses `mist`.
  */
 export const palettes = {
   slate: {
@@ -171,5 +174,5 @@ export const paletteGroups = {
   green:   ["lime", "green", "emerald", "teal"],
   cool:    ["cyan", "sky", "blue", "indigo"],
   purple:  ["violet", "purple", "fuchsia", "pink", "rose"],
-  custom:  ["mauve", "olive", "mist", "taupe"],
+  shadcn:  ["mauve", "olive", "mist", "taupe"],
 } as const;

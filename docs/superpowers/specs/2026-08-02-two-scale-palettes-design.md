@@ -24,8 +24,15 @@ are missing.
 
 1. **A preset names two scales**: a base palette for the chrome and an accent palette
    for the accent roles.
-2. **Four roles come from the accent scale**: `accent`, `accentText`, `subtle` and
-   `mutedText`. The other four — `ink`, `surface`, `muted`, `border` — stay on the base.
+2. **Three roles come from the accent scale**: `accent`, `accentText` and `subtle`. The
+   other five — `ink`, `surface`, `muted`, `border`, `mutedText` — stay on the base.
+   `mutedText` was originally planned for the accent scale alongside the other three,
+   but a contrast review measured it below WCAG AA (4.5:1) against `surface` for several
+   accent choices (e.g. wp-admin's blue accent: 3.60) — it is the only one of the four
+   candidates rendered as plain secondary body text (placeholders, card descriptions,
+   breadcrumbs, pagination, help text) rather than on a controlled background. The repo
+   owner ruled it moves to the base scale; `subtle`, `accent` and `accentText` stay on
+   the accent scale.
 3. **All 22 Tailwind v4 scales ship**, plus the 4 existing custom scales: 26 in total.
 4. **Colour values are fetched from source, never recalled.**
 5. **The prompt groups the palette names**; the skill stops hardcoding them.
@@ -92,8 +99,11 @@ return {
     surface:    base[50],
     muted:      base[200],
     border:     base[300],
+    // On the base scale, not the accent: the only one of the four accent-eligible
+    // roles used as plain secondary text on `surface`. On a light or high-chroma
+    // accent it drops below 4.5:1 (WCAG AA) contrast.
+    mutedText:  base[500],
     subtle:     acc[400],
-    mutedText:  acc[500],
     accent:     acc[700],
     accentText: acc[50],
     transparent: TRANSPARENT,
@@ -203,8 +213,8 @@ It builds to `dist/wp-admin/`, which is committed like every other preset's outp
 - **`tests/theme.test.ts`**
   - a preset with no `accent` resolves to exactly the theme it resolves to today — the
     guard behind the byte-identity claim
-  - a preset with `accent` takes `subtle`, `mutedText`, `accent` and `accentText` from
-    the accent scale and `ink`, `surface`, `muted`, `border` from the base
+  - a preset with `accent` takes `subtle`, `accent` and `accentText` from the accent
+    scale and `ink`, `surface`, `muted`, `border`, `mutedText` from the base
   - an illegal `accent` throws, and the message names legal values
 - **`tests/presets.test.ts`** — add a two-scale preset (e.g.
   `{ name: "ax-accent", palette: "neutral", accent: "blue" }`) to the existing `PRESETS`
@@ -235,6 +245,16 @@ No component changes. `src/comic.ts`, `src/element.ts`, `src/scene.ts` and every
 resolves those to hex, which is exactly why this change reaches every component without
 editing any of them.
 
-Contrast is not validated. Nothing checks that `accentText` is legible on `accent`, and
-this design does not add such a check; a preset pairing two dark scales will produce a
-low-contrast button and the build will accept it.
+Contrast is not validated in general. Nothing checks that `accentText` is legible on
+`accent`, and this design does not add such a check; a preset pairing two dark scales
+will produce a low-contrast button and the build will accept it.
+
+The one contrast case that *was* checked is `mutedText`, and only because it is body
+text rather than a role confined to a controlled background — see Decision 2. That
+review reasoned solely about `accentText` on `accent` and, at the time, missed that
+`mutedText` faces the same exposure: it renders on the light `surface` regardless of
+which accent is chosen, so a light or high-chroma accent could put it below 4.5:1. Once
+found, `mutedText` moved to the base scale, which clears 4.5:1 for every accent choice.
+`subtle`, `accent` and `accentText` remain unvalidated for the reason above — they sit on
+controlled backgrounds the author picks alongside the colour, not on the light surface
+every preset shares.
