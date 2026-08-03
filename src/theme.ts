@@ -20,6 +20,7 @@ export interface Preset {
   edges?: EdgesName;
   font?: FontName;
   palette?: PaletteName;
+  accent?: PaletteName;
 }
 
 export interface Theme {
@@ -40,6 +41,7 @@ export const DEFAULT_PRESET: Required<Preset> = {
   edges: "round",
   font: "excalifont",
   palette: "zinc",
+  accent: "zinc",
 };
 
 const EDGES: readonly EdgesName[] = ["sharp", "round"];
@@ -74,6 +76,10 @@ export function resolveTheme(preset: Preset): Theme {
   }
   const paletteName = pick("palette", preset.palette ?? DEFAULT_PRESET.palette,
     Object.keys(palettes) as PaletteName[]);
+  // Defaulting to the base palette rather than to DEFAULT_PRESET.accent is what makes
+  // every preset written before this field existed resolve unchanged.
+  const accentName = pick("accent", preset.accent ?? paletteName,
+    Object.keys(palettes) as PaletteName[]);
   const strokeName = pick("strokeWidth", preset.strokeWidth ?? DEFAULT_PRESET.strokeWidth,
     Object.keys(strokeLadders) as StrokeName[]);
   const sloppiness = pick("sloppiness", preset.sloppiness ?? DEFAULT_PRESET.sloppiness,
@@ -82,19 +88,20 @@ export function resolveTheme(preset: Preset): Theme {
     Object.keys(fontFaces) as FontName[]);
   const edges = pick("edges", preset.edges ?? DEFAULT_PRESET.edges, EDGES);
 
-  const p = palettes[paletteName];
+  const base = palettes[paletteName];
+  const accent = palettes[accentName];
 
   return {
     name: preset.name,
     palette: {
-      ink: p[900],
-      surface: p[50],
-      muted: p[200],
-      border: p[300],
-      subtle: p[400],
-      mutedText: p[500],
-      accent: p[700],
-      accentText: p[50],
+      ink: base[900],
+      surface: base[50],
+      muted: base[200],
+      border: base[300],
+      subtle: accent[400],
+      mutedText: accent[500],
+      accent: accent[700],
+      accentText: accent[50],
       transparent: TRANSPARENT,
       canvas: CANVAS,
     },

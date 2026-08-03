@@ -19,6 +19,7 @@ const PRESETS: Preset[] = [
   // only face that can widen one, so it is the one that actually exercises the guard.
   { name: "ax-font-wide", font: "comic-shanns" },
   { name: "ax-palette", palette: "mauve" },
+  { name: "ax-accent", palette: "neutral", accent: "blue" },
   { name: "ax-all", strokeWidth: "thin", sloppiness: "architect", edges: "sharp", font: "nunito", palette: "mauve" },
 ];
 
