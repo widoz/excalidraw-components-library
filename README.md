@@ -29,8 +29,8 @@ Textarea, Toast, Toggle, Toggle Group, Tooltip.
 ## Palette
 
 The default style is shadcn zinc. `#18181b` for ink and shadows, `#fafafa` for surfaces,
-`#e4e4e7` for muted fills, `#3f3f46` for accents. Six other neutral scales are available
-as build presets — see [Styles](#styles).
+`#e4e4e7` for muted fills, `#3f3f46` for accents. 25 other scales are available as build
+presets, and a preset can pair a second scale as its accent — see [Styles](#styles).
 
 ## Develop
 
@@ -58,7 +58,7 @@ output is committed, one directory per preset — see [Styles](#styles).
 ## Styles
 
 The library ships in one style by default, but the generator is preset-driven. A preset
-picks five things:
+picks six things:
 
 | field | values |
 |---|---|
@@ -66,7 +66,14 @@ picks five things:
 | `sloppiness` | `architect` (0) · `artist` (1) · `cartoonist` (2, default) |
 | `edges` | `sharp` · `round` (default) |
 | `font` | `excalifont` (default) · `comic-shanns` · `nunito` — body text only; headings stay Comic Shanns |
-| `palette` | `neutral` · `stone` · `zinc` (default) · `mauve` · `olive` · `mist` · `taupe` |
+| `palette` | any of 26 scales — Tailwind's 22 (`slate` `gray` `zinc` `neutral` `stone` `red` `orange` `amber` `yellow` `lime` `green` `emerald` `teal` `cyan` `sky` `blue` `indigo` `violet` `purple` `fuchsia` `pink` `rose`) plus `mauve` `olive` `mist` `taupe`. Default `zinc` |
+| `accent` | any palette — drives `accent`, `accentText`, `subtle` and `mutedText`. Defaults to `palette`, so omitting it keeps the single-scale look |
+
+A preset names up to two scales. The base `palette` colours the chrome — every stroke,
+panel, muted fill and border. The `accent` scale colours buttons, badges, focus rings
+and secondary text. Leaving `accent` out points both at the same scale, which is how
+every preset behaved before the field existed. `presets/wp-admin.json` is the two-scale
+example: neutral chrome, blue accents.
 
 ```bash
 npm run preset                    # prompts, writes presets/<name>.json

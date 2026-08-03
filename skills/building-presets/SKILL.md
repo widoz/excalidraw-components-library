@@ -5,7 +5,7 @@ description: Use when creating or building a style preset for the Excalidraw com
 
 # Building Style Presets
 
-A preset picks five things and the build resolves them into every element. This skill
+A preset picks six things and the build resolves them into every element. This skill
 runs the library's own CLIs; it does not offer style advice.
 
 ## Preflight
@@ -26,12 +26,30 @@ to point it at. Run every later command from the printed root.
 | `sloppiness` | `architect` (0) · `artist` (1) · `cartoonist` (2, default) |
 | `edges` | `sharp` · `round` (default) |
 | `font` | `excalifont` (default) · `comic-shanns` · `nunito` — body text only |
-| `palette` | `neutral` · `stone` · `zinc` (default) · `mauve` · `olive` · `mist` · `taupe` |
+| `palette` | any of 26 scales, grouped: neutral · warm · green · cool · purple · custom |
+| `accent` | any of the same 26 — colours buttons, badges, focus rings and secondary text. Defaults to `palette` |
+
+## Choosing palettes
+
+Ask the user for both, rather than assuming. Offer the groups:
+
+- **neutral** — slate, gray, zinc, neutral, stone
+- **warm** — red, orange, amber, yellow
+- **green** — lime, green, emerald, teal
+- **cool** — cyan, sky, blue, indigo
+- **purple** — violet, purple, fuchsia, pink, rose
+- **custom** — mauve, olive, mist, taupe
+
+A neutral base with a coloured accent is the usual choice: gray chrome, coloured
+buttons. A coloured base tints every stroke and panel, which is a much stronger look.
+
+Do not maintain a copy of the legal values here beyond this list — the CLI is the
+authority, and it names every legal value when a field is wrong.
 
 ## Commands
 
 ```bash
-npm run preset -- --name soft --palette stone --edges sharp   # writes presets/soft.json
+npm run preset -- --name soft --palette stone --accent blue --edges sharp   # writes presets/soft.json
 npm run build -- --preset soft                                 # writes dist/soft/
 npm run validate -- --preset soft                              # checks dist/soft/
 npm run build                                                  # every preset, prunes orphans

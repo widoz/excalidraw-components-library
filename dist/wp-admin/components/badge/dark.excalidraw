@@ -1,0 +1,83 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "excalidraw-comic-components",
+  "elements": [
+    {
+      "id": "badge-group-6-8oklvv",
+      "type": "rectangle",
+      "x": 0,
+      "y": 0,
+      "width": 60,
+      "height": 38,
+      "angle": 0,
+      "strokeColor": "#171717",
+      "backgroundColor": "#171717",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "badge-group"
+      ],
+      "frameId": null,
+      "index": "a00006V",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 2038658084,
+      "version": 1,
+      "versionNonce": 1825732157,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "badge-group-7-jnsjkb",
+      "type": "text",
+      "x": 18,
+      "y": 9,
+      "width": 24,
+      "height": 20,
+      "angle": 0,
+      "strokeColor": "#eff6ff",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "badge-group"
+      ],
+      "frameId": null,
+      "index": "a00007V",
+      "roundness": null,
+      "seed": 358282376,
+      "version": 1,
+      "versionNonce": 1695501956,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "Hot",
+      "originalText": "Hot",
+      "fontSize": 16,
+      "fontFamily": 7,
+      "textAlign": "center",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}

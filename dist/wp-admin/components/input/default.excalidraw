@@ -1,0 +1,115 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "excalidraw-comic-components",
+  "elements": [
+    {
+      "id": "input-group-0-ytg1j3",
+      "type": "rectangle",
+      "x": 6,
+      "y": 6,
+      "width": 320,
+      "height": 56,
+      "angle": 0,
+      "strokeColor": "#171717",
+      "backgroundColor": "#171717",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "input-group"
+      ],
+      "frameId": null,
+      "index": "a00000V",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1701600787,
+      "version": 1,
+      "versionNonce": 1351132517,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "input-group-1-azusvu",
+      "type": "rectangle",
+      "x": 0,
+      "y": 0,
+      "width": 320,
+      "height": 56,
+      "angle": 0,
+      "strokeColor": "#171717",
+      "backgroundColor": "#fafafa",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "input-group"
+      ],
+      "frameId": null,
+      "index": "a00001V",
+      "roundness": {
+        "type": 3
+      },
+      "seed": 1967141605,
+      "version": 1,
+      "versionNonce": 592391923,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "id": "input-group-2-6o54gq",
+      "type": "text",
+      "x": 18,
+      "y": 18,
+      "width": 112,
+      "height": 20,
+      "angle": 0,
+      "strokeColor": "#51a2ff",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 1,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "input-group"
+      ],
+      "frameId": null,
+      "index": "a00002V",
+      "roundness": null,
+      "seed": 1364246278,
+      "version": 1,
+      "versionNonce": 717476858,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "your@email.com",
+      "originalText": "your@email.com",
+      "fontSize": 16,
+      "fontFamily": 6,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    }
+  ],
+  "appState": {
+    "gridSize": null,
+    "viewBackgroundColor": "#ffffff"
+  },
+  "files": {}
+}
