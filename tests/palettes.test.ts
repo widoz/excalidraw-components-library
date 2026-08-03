@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { palettes, zinc } from "../src/palettes.js";
+import { palettes, paletteGroups, zinc } from "../src/palettes.js";
 
 const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 const HEX = /^#[0-9a-f]{6}$/;
@@ -30,6 +30,38 @@ describe("palettes", () => {
     const scale = palettes[name as keyof typeof palettes] as Record<number, string>;
     for (const step of STEPS) {
       expect(scale[step], `${name}.${step}`).toMatch(HEX);
+    }
+  });
+});
+
+describe("palettes", () => {
+  it("pins a sample of the fetched Tailwind scales", () => {
+    // Spot checks against the fetched source. These exist so a hand-edit to the table
+    // is caught; they are not a substitute for the fetch being right in the first place.
+    expect(palettes.blue[700]).toBe("#1447e6");
+    expect(palettes.red[500]).toBe("#fb2c36");
+    expect(palettes.slate[900]).toBe("#0f172b");
+  });
+});
+
+describe("paletteGroups", () => {
+  // The groups are what the prompt prints. If a new scale is added to `palettes` and
+  // not to a group, it silently becomes unofferable: legal to type, never listed.
+  it("names every palette exactly once", () => {
+    const grouped = Object.values(paletteGroups).flat();
+    expect([...grouped].sort()).toEqual(Object.keys(palettes).sort());
+    expect(new Set(grouped).size).toBe(grouped.length);
+  });
+});
+
+describe("the palette set", () => {
+  it("carries all 22 Tailwind scales plus the 4 custom ones", () => {
+    expect(Object.keys(palettes)).toHaveLength(26);
+    for (const name of ["slate", "gray", "blue", "red", "green", "rose"]) {
+      expect(Object.keys(palettes), name).toContain(name);
+    }
+    for (const name of ["mauve", "olive", "mist", "taupe"]) {
+      expect(Object.keys(palettes), name).toContain(name);
     }
   });
 });
