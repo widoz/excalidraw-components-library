@@ -1,4 +1,5 @@
-import { CANVAS, fontAdvance, fontFaces, palettes, sloppinessValues, strokeLadders, TRANSPARENT } from "./tokens.js";
+import { CANVAS, fontAdvance, fontFaces, sloppinessValues, strokeLadders, TRANSPARENT } from "./tokens.js";
+import { palettes } from "./palettes.js";
 
 export type ColorRole =
   | "ink" | "surface" | "muted" | "border" | "subtle"

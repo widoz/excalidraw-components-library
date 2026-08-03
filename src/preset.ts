@@ -4,7 +4,8 @@ import { createInterface } from "node:readline";
 import { stdin, stdout } from "node:process";
 import { PRESETS_DIR } from "./build.js";
 import { DEFAULT_PRESET, resolveTheme, type Preset } from "./theme.js";
-import { fontFaces, palettes, sloppinessValues, strokeLadders } from "./tokens.js";
+import { fontFaces, sloppinessValues, strokeLadders } from "./tokens.js";
+import { palettes } from "./palettes.js";
 
 const FLAGS: Record<string, keyof Preset> = {
   "--name": "name",

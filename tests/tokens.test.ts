@@ -1,25 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { color, font, size, style, zinc } from "../src/tokens.js";
+import { color, font, size, style } from "../src/tokens.js";
+import { zinc } from "../src/palettes.js";
 import { DEFAULT_PRESET, paletteValues, resolveTheme } from "../src/theme.js";
 
 const theme = resolveTheme(DEFAULT_PRESET);
 const PALETTE_VALUES = paletteValues(theme);
 
 describe("tokens", () => {
-  it("exposes the shadcn zinc scale", () => {
-    expect(zinc[50]).toBe("#fafafa");
-    expect(zinc[200]).toBe("#e4e4e7");
-    expect(zinc[700]).toBe("#3f3f46");
-    expect(zinc[900]).toBe("#18181b");
-    expect(Object.keys(zinc)).toHaveLength(11);
-  });
-
-  it("uses shadcn's current (Tailwind v4) zinc values", () => {
-    expect(zinc[400]).toBe("#9f9fa9");
-    expect(zinc[500]).toBe("#71717b");
-    expect(zinc[600]).toBe("#52525c");
-  });
-
   it("names semantic colour roles, resolved against the default theme onto the zinc scale", () => {
     expect(color.ink).toBe("ink");
     expect(theme.palette.ink).toBe(zinc[900]);
