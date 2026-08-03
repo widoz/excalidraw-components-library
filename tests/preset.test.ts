@@ -13,9 +13,10 @@ describe("parseArgs", () => {
     expect(parseArgs([
       "--name", "soft", "--stroke", "medium", "--sloppiness", "artist",
       "--edges", "sharp", "--font", "nunito", "--palette", "stone",
+      "--accent", "blue",
     ])).toEqual({
       name: "soft", strokeWidth: "medium", sloppiness: "artist",
-      edges: "sharp", font: "nunito", palette: "stone", force: false,
+      edges: "sharp", font: "nunito", palette: "stone", accent: "blue", force: false,
     });
   });
 
@@ -94,7 +95,7 @@ describe("interactive prompt (piped, non-TTY stdin)", () => {
   it("writes every prompted field from piped answers and exits 0", () => {
     const stdout = execFileSync("npx", ["tsx", "src/preset.ts"], {
       cwd: REPO_ROOT,
-      input: `${name}\nthin\narchitect\nsharp\nnunito\nmist\n`,
+      input: `${name}\nthin\narchitect\nsharp\nnunito\nmist\nblue\n`,
       encoding: "utf8",
     });
     expect(stdout).toContain("Wrote");
@@ -106,7 +107,19 @@ describe("interactive prompt (piped, non-TTY stdin)", () => {
       edges: "sharp",
       font: "nunito",
       palette: "mist",
+      accent: "blue",
     });
+  });
+
+  it("leaves accent unset when the answer is blank, so it falls back to the base palette", () => {
+    execFileSync("npx", ["tsx", "src/preset.ts"], {
+      cwd: REPO_ROOT,
+      input: `${name}\nthin\narchitect\nsharp\nnunito\nmist\n\n`,
+      encoding: "utf8",
+    });
+    const written = JSON.parse(readFileSync(path, "utf8"));
+    expect(written.palette).toBe("mist");
+    expect("accent" in written).toBe(false);
   });
 
   it("fails loudly on stdin that ends mid-questionnaire, instead of exiting 0 in silence", () => {
@@ -124,7 +137,7 @@ describe("interactive prompt (piped, non-TTY stdin)", () => {
     expect(() =>
       execFileSync("npx", ["tsx", "src/preset.ts"], {
         cwd: REPO_ROOT,
-        input: `${name}\nthin\narchitect\nsharp\nnunito\nburgundy\n`,
+        input: `${name}\nthin\narchitect\nsharp\nnunito\nburgundy\n\n`,
         encoding: "utf8",
       }),
     ).toThrowError(/Preset field "palette" has illegal value "burgundy"/);

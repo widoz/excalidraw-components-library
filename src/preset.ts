@@ -5,7 +5,7 @@ import { stdin, stdout } from "node:process";
 import { PRESETS_DIR } from "./build.js";
 import { DEFAULT_PRESET, resolveTheme, type Preset } from "./theme.js";
 import { fontFaces, sloppinessValues, strokeLadders } from "./tokens.js";
-import { palettes } from "./palettes.js";
+import { palettes, paletteGroups } from "./palettes.js";
 
 const FLAGS: Record<string, keyof Preset> = {
   "--name": "name",
@@ -14,6 +14,7 @@ const FLAGS: Record<string, keyof Preset> = {
   "--edges": "edges",
   "--font": "font",
   "--palette": "palette",
+  "--accent": "accent",
 };
 
 export function parseArgs(argv: string[]): Partial<Preset> & { force: boolean } {
@@ -50,9 +51,24 @@ const CHOICES: Record<string, readonly string[]> = {
   edges: ["sharp", "round"],
   font: Object.keys(fontFaces),
   palette: Object.keys(palettes),
+  accent: Object.keys(palettes),
 };
 
 const PROMPT_FIELDS = Object.entries(CHOICES);
+
+/**
+ * 26 palette names on one bracketed line is unreadable, so the two palette fields print
+ * their choices grouped over several lines. Every other field keeps the one-line form.
+ */
+function renderChoices(field: string, choices: readonly string[]): string {
+  if (field !== "palette" && field !== "accent") {
+    return `[${choices.join(" | ")}]`;
+  }
+  const rows = Object.entries(paletteGroups)
+    .map(([group, names]) => `  ${group.padEnd(8)} ${names.join(" ")}`)
+    .join("\n");
+  return `\n${rows}\n`;
+}
 
 /**
  * When a non-TTY stdin (a pipe, a redirected file, or anything an automated test
@@ -89,7 +105,8 @@ function prompt(): Promise<Preset> {
         }
         const [field, choices] = PROMPT_FIELDS[i]!;
         const fallback = DEFAULT_PRESET[field as keyof Preset];
-        rl.question(`${field} [${choices.join(" | ")}] (${fallback}): `, (raw) => {
+        const shown = field === "accent" ? "blank = same as base" : String(fallback);
+        rl.question(`${field} ${renderChoices(field, choices)}(${shown}): `, (raw) => {
           const answer = raw.trim();
           if (answer) (preset as unknown as Record<string, string>)[field] = answer;
           askField(i + 1);
