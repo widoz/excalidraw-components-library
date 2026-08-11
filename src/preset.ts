@@ -1,5 +1,5 @@
 import { existsSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { createInterface } from "node:readline";
 import { stdin, stdout } from "node:process";
 import { PRESETS_DIR } from "./build.js";
@@ -110,7 +110,9 @@ async function main(): Promise<void> {
   const preset = fields.name ? (fields as Preset) : await prompt();
   const path = writePreset(preset, force);
   console.log(`\n${summary(preset)}`);
-  console.log(ok(path, preset.name));
+  // Relative to where the command ran: the absolute form is noise in a terminal, and
+  // it is someone else's directory layout in a screenshot.
+  console.log(ok(relative(process.cwd(), path) || path, preset.name));
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

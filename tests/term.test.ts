@@ -101,6 +101,18 @@ describe("summary", () => {
     }
   });
 
+  it("still shows a field the answer skipped, with the value the build will use", () => {
+    const text = summary({ name: "soft", palette: "stone" });
+    expect(text).toContain("sloppiness");
+    expect(text).toContain("cartoonist");
+    expect(text).toContain("(default)");
+  });
+
+  it("resolves a skipped accent to the base palette, not to the default accent", () => {
+    const text = summary({ name: "soft", palette: "mist" });
+    expect(text).toMatch(/accent\s+██ mist\s+\(default\)/);
+  });
+
   it("swatches the two palette fields and leaves the rest plain", () => {
     const text = coloured(() => summary({ name: "soft", palette: "stone", accent: "blue" }));
     expect(text).toContain(coloured(() => chalk.hex(palettes.stone[500])("██")));

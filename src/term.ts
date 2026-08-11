@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { paletteGroups, palettes } from "./palettes.js";
-import type { Preset } from "./theme.js";
+import { DEFAULT_PRESET, type Preset } from "./theme.js";
 
 /**
  * Every styled string the preset CLI writes. Keeping them here leaves `preset.ts` to
@@ -107,15 +107,25 @@ export function fieldPrompt(
   return `${head} ${chalk.dim("[")}${tokens}${chalk.dim("]")} ${shown} ${cue("›")} `;
 }
 
-/** The preset as written, with the palette fields shown in the colours they name. */
+/**
+ * What the preset resolves to, with the palette fields shown in the colours they name.
+ * A field the answer left out still appears, dim and marked: the file omits it, but the
+ * build still gives it a value, and that value is what the reader wants to see.
+ */
 export function summary(preset: Preset): string {
-  return Object.entries(preset)
-    .map(([field, value]) => {
-      const shades = isPaletteField(field) ? scale(String(value)) : undefined;
-      const shown = shades
-        ? `${chalk.hex(shades[500]!)(SWATCH)} ${String(value)}`
-        : String(value);
-      return `  ${chalk.dim(field.padEnd(12))}${shown}`;
+  const answers = preset as unknown as Record<string, string | undefined>;
+  return (Object.keys(DEFAULT_PRESET) as (keyof Preset)[])
+    .map((field) => {
+      const chosen = answers[field];
+      // A blank accent follows the base palette, not DEFAULT_PRESET.accent.
+      const inherited = field === "accent"
+        ? answers["palette"] ?? DEFAULT_PRESET.palette
+        : DEFAULT_PRESET[field];
+      const value = chosen ?? inherited;
+      const shades = isPaletteField(field) ? scale(value) : undefined;
+      const swatch = shades ? `${chalk.hex(shades[500]!)(SWATCH)} ` : "";
+      const shown = chosen ? value : chalk.dim(`${value}  (default)`);
+      return `  ${chalk.dim(field.padEnd(12))}${swatch}${shown}`;
     })
     .join("\n");
 }
