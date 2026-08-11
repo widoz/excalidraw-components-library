@@ -1,0 +1,60 @@
+name: checks
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A new push to the same pull request cancels the run still in flight.
+concurrency:
+  group: checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 22 is the oldest line still maintained; 24 is what the work is done on.
+        node: [22, 24]
+    name: node ${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      # The four stages of `npm run check`, kept apart so a failed run names the
+      # stage that failed instead of one opaque red step.
+      - name: build
+        run: npm run build
+
+      # dist/ is committed, so the library works without a build. A pull request that
+      # changes the generator must carry the rebuilt output with it.
+      - name: dist is up to date
+        run: |
+          if [ -n "$(git status --porcelain -- dist)" ]; then
+            echo "::error::dist/ does not match a fresh build. Run 'npm run build' and commit the result."
+            git status --porcelain -- dist
+            git diff --stat -- dist
+            exit 1
+          fi
+
+      - name: validate
+        run: npm run validate
+
+      - name: typecheck
+        run: npm run typecheck
+
+      # Several suites drive the real CLIs, which write into the shared presets/ and
+      # dist/ directories. Run the files one at a time so they cannot race each other.
+      - name: test
+        run: npx vitest run --no-file-parallelism
