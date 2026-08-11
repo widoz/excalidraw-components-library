@@ -1,4 +1,4 @@
-# Excalidraw Comic Components
+# Excalidraw Components Library
 
 Hand-drawn, comic-styled UI components for [Excalidraw](https://excalidraw.com),
 modelled on the [shadcn/ui](https://ui.shadcn.com) component set.
@@ -72,8 +72,8 @@ picks six things:
 A preset names up to two scales. The base `palette` colours the chrome — every stroke,
 panel, muted fill, border and secondary text. The `accent` scale colours buttons, badges
 and focus rings. Leaving `accent` out points both at the same scale, which is how every
-preset behaved before the field existed. `presets/wp-admin.json` is the two-scale
-example: neutral chrome, blue accents.
+preset behaved before the field existed. A two-scale preset pairs the two fields, for
+example `--palette zinc --accent blue`: neutral chrome, blue accents.
 
 Secondary text (`mutedText`) stays on the base scale on purpose. It is the one role that
 renders as plain body text on the surface, so a light or high-chroma accent drops it
