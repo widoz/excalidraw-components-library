@@ -1,6 +1,6 @@
 import { Factory } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, fillBand, inkBox, label, size } from "../comic.js";
+import { color, fillBand, inkBox, label, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const W = size.control;

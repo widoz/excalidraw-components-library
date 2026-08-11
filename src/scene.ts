@@ -1,7 +1,7 @@
 import type { ExcalidrawElement } from "./element.js";
 import type { Theme } from "./theme.js";
 
-export const SOURCE = "excalidraw-comic-components";
+export const SOURCE = "excalidraw-ui";
 
 export function toScene(elements: ExcalidrawElement[], theme: Theme): object {
   return {

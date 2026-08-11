@@ -174,7 +174,7 @@ export function compose(layout, { root = resolveRoot(), preset } = {}) {
   return {
     type: "excalidraw",
     version: 2,
-    source: "excalidraw-comic-components",
+    source: "excalidraw-ui",
     elements,
     appState,
     files: {},

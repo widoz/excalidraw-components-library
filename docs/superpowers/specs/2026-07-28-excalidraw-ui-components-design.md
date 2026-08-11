@@ -1,10 +1,10 @@
-# Excalidraw Comic Components Library — Design
+# Excalidraw UI Components Library — Design
 
 Date: 2026-07-28
 
 ## Goal
 
-A library of hand-drawn, comic-styled UI components for Excalidraw, modelled on the
+A library of hand-drawn UI components for Excalidraw, modelled on the
 shadcn/ui component set. Each component is a separate file. The look is deliberately
 sloppy: thick wobbly ink, flat fills, hard offset shadows. Colours come from the
 shadcn **zinc** scale.
@@ -12,7 +12,7 @@ shadcn **zinc** scale.
 ## Deliverables
 
 - `dist/components/<name>.excalidraw` — one openable scene per component (58 files).
-- `dist/comic-ui.excalidrawlib` — a single library bundle containing all 58 components
+- `dist/ui.excalidrawlib` — a single library bundle containing all 58 components
   as library items, importable into Excalidraw in one click.
 
 Both are generated. `dist/` is committed so the library is usable without a build.
@@ -32,7 +32,7 @@ A small TypeScript project. `npm run build` writes `dist/`.
 src/
   tokens.ts        zinc palette, spacing, sizing, font ids
   element.ts       low-level Excalidraw element factories
-  comic.ts         style helpers built on element.ts
+  style.ts         style helpers built on element.ts
   scene.ts         wraps elements into .excalidraw / .excalidrawlib file shapes
   registry.ts      name -> component builder map
   components/      one file per component, 58 files
@@ -51,13 +51,13 @@ Each layer only knows the one below it.
 |---|---|---|
 | `tokens.ts` | Named constants. No logic. | — |
 | `element.ts` | Produce a single valid Excalidraw element of a given type. Handles ids, seeds, fractional `index`, and every mandatory field. | `tokens` |
-| `comic.ts` | The house style. `inkBox`, `inkCircle`, `fillBand`, `label`, `rule`, `bubble`, `burst`, `checkMark`, `chevron`, `xMark`, `arc`, `dots`, `swash`. | `element`, `tokens` |
-| `components/*.ts` | Compose comic helpers into one component. Export `default (): ExcalidrawElement[]`. | `comic`, `element`, `tokens` |
+| `style.ts` | The house style. `inkBox`, `inkCircle`, `fillBand`, `label`, `rule`, `bubble`, `burst`, `checkMark`, `chevron`, `xMark`, `arc`, `dots`, `swash`. | `element`, `tokens` |
+| `components/*.ts` | Compose style helpers into one component. Export `default (): ExcalidrawElement[]`. | `style`, `element`, `tokens` |
 | `scene.ts` | Serialise an element list into the two file formats. | — |
 | `build.ts` | Orchestration and file writes. | all |
 
 The key boundary: **`element.ts` is the only module that writes raw element JSON.**
-`comic.ts` is where the house style lives — outlines, hard shadows, fills, tails —
+`style.ts` is where the house style lives — outlines, hard shadows, fills, tails —
 and most of what a component draws flows through it, so that is the first place to
 change when restyling. It is not the only place: a component may drop to a `Factory`
 primitive for a one-off shape (a caret, a tab header, an avatar glyph). Twenty-two of
@@ -70,11 +70,11 @@ decisions, so a restyle has to sweep them too.
 
 ## Visual style
 
-Applied by `comic.ts` to every shape:
+Applied by `style.ts` to every shape:
 
 - `roughness: 2` (Excalidraw's "artist" setting)
 - `strokeWidth: 4` (bold ink)
-- `fillStyle: "solid"` (flat comic fills, not hachure)
+- `fillStyle: "solid"` (flat ink fills, not hachure)
 - `roundness: { type: 3 }` on rectangles, `null` where a hard corner reads better
 - `seed` and `versionNonce` randomised per element from a **seeded PRNG**, so builds are
   deterministic but no two strokes wobble identically
@@ -83,7 +83,7 @@ Applied by `comic.ts` to every shape:
 
 Every raised surface is drawn as two rectangles: a solid `ink` rectangle offset by
 `+6, +6`, emitted *first* (so it sits behind), then the surface rectangle on top.
-`comic.inkBox()` returns both.
+`style.inkBox()` returns both.
 
 ### Fonts
 
@@ -115,8 +115,8 @@ renders **realistic states**, not a bare shape, so the file reads as a real piec
 | File | What it shows |
 |---|---|
 | `accordion.ts` | Three stacked rows; the first is expanded with a ruled body underneath it |
-| `alert.ts` | Icon slot with a comic burst behind it, plus a title and body |
-| `alert-dialog.ts` | Comic panel frame that forces a choice: no close X, two footer buttons |
+| `alert.ts` | Icon slot with an ink burst behind it, plus a title and body |
+| `alert-dialog.ts` | Ink panel frame that forces a choice: no close X, two footer buttons |
 | `aspect-ratio.ts` | A dashed placeholder frame with crossed diagonals and a ratio label |
 | `attachment.ts` | A file chip: a folded-corner thumbnail, filename, size, and a remove X |
 | `avatar.ts` | Three avatars: image placeholder, initials, and an overlapping stack |
@@ -135,7 +135,7 @@ renders **realistic states**, not a bare shape, so the file reads as a real piec
 | `command.ts` | Search row with a magnifier glyph, a "Suggestions" heading, and three key-hinted rows |
 | `context-menu.ts` | A dashed drop target with an open context menu overlapping its centre and spilling past its corner |
 | `date-picker.ts` | Trigger with a calendar glyph and a compact three-week month popover below it |
-| `dialog.ts` | Comic panel frame: title, body lines, close X, and two footer buttons |
+| `dialog.ts` | Ink panel frame: title, body lines, close X, and two footer buttons |
 | `drawer.ts` | Bottom-sheet panel with a rounded grabber bar standing in for the sheet affordance |
 | `dropdown-menu.ts` | Trigger plus an open menu: four items, one hovered, one separator before the last |
 | `empty.ts` | A dashed empty-state frame: burst glyph, title, body copy and a call-to-action |
@@ -152,7 +152,7 @@ renders **realistic states**, not a bare shape, so the file reads as a real piec
 | `message.ts` | A two-turn chat exchange: initials avatar plus tailed bubble, incoming then a reply |
 | `navigation-menu.ts` | A nav row of three items ("Docs" open) with a mega-panel of two columns below |
 | `pagination.ts` | Prev arrow, pages 1–5 with page 2 active, next arrow |
-| `popover.ts` | A trigger button with a comic popover bubble above it, tail aimed at its centre |
+| `popover.ts` | A trigger button with a hand-drawn popover bubble above it, tail aimed at its centre |
 | `progress.ts` | Two bars at 35% and 80% |
 | `radio-group.ts` | Three stacked radios, the second one selected |
 | `resizable.ts` | Two side-by-side panels split by a draggable handle with a vertical grip |
@@ -171,9 +171,9 @@ renders **realistic states**, not a bare shape, so the file reads as a real piec
 | `toast.ts` | A floating save-confirmation card with a heavier shadow, dismiss X, and an undo button |
 | `toggle.ts` | Two square toggles: one pressed (sunk, no shadow), one at rest (shadowed) |
 | `toggle-group.ts` | Three joined square toggles, one pressed, marked with alignment-icon strokes |
-| `tooltip.ts` | A trigger button with a comic speech bubble pointing down at it |
+| `tooltip.ts` | A trigger button with a hand-drawn speech bubble pointing down at it |
 
-Comic extras (burst, bubble, panel, swash) appear only where noted — `alert`, `alert-dialog`,
+Ink extras (burst, bubble, panel, swash) appear only where noted — `alert`, `alert-dialog`,
 `carousel`, `dialog`, `empty`, `hover-card`, `marker`, `message`, `popover`, `slider`, `tooltip`.
 
 ### Grouping
@@ -195,7 +195,7 @@ Scene (`.excalidraw`):
 {
   "type": "excalidraw",
   "version": 2,
-  "source": "excalidraw-comic-components",
+  "source": "excalidraw-ui",
   "elements": [],
   "appState": { "gridSize": null, "viewBackgroundColor": "#ffffff" },
   "files": {}
@@ -208,7 +208,7 @@ Library (`.excalidrawlib`):
 {
   "type": "excalidrawlib",
   "version": 2,
-  "source": "excalidraw-comic-components",
+  "source": "excalidraw-ui",
   "libraryItems": [
     { "id": "Button", "status": "unpublished", "created": 0, "name": "Button", "elements": [] }
   ]
@@ -280,5 +280,5 @@ elements scattered/unstyled.
 
 ## Usage
 
-Import `dist/comic-ui.excalidrawlib` into Excalidraw via **Library → Load from file**, or
+Import `dist/ui.excalidrawlib` into Excalidraw via **Library → Load from file**, or
 open any `dist/components/<name>.excalidraw` directly and copy what you need.

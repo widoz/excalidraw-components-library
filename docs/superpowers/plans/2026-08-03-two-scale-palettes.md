@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - **Zero runtime dependencies.** Node core modules only. Do not add a package to `dependencies`. A temporary devDependency is allowed only if a task explicitly says so; no task in this plan does.
-- **No component changes.** `src/comic.ts`, `src/element.ts`, `src/scene.ts` and every file in `src/components/` are out of scope. Components reference role names; only `theme.ts` resolves them to hex.
+- **No component changes.** `src/style.ts`, `src/element.ts`, `src/scene.ts` and every file in `src/components/` are out of scope. Components reference role names; only `theme.ts` resolves them to hex.
 - **`dist/default/` and `dist/blueprint/` must not change.** After any task, `git status --short dist` must show nothing except (in Task 5) the new `dist/wp-admin/`. This is the hard check that the refactor is behaviour-preserving.
 - **Colour values are fetched from source, never recalled.** If the fetch fails, stop and report BLOCKED. Writing plausible-looking hex from memory produces colours that are subtly wrong and that no test here can catch — the structural tests check shape and format, not accuracy.
 - **The four accent roles are exactly**: `accent` (700), `accentText` (50), `subtle` (400), `mutedText` (500). The four base roles are exactly: `ink` (900), `surface` (50), `muted` (200), `border` (300).

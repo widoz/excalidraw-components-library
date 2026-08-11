@@ -12,7 +12,7 @@ const theme = resolveTheme(DEFAULT_PRESET);
 let out: string;
 
 beforeAll(() => {
-  out = mkdtempSync(join(tmpdir(), "comic-ui-"));
+  out = mkdtempSync(join(tmpdir(), "ui-"));
   buildAll(theme, out);
 });
 
@@ -35,10 +35,10 @@ describe("build", () => {
   });
 
   it("is deterministic", () => {
-    const first = readFileSync(join(out, "comic-ui.excalidrawlib"), "utf8");
-    const second = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    const first = readFileSync(join(out, "ui.excalidrawlib"), "utf8");
+    const second = mkdtempSync(join(tmpdir(), "ui-"));
     buildAll(theme, second);
-    expect(readFileSync(join(second, "comic-ui.excalidrawlib"), "utf8")).toBe(first);
+    expect(readFileSync(join(second, "ui.excalidrawlib"), "utf8")).toBe(first);
     rmSync(second, { recursive: true, force: true });
   });
 
@@ -119,7 +119,7 @@ describe("registry", () => {
   });
 
   it("appears in the library bundle once per component", () => {
-    const lib = JSON.parse(readFileSync(join(out, "comic-ui.excalidrawlib"), "utf8"));
+    const lib = JSON.parse(readFileSync(join(out, "ui.excalidrawlib"), "utf8"));
     expect(lib.libraryItems).toHaveLength(EXPECTED.length);
   });
 });
@@ -287,14 +287,14 @@ describe("preset CLI", () => {
         readdirSync(join(dir, "components")).filter((f) => f.endsWith(".excalidraw")),
         `${name} components`,
       ).toHaveLength(Object.keys(registry).length);
-      expect(existsSync(join(dir, "comic-ui.excalidrawlib")), `${name} library`).toBe(true);
+      expect(existsSync(join(dir, "ui.excalidrawlib")), `${name} library`).toBe(true);
     }
   });
 
   it("building one named preset leaves other presets' output alone", () => {
     const blueprint = outDirFor(resolveTheme(loadPreset("blueprint")));
     execFileSync("npx", ["tsx", "src/build.ts", "--preset", "default"], { cwd: REPO_ROOT, encoding: "utf8" });
-    expect(existsSync(join(blueprint, "comic-ui.excalidrawlib"))).toBe(true);
+    expect(existsSync(join(blueprint, "ui.excalidrawlib"))).toBe(true);
   });
 
   it("validates a named preset's own output directory", () => {

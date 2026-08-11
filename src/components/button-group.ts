@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, label, size, stroke, style } from "../comic.js";
+import { color, font, label, size, stroke, style } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const CELL_W = 110;

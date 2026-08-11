@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { burst, color, font, inkBox, label, size } from "../comic.js";
+import { burst, color, font, inkBox, label, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 340;

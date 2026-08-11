@@ -1,10 +1,10 @@
-# Excalidraw Comic Components Library Implementation Plan
+# Excalidraw UI Components Library Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Generate 20 hand-drawn, comic-styled Excalidraw UI components modelled on shadcn/ui, as one `.excalidraw` scene per component plus a single `.excalidrawlib` bundle.
+**Goal:** Generate 20 hand-drawn Excalidraw UI components modelled on shadcn/ui, as one `.excalidraw` scene per component plus a single `.excalidrawlib` bundle.
 
-**Architecture:** A TypeScript build script. `tokens.ts` holds constants, `element.ts` emits valid Excalidraw element JSON, `comic.ts` layers the house style on top, and each file under `components/` composes comic helpers into one component. `build.ts` walks a registry and writes `dist/`. Nothing but `element.ts` writes raw element JSON, so restyling the library is a change to `comic.ts`.
+**Architecture:** A TypeScript build script. `tokens.ts` holds constants, `element.ts` emits valid Excalidraw element JSON, `style.ts` layers the house style on top, and each file under `components/` composes style helpers into one component. `build.ts` walks a registry and writes `dist/`. Nothing but `element.ts` writes raw element JSON, so restyling the library is a change to `style.ts`.
 
 **Tech Stack:** Node 20+, TypeScript 5, tsx (to run TS directly), vitest. No runtime dependencies.
 
@@ -14,11 +14,11 @@
 - Zero runtime dependencies. `typescript`, `tsx` and `vitest` are devDependencies only.
 - Every colour written into output must come from `tokens.ts` or be the literal string `"transparent"`. No inline hex anywhere outside `tokens.ts`.
 - Every shape uses `roughness: 2` and `fillStyle: "solid"`.
-- `strokeWidth` is `4` — the bold comic ink — for every primary shape: component outlines,
+- `strokeWidth` is `4` — the bold ink — for every primary shape: component outlines,
   ticks, chevrons, bubbles, bursts, close marks. Fine detail deliberately goes thinner, and
-  the thinner value is always stated explicitly at the call site: `comic.rule()` hairlines
+  the thinner value is always stated explicitly at the call site: `style.rule()` hairlines
   and small incidental strokes (text caret, resize grip) use `2`; the hard-shadow shapes
-  inside `comic.inkBox()` / `comic.inkCircle()` use `1` so their own outline does not fatten
+  inside `style.inkBox()` / `style.inkCircle()` use `1` so their own outline does not fatten
   the silhouette. A `strokeWidth` below `4` is only correct on a stroke that is secondary to
   the component's silhouette.
 - Builds are deterministic: seeded PRNG only, never `Math.random()`, never `Date.now()`.
@@ -41,7 +41,7 @@
 
 **Interfaces:**
 - Consumes: nothing.
-- Produces: `zinc` (record of shade number → hex string), `color` (record of semantic name → hex string), `PALETTE_VALUES: ReadonlySet<string>`, `style` (`roughness`, `strokeWidth`, `shadowOffset`), `font` (`hand`, `comic`), `size` (`control`, `rowHeight`, `gap`, `radius`, `fontSm`, `fontMd`, `fontLg`).
+- Produces: `zinc` (record of shade number → hex string), `color` (record of semantic name → hex string), `PALETTE_VALUES: ReadonlySet<string>`, `style` (`roughness`, `strokeWidth`, `shadowOffset`), `font` (`hand`, `heading`), `size` (`control`, `rowHeight`, `gap`, `radius`, `fontSm`, `fontMd`, `fontLg`).
 
 - [ ] **Step 1: Initialise the repository**
 
@@ -57,11 +57,11 @@ git checkout -b main
 
 ```json
 {
-  "name": "excalidraw-comic-components",
+  "name": "excalidraw-ui",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Comic-styled shadcn-inspired UI components for Excalidraw",
+  "description": "Hand-drawn shadcn-inspired UI components for Excalidraw",
   "scripts": {
     "build": "tsx src/build.ts",
     "validate": "tsx src/validate.ts",
@@ -146,12 +146,12 @@ describe("tokens", () => {
     expect(PALETTE_VALUES.has("#ff0000")).toBe(false);
   });
 
-  it("pins the comic style constants", () => {
+  it("pins the house style constants", () => {
     expect(style.roughness).toBe(2);
     expect(style.strokeWidth).toBe(4);
     expect(style.shadowOffset).toBe(6);
     expect(font.hand).toBe(1);
-    expect(font.comic).toBe(7);
+    expect(font.heading).toBe(7);
     expect(size.control).toBe(320);
   });
 });
@@ -199,7 +199,7 @@ export const PALETTE_VALUES: ReadonlySet<string> = new Set<string>([
   "transparent",
 ]);
 
-/** The comic look, applied to every shape. */
+/** The hand-drawn look, applied to every shape. */
 export const style = {
   roughness: 2,
   strokeWidth: 4,
@@ -212,7 +212,7 @@ export const font = {
   /** Excalifont, the default hand-drawn face. */
   hand: 1,
   /** Comic Shanns, used for emphasis. */
-  comic: 7,
+  heading: 7,
 } as const;
 
 export const size = {
@@ -668,7 +668,7 @@ git commit -m "feat: add deterministic Excalidraw element factory"
 **Interfaces:**
 - Consumes: `ExcalidrawElement` from `src/element.js`.
 - Produces:
-  - `SOURCE: string` (the literal `"excalidraw-comic-components"`)
+  - `SOURCE: string` (the literal `"excalidraw-ui"`)
   - `toScene(elements: ExcalidrawElement[]): object`
   - `interface LibraryItemInput { name: string; elements: ExcalidrawElement[] }`
   - `toLibrary(items: LibraryItemInput[]): object`
@@ -727,7 +727,7 @@ Expected: FAIL — cannot resolve `../src/scene.js`.
 ```ts
 import type { ExcalidrawElement } from "./element.js";
 
-export const SOURCE = "excalidraw-comic-components";
+export const SOURCE = "excalidraw-ui";
 
 export function toScene(elements: ExcalidrawElement[]): object {
   return {
@@ -776,11 +776,11 @@ git commit -m "feat: add scene and library serialisation"
 
 ---
 
-### Task 4: Comic style helpers
+### Task 4: Style helpers
 
 **Files:**
-- Create: `src/comic.ts`
-- Test: `tests/comic.test.ts`
+- Create: `src/style.ts`
+- Test: `tests/style.test.ts`
 
 **Interfaces:**
 - Consumes: `Factory`, `ExcalidrawElement`, `estimateTextWidth` from `src/element.js`; `color`, `font`, `size`, `style` from `src/tokens.js`.
@@ -807,12 +807,12 @@ centre a label inside a box of height `h` at top `y`, callers use `y + (h - font
 
 - [ ] **Step 1: Write the failing test**
 
-Create `tests/comic.test.ts`:
+Create `tests/style.test.ts`:
 
 ```ts
 import { describe, expect, it } from "vitest";
 import { Factory } from "../src/element.js";
-import { bubble, burst, checkMark, chevron, inkBox, inkCircle, label, rule, xMark } from "../src/comic.js";
+import { bubble, burst, checkMark, chevron, inkBox, inkCircle, label, rule, xMark } from "../src/style.js";
 import { color, style } from "../src/tokens.js";
 
 describe("inkBox", () => {
@@ -921,10 +921,10 @@ describe("xMark", () => {
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npx vitest run tests/comic.test.ts`
-Expected: FAIL — cannot resolve `../src/comic.js`.
+Run: `npx vitest run tests/style.test.ts`
+Expected: FAIL — cannot resolve `../src/style.js`.
 
-- [ ] **Step 3: Write `src/comic.ts`**
+- [ ] **Step 3: Write `src/style.ts`**
 
 ```ts
 import type { ExcalidrawElement, Factory } from "./element.js";
@@ -1061,7 +1061,7 @@ export function bubble(
   return out;
 }
 
-/** Comic action starburst. */
+/** Ink action starburst. */
 export function burst(
   f: Factory,
   o: { cx: number; cy: number; r: number; spikes?: number; fill?: string; stroke?: string },
@@ -1108,14 +1108,14 @@ export { color, font, size, style };
 
 - [ ] **Step 4: Run the test to verify it passes**
 
-Run: `npx vitest run tests/comic.test.ts`
+Run: `npx vitest run tests/style.test.ts`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/comic.ts tests/comic.test.ts
-git commit -m "feat: add comic style helpers"
+git add src/style.ts tests/style.test.ts
+git commit -m "feat: add style helpers"
 ```
 
 ---
@@ -1133,7 +1133,7 @@ task only adds component files and registry lines.
 - Test: `tests/build.test.ts`
 
 **Interfaces:**
-- Consumes: `Factory` from `src/element.js`; helpers from `src/comic.js`; `toScene`, `toLibrary` from `src/scene.js`.
+- Consumes: `Factory` from `src/element.js`; helpers from `src/style.js`; `toScene`, `toLibrary` from `src/scene.js`.
 - Produces:
   - `type ComponentBuilder = () => ExcalidrawElement[]`
   - `registry: Record<string, { title: string; build: ComponentBuilder }>` keyed by kebab-case file name
@@ -1144,7 +1144,7 @@ task only adds component files and registry lines.
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, font, inkBox, label, size } from "../comic.js";
+import { color, font, inkBox, label, size } from "../style.js";
 
 const W = 200;
 const H = 56;
@@ -1169,7 +1169,7 @@ export default function button(): ExcalidrawElement[] {
       y: y + (H - size.fontMd * 1.25) / 2,
       text: v.text,
       fontSize: size.fontMd,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: v.ink,
       align: "center",
     }));
@@ -1229,7 +1229,7 @@ export function buildAll(outDir: string = DEFAULT_OUT): void {
   }
 
   writeFileSync(
-    join(outDir, "comic-ui.excalidrawlib"),
+    join(outDir, "ui.excalidrawlib"),
     `${JSON.stringify(toLibrary(items), null, 2)}\n`,
   );
 
@@ -1339,7 +1339,7 @@ export function validateAll(outDir: string = DEFAULT_OUT): string[] {
   }
 
   const lib = JSON.parse(
-    readFileSync(join(outDir, "comic-ui.excalidrawlib"), "utf8"),
+    readFileSync(join(outDir, "ui.excalidrawlib"), "utf8"),
   ) as Record<string, unknown>;
   if (lib.type !== "excalidrawlib") errors.push("library: type is not \"excalidrawlib\"");
   if (lib.version !== 2) errors.push("library: version is not 2");
@@ -1382,7 +1382,7 @@ import { registry } from "../src/registry.js";
 let out: string;
 
 beforeAll(() => {
-  out = mkdtempSync(join(tmpdir(), "comic-ui-"));
+  out = mkdtempSync(join(tmpdir(), "ui-"));
   buildAll(out);
 });
 
@@ -1405,10 +1405,10 @@ describe("build", () => {
   });
 
   it("is deterministic", () => {
-    const first = readFileSync(join(out, "comic-ui.excalidrawlib"), "utf8");
-    const second = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    const first = readFileSync(join(out, "ui.excalidrawlib"), "utf8");
+    const second = mkdtempSync(join(tmpdir(), "ui-"));
     buildAll(second);
-    expect(readFileSync(join(second, "comic-ui.excalidrawlib"), "utf8")).toBe(first);
+    expect(readFileSync(join(second, "ui.excalidrawlib"), "utf8")).toBe(first);
     rmSync(second, { recursive: true, force: true });
   });
 });
@@ -1468,7 +1468,7 @@ git commit -m "feat: add build pipeline, validator, and button component"
 - Test: `tests/components.test.ts`
 
 **Interfaces:**
-- Consumes: `Factory`, `ExcalidrawElement`; `inkBox`, `inkCircle`, `label`, `rule`, `checkMark`, `color`, `font`, `size` from `src/comic.js`.
+- Consumes: `Factory`, `ExcalidrawElement`; `inkBox`, `inkCircle`, `label`, `rule`, `checkMark`, `color`, `font`, `size` from `src/style.js`.
 - Produces: five default-exported `ComponentBuilder`s, registered under keys `input`, `textarea`, `checkbox-group`, `radio-group`, `switch`.
 
 - [ ] **Step 1: Write the shared component test file**
@@ -1485,7 +1485,7 @@ import { color } from "../src/tokens.js";
 
 let out: string;
 beforeAll(() => {
-  out = mkdtempSync(join(tmpdir(), "comic-ui-comp-"));
+  out = mkdtempSync(join(tmpdir(), "ui-comp-"));
   buildAll(out);
 });
 afterAll(() => rmSync(out, { recursive: true, force: true }));
@@ -1560,7 +1560,7 @@ Expected: FAIL — `dist/components/input.excalidraw` does not exist.
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, inkBox, label, size } from "../comic.js";
+import { color, inkBox, label, size } from "../style.js";
 
 const W = size.control;
 const H = 56;
@@ -1601,7 +1601,7 @@ export default function input(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, inkBox, label, rule, size } from "../comic.js";
+import { color, inkBox, label, rule, size } from "../style.js";
 
 const W = size.control;
 const H = 180;
@@ -1646,7 +1646,7 @@ export default function textarea(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { checkMark, color, inkBox, label, size } from "../comic.js";
+import { checkMark, color, inkBox, label, size } from "../style.js";
 
 const BOX = 34;
 const ROW = 56;
@@ -1690,7 +1690,7 @@ export default function checkboxGroup(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, inkCircle, label, size } from "../comic.js";
+import { color, inkCircle, label, size } from "../style.js";
 
 const R = 18;
 const ROW = 56;
@@ -1728,7 +1728,7 @@ export default function radioGroup(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, inkBox, inkCircle, label, size } from "../comic.js";
+import { color, inkBox, inkCircle, label, size } from "../style.js";
 
 const TRACK_W = 88;
 const TRACK_H = 44;
@@ -1826,7 +1826,7 @@ git commit -m "feat: add input, textarea, checkbox group, radio group and switch
 - Modify: `tests/components.test.ts`
 
 **Interfaces:**
-- Consumes: `inkBox`, `label`, `rule`, `chevron`, `color`, `font`, `size` from `src/comic.js`.
+- Consumes: `inkBox`, `label`, `rule`, `chevron`, `color`, `font`, `size` from `src/style.js`.
 - Produces: builders registered as `select` and `dropdown-menu`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -1838,7 +1838,7 @@ describe("select", () => {
   it("shows a trigger with a chevron and an open menu with a highlighted item", () => {
     const els = load(out, "select");
     expect(texts(els)).toContain("Pick a style");
-    expect(texts(els)).toContain("Comic");
+    expect(texts(els)).toContain("Inked");
     // One chevron line.
     expect(count(els, "line")).toBe(1);
     // The highlighted menu row is an accent-filled rectangle.
@@ -1866,7 +1866,7 @@ Expected: FAIL — `dist/components/select.excalidraw` does not exist.
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { chevron, color, inkBox, label, size } from "../comic.js";
+import { chevron, color, inkBox, label, size } from "../style.js";
 
 const W = size.control;
 const TRIGGER_H = 56;
@@ -1887,14 +1887,14 @@ export default function select(): ExcalidrawElement[] {
   els.push(...chevron(f, { x: W - 42, y: TRIGGER_H / 2 - 5, s: 12, dir: "down" }));
 
   // Open menu.
-  const items = ["Sketchy", "Comic", "Clean"];
+  const items = ["Sketchy", "Inked", "Clean"];
   const menuY = TRIGGER_H + 22;
   const menuH = items.length * ITEM_H + 16;
   els.push(...inkBox(f, { x: 0, y: menuY, w: W, h: menuH }));
 
   items.forEach((text, i) => {
     const y = menuY + 8 + i * ITEM_H;
-    const highlighted = text === "Comic";
+    const highlighted = text === "Inked";
     if (highlighted) {
       els.push(f.rect({ x: 8, y, w: W - 16, h: ITEM_H, fill: color.accent }));
     }
@@ -1915,7 +1915,7 @@ export default function select(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, font, inkBox, label, rule, size } from "../comic.js";
+import { color, font, inkBox, label, rule, size } from "../style.js";
 
 const W = 260;
 const TRIGGER_W = 150;
@@ -1933,7 +1933,7 @@ export default function dropdownMenu(): ExcalidrawElement[] {
     y: (TRIGGER_H - size.fontMd * 1.25) / 2,
     text: "Actions",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -2015,7 +2015,7 @@ git commit -m "feat: add select and dropdown menu"
 - Modify: `tests/components.test.ts`
 
 **Interfaces:**
-- Consumes: `inkBox`, `inkCircle`, `label`, `rule`, `burst`, `color`, `font`, `size` from `src/comic.js`.
+- Consumes: `inkBox`, `inkCircle`, `label`, `rule`, `burst`, `color`, `font`, `size` from `src/style.js`.
 - Produces: builders registered as `card`, `badge`, `alert`, `avatar`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -2069,7 +2069,7 @@ Expected: FAIL — `dist/components/card.excalidraw` does not exist.
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, font, inkBox, label, rule, size } from "../comic.js";
+import { color, font, inkBox, label, rule, size } from "../style.js";
 
 const W = 340;
 const H = 230;
@@ -2086,7 +2086,7 @@ export default function card(): ExcalidrawElement[] {
     y: 24,
     text: "Sketch Kit",
     fontSize: size.fontLg,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...label(f, {
     x: 24,
@@ -2110,7 +2110,7 @@ export default function card(): ExcalidrawElement[] {
     y: btnY + (btnH - size.fontSm * 1.25) / 2,
     text: "Get it",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));
@@ -2123,7 +2123,7 @@ export default function card(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, font, inkBox, label, size } from "../comic.js";
+import { color, font, inkBox, label, size } from "../style.js";
 
 const H = 38;
 const GAP = 16;
@@ -2150,7 +2150,7 @@ export default function badge(): ExcalidrawElement[] {
       y: (H - size.fontSm * 1.25) / 2,
       text: v.text,
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: v.ink,
       align: "center",
     }));
@@ -2165,12 +2165,12 @@ export default function badge(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { burst, color, font, inkBox, label, size } from "../comic.js";
+import { burst, color, font, inkBox, label, size } from "../style.js";
 
 const W = 380;
 const H = 120;
 
-/** Icon slot with a comic burst behind it, plus a title and body. */
+/** Icon slot with an ink burst behind it, plus a title and body. */
 export default function alert(): ExcalidrawElement[] {
   const f = new Factory("alert");
   const els: ExcalidrawElement[] = [];
@@ -2184,7 +2184,7 @@ export default function alert(): ExcalidrawElement[] {
     y: H / 2 - (size.fontLg * 1.25) / 2,
     text: "!",
     fontSize: size.fontLg,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -2193,7 +2193,7 @@ export default function alert(): ExcalidrawElement[] {
     y: 28,
     text: "Heads up!",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
   els.push(...label(f, {
     x: 100,
@@ -2211,7 +2211,7 @@ export default function alert(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, font, inkCircle, label, size } from "../comic.js";
+import { color, font, inkCircle, label, size } from "../style.js";
 
 const R = 30;
 
@@ -2233,7 +2233,7 @@ export default function avatar(): ExcalidrawElement[] {
     y: R - (size.fontMd * 1.25) / 2,
     text: "GS",
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));
@@ -2295,7 +2295,7 @@ git commit -m "feat: add card, badge, alert and avatar"
 - Modify: `tests/components.test.ts`
 
 **Interfaces:**
-- Consumes: `inkBox`, `label`, `rule`, `color`, `font`, `size` from `src/comic.js`.
+- Consumes: `inkBox`, `label`, `rule`, `color`, `font`, `size` from `src/style.js`.
 - Produces: builders registered as `tabs` and `table`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -2333,7 +2333,7 @@ Expected: FAIL — `dist/components/tabs.excalidraw` does not exist.
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, font, inkBox, label, size } from "../comic.js";
+import { color, font, inkBox, label, size } from "../style.js";
 
 const TAB_W = 120;
 const TAB_H = 48;
@@ -2365,7 +2365,7 @@ export default function tabs(): ExcalidrawElement[] {
       y: (TAB_H - size.fontSm * 1.25) / 2,
       text: title,
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: active ? color.accentText : color.mutedText,
       align: "center",
     }));
@@ -2387,7 +2387,7 @@ export default function tabs(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, font, inkBox, label, rule, size } from "../comic.js";
+import { color, font, inkBox, label, rule, size } from "../style.js";
 
 const W = 380;
 const ROW_H = 50;
@@ -2415,7 +2415,7 @@ export default function table(): ExcalidrawElement[] {
       y: (ROW_H - size.fontSm * 1.25) / 2,
       text,
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
     }));
   });
 
@@ -2482,7 +2482,7 @@ git commit -m "feat: add tabs and table"
 - Modify: `tests/components.test.ts`
 
 **Interfaces:**
-- Consumes: `inkBox`, `inkCircle`, `label`, `bubble`, `color`, `font`, `size` from `src/comic.js`.
+- Consumes: `inkBox`, `inkCircle`, `label`, `bubble`, `color`, `font`, `size` from `src/style.js`.
 - Produces: builders registered as `progress` and `slider`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -2521,7 +2521,7 @@ Expected: FAIL — `dist/components/progress.excalidraw` does not exist.
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, inkBox, label, size } from "../comic.js";
+import { color, inkBox, label, size } from "../style.js";
 
 const W = size.control;
 const H = 32;
@@ -2560,7 +2560,7 @@ export default function progress(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { bubble, color, font, inkBox, inkCircle, label, size } from "../comic.js";
+import { bubble, color, font, inkBox, inkCircle, label, size } from "../style.js";
 
 const W = size.control;
 const TRACK_H = 16;
@@ -2595,7 +2595,7 @@ export default function slider(): ExcalidrawElement[] {
     y: trackY - BUBBLE_H - 42 + (BUBBLE_H - size.fontMd * 1.25) / 2,
     text: String(VALUE),
     fontSize: size.fontMd,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -2631,7 +2631,7 @@ Expected: `Wrote 16 components`, no errors, all tests pass.
 
 Open `dist/components/slider.excalidraw`. The bubble's tail must point down at the knob and
 its fill must hide the bubble's bottom border where they meet. If the tail is inverted or
-detached, adjust `bubble`'s tail geometry in `src/comic.ts` and rebuild.
+detached, adjust `bubble`'s tail geometry in `src/style.ts` and rebuild.
 
 - [ ] **Step 8: Commit**
 
@@ -2651,7 +2651,7 @@ git commit -m "feat: add progress and slider"
 - Modify: `tests/components.test.ts`
 
 **Interfaces:**
-- Consumes: `inkBox`, `label`, `rule`, `bubble`, `xMark`, `color`, `font`, `size` from `src/comic.js`.
+- Consumes: `inkBox`, `label`, `rule`, `bubble`, `xMark`, `color`, `font`, `size` from `src/style.js`.
 - Produces: builders registered as `tooltip` and `dialog`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -2687,14 +2687,14 @@ Expected: FAIL — `dist/components/tooltip.excalidraw` does not exist.
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { bubble, color, font, inkBox, label, size } from "../comic.js";
+import { bubble, color, font, inkBox, label, size } from "../style.js";
 
 const BTN_W = 140;
 const BTN_H = 52;
 const BUBBLE_W = 220;
 const BUBBLE_H = 60;
 
-/** A trigger button with a comic speech bubble pointing down at it. */
+/** A trigger button with a hand-drawn speech bubble pointing down at it. */
 export default function tooltip(): ExcalidrawElement[] {
   const f = new Factory("tooltip");
   const els: ExcalidrawElement[] = [];
@@ -2714,7 +2714,7 @@ export default function tooltip(): ExcalidrawElement[] {
     y: (BUBBLE_H - size.fontSm * 1.25) / 2,
     text: "Save your work!",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     align: "center",
   }));
 
@@ -2724,7 +2724,7 @@ export default function tooltip(): ExcalidrawElement[] {
     y: btnY + (BTN_H - size.fontSm * 1.25) / 2,
     text: "Save",
     fontSize: size.fontSm,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
     stroke: color.accentText,
     align: "center",
   }));
@@ -2737,21 +2737,21 @@ export default function tooltip(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { color, font, inkBox, label, rule, size, xMark } from "../comic.js";
+import { color, font, inkBox, label, rule, size, xMark } from "../style.js";
 
 const W = 420;
 const H = 250;
 const BTN_W = 130;
 const BTN_H = 50;
 
-/** Comic panel frame: title, body lines, close X, and two footer buttons. */
+/** Ink panel frame: title, body lines, close X, and two footer buttons. */
 export default function dialog(): ExcalidrawElement[] {
   const f = new Factory("dialog");
   const els: ExcalidrawElement[] = [];
 
-  // Sharp corners read as a comic panel rather than a soft modal.
+  // Sharp corners read as an ink panel rather than a soft modal.
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H, rounded: false }));
-  // Inner panel line, the classic comic double frame.
+  // Inner panel line, the classic double panel frame.
   els.push(f.rect({
     x: 10,
     y: 10,
@@ -2767,7 +2767,7 @@ export default function dialog(): ExcalidrawElement[] {
     y: 30,
     text: "Delete drawing?",
     fontSize: size.fontLg,
-    fontFamily: font.comic,
+    fontFamily: font.heading,
   }));
 
   els.push(...rule(f, { x: 30, y: 92, w: W - 120, stroke: color.muted }));
@@ -2787,7 +2787,7 @@ export default function dialog(): ExcalidrawElement[] {
       y: btnY + (BTN_H - size.fontSm * 1.25) / 2,
       text: b.text,
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: b.ink,
       align: "center",
     }));
@@ -2839,7 +2839,7 @@ git commit -m "feat: add tooltip and dialog"
 - Modify: `tests/components.test.ts`
 
 **Interfaces:**
-- Consumes: `inkBox`, `label`, `chevron`, `color`, `font`, `size`, `estimateTextWidth` from `src/comic.js` / `src/element.js`.
+- Consumes: `inkBox`, `label`, `chevron`, `color`, `font`, `size`, `estimateTextWidth` from `src/style.js` / `src/element.js`.
 - Produces: builders registered as `breadcrumb` and `pagination`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -2877,7 +2877,7 @@ Expected: FAIL — `dist/components/breadcrumb.excalidraw` does not exist.
 
 ```ts
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
-import { chevron, color, font, label, size } from "../comic.js";
+import { chevron, color, font, label, size } from "../style.js";
 
 const GAP = 20;
 
@@ -2900,7 +2900,7 @@ export default function breadcrumb(): ExcalidrawElement[] {
       y: 0,
       text: crumb.text,
       fontSize: size.fontMd,
-      fontFamily: crumb.current ? font.comic : font.hand,
+      fontFamily: crumb.current ? font.heading : font.hand,
       stroke: crumb.current ? color.ink : color.mutedText,
     }));
     x += width;
@@ -2924,7 +2924,7 @@ export default function breadcrumb(): ExcalidrawElement[] {
 
 ```ts
 import { Factory, type ExcalidrawElement } from "../element.js";
-import { chevron, color, font, inkBox, label, size } from "../comic.js";
+import { chevron, color, font, inkBox, label, size } from "../style.js";
 
 const CELL = 48;
 const GAP = 12;
@@ -2957,7 +2957,7 @@ export default function pagination(): ExcalidrawElement[] {
       y: (CELL - size.fontSm * 1.25) / 2,
       text: String(page),
       fontSize: size.fontSm,
-      fontFamily: font.comic,
+      fontFamily: font.heading,
       stroke: active ? color.accentText : color.ink,
       align: "center",
     }));
@@ -2973,8 +2973,8 @@ export default function pagination(): ExcalidrawElement[] {
 
 Note: the prev chevron points right here for simplicity of the `chevron` helper. If you want
 it mirrored, pass negative-x points via a dedicated call rather than adding a `"left"`
-direction — but a `"left"` direction in `comic.ts` is also acceptable if you add a test for it
-in `tests/comic.test.ts` first.
+direction — but a `"left"` direction in `style.ts` is also acceptable if you add a test for it
+in `tests/style.test.ts` first.
 
 - [ ] **Step 5: Register both components**
 
@@ -3041,7 +3041,7 @@ describe("registry", () => {
   });
 
   it("appears in the library bundle once per component", () => {
-    const lib = JSON.parse(readFileSync(join(out, "comic-ui.excalidrawlib"), "utf8"));
+    const lib = JSON.parse(readFileSync(join(out, "ui.excalidrawlib"), "utf8"));
     expect(lib.libraryItems).toHaveLength(EXPECTED.length);
   });
 });
@@ -3056,9 +3056,9 @@ the registry, not the test.
 - [ ] **Step 3: Write `README.md`**
 
 ```markdown
-# Excalidraw Comic Components
+# Excalidraw UI Components
 
-Hand-drawn, comic-styled UI components for [Excalidraw](https://excalidraw.com),
+Hand-drawn UI components for [Excalidraw](https://excalidraw.com),
 modelled on the [shadcn/ui](https://ui.shadcn.com) component set.
 
 Bold wobbly ink, flat fills, hard offset shadows. Colours are the shadcn **zinc** scale.
@@ -3066,7 +3066,7 @@ Bold wobbly ink, flat fills, hard offset shadows. Colours are the shadcn **zinc*
 ## Use it
 
 **Whole library:** in Excalidraw open **Library → Load from file** and pick
-`dist/comic-ui.excalidrawlib`. All 20 components land in your library panel.
+`dist/ui.excalidrawlib`. All 20 components land in your library panel.
 
 **One component:** open `dist/components/<name>.excalidraw` via **Menu → Open**,
 then copy what you need.
@@ -3094,7 +3094,7 @@ npm test           # unit tests
 npm run check      # all three
 ```
 
-`src/tokens.ts` holds the palette and sizing. `src/comic.ts` holds the house style —
+`src/tokens.ts` holds the palette and sizing. `src/style.ts` holds the house style —
 change it and every component restyles. `src/components/*.ts` is one file per component.
 `dist/` is generated but committed, so the library works without a build.
 ```
@@ -3117,9 +3117,9 @@ Expected: no errors. Fix any that appear.
 
 - [ ] **Step 6: Final visual pass in Excalidraw**
 
-Load `dist/comic-ui.excalidrawlib` into Excalidraw's library panel. Confirm all 20 items
+Load `dist/ui.excalidrawlib` into Excalidraw's library panel. Confirm all 20 items
 appear with sensible thumbnails, and drag three at random onto the canvas to confirm they
-place as single groups with the comic look intact.
+place as single groups with the hand-drawn look intact.
 
 - [ ] **Step 7: Commit**
 
@@ -3134,5 +3134,5 @@ git commit -m "docs: add README and registry coverage test"
 
 - `npm run check` passes.
 - `npx tsc --noEmit` is clean.
-- `dist/` holds 20 `.excalidraw` files plus `comic-ui.excalidrawlib`, all committed.
+- `dist/` holds 20 `.excalidraw` files plus `ui.excalidrawlib`, all committed.
 - The library file loads into Excalidraw and every item renders.

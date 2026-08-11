@@ -53,7 +53,7 @@ function writeScene(
     ...(toLibrary([{ name: "Widget", elements: makeElements() }]) as Record<string, unknown>),
     ...overrides?.library,
   };
-  writeFileSync(join(dir, "comic-ui.excalidrawlib"), JSON.stringify(library));
+  writeFileSync(join(dir, "ui.excalidrawlib"), JSON.stringify(library));
 }
 
 beforeEach(() => {
@@ -236,7 +236,7 @@ describe("theme-aware validation", () => {
   });
 
   it("reports a variant file that is not at the origin", () => {
-    const dir = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    const dir = mkdtempSync(join(tmpdir(), "ui-"));
     buildAll(theme, dir);
     const file = join(dir, "components", "button", "default.excalidraw");
     const scene = JSON.parse(readFileSync(file, "utf8"));
@@ -253,7 +253,7 @@ describe("theme-aware validation", () => {
   });
 
   it("reports a variant whose elements are missing from the sheet", () => {
-    const dir = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    const dir = mkdtempSync(join(tmpdir(), "ui-"));
     buildAll(theme, dir);
     const file = join(dir, "components", "button", "default.excalidraw");
     const scene = JSON.parse(readFileSync(file, "utf8"));
@@ -266,7 +266,7 @@ describe("theme-aware validation", () => {
   });
 
   it("reports a component with no variant directory", () => {
-    const dir = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    const dir = mkdtempSync(join(tmpdir(), "ui-"));
     buildAll(theme, dir);
     rmSync(join(dir, "components", "button"), { recursive: true, force: true });
 

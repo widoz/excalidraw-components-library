@@ -15,7 +15,7 @@ Task 3: two authorised deviations, both verified necessary — scene.ts's toScen
   (color.canvas stopped being a hex, and hardcoding one would violate the no-inline-hex constraint);
   and the documented tokens->theme->tokens import cycle was real, so PALETTE_VALUES moved into
   theme.ts per the brief's fallback. Task 7 removes it.
-Task 3: minor (deferred): tests/comic.test.ts's arc quadrant test changed new Factory(`a${endDeg}`)
+Task 3: minor (deferred): tests/style.test.ts's arc quadrant test changed new Factory(`a${endDeg}`)
   to new Factory(`a`, theme), collapsing four distinct per-iteration seeds into one. Assertions are
   purely geometric so it passes, but it weakens the sweep and was an unrequested change inside what
   should have been a mechanical edit. One-token fix.
@@ -107,11 +107,11 @@ CONTROLLER VISUAL VERIFICATION: blueprint preset (thin/architect/sharp/nunito/mi
   with mist values instead of zinc: same elements, same roles, different palette. All rectangles
   square under edges:sharp; only line elements keep roundness (the linear-curve setting).
 BRANCH COMPLETE. 402 tests.
-PRESET OUTPUT CONSISTENCY FINAL FIX WAVE: `RESERVED_NAMES` (Task 8's `["components", "comic-ui"]`
+PRESET OUTPUT CONSISTENCY FINAL FIX WAVE: `RESERVED_NAMES` (Task 8's `["components", "ui"]`
   guard in `resolveTheme`) has been removed. It existed only because those two names collided with
   the default preset's flat `dist/` output and `dist/components`; since this branch made every
   preset — including `default` — build to its own `dist/<name>/`, no preset name can collide with
-  anything any more, so `components` and `comic-ui` are legal preset names today. The traversal
+  anything any more, so `components` and `ui` are legal preset names today. The traversal
   concern the guard was never meant to cover (a name like `..`) is unaffected: that is `NAME_PATTERN`'s
   charset restriction and `assertInsideDist`'s containment check, neither of which is a list of names
   and neither of which changed. A list of forbidden names was never what made a traversal

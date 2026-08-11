@@ -142,7 +142,7 @@ A **one-way override**:
 
 26 of the 58 components pass `rounded: false` for structural reasons: joined cells in `tabs`,
 `button-group`, `toggle-group`, `input-group`, `input-otp`, `kbd`; inner bands in `table` and
-`scroll-area`; comic panels in `dialog`, `alert-dialog`, `sheet`, `drawer`. Excalidraw's
+`scroll-area`; ink panels in `dialog`, `alert-dialog`, `sheet`, `drawer`. Excalidraw's
 corner radius scales with shape size, so rounding those produces overhang at the corners and
 notches at the seams — the defect class that shipped twice in the first batch and cost two fix
 rounds. `round` therefore means "allow rounding where the component asks for it", not "round
@@ -274,17 +274,17 @@ Flags and prompts are the same schema: if every field is supplied as a flag, no 
 ```
 dist/                        default preset (committed, as today)
   components/*.excalidraw
-  comic-ui.excalidrawlib
+  ui.excalidrawlib
 dist/<preset>/               non-default presets (gitignored)
   components/*.excalidraw
-  comic-ui.excalidrawlib
+  ui.excalidrawlib
 ```
 
 Existing import paths keep working. `.gitignore` gains `dist/*/` with a `!dist/components/`
 negation, so only the default preset's output is tracked.
 
-`components` and `comic-ui` are reserved preset names: `resolveTheme` rejects them, because
-they would resolve to `dist/components/` and `dist/comic-ui.excalidrawlib` — the default
+`components` and `ui` are reserved preset names: `resolveTheme` rejects them, because
+they would resolve to `dist/components/` and `dist/ui.excalidrawlib` — the default
 preset's own committed output paths — which `buildAll`'s `rmSync` would then delete.
 
 `buildAll` gains a `theme` parameter. Its signature becomes
@@ -329,7 +329,7 @@ every illegal value throws naming the field.
 ## Risks
 
 **The symbolic-token change touches the two most load-bearing files.** `element.ts` writes
-every element and `comic.ts` defines the house style. The mitigation is the byte-identical
+every element and `style.ts` defines the house style. The mitigation is the byte-identical
 acceptance criterion above: if the default preset's output changes at all beyond the zinc
 shift, the refactor is wrong.
 

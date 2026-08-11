@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { bubble, color, font, inkBox, label, rule, size } from "../comic.js";
+import { bubble, color, font, inkBox, label, rule, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const TRIGGER_W = 140;
@@ -9,7 +9,7 @@ const BUBBLE_W = 280;
 const BUBBLE_H = 160;
 const PAD = 20;
 
-/** A trigger button with a comic popover bubble above it, tail aimed at its centre. */
+/** A trigger button with a hand-drawn popover bubble above it, tail aimed at its centre. */
 export default function popover(theme: Theme): ComponentOutput {
   const f = new Factory("popover", theme);
   const els: ExcalidrawElement[] = [];

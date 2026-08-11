@@ -12,7 +12,7 @@
 
 - Plugin scripts are **plain ESM `.mjs`, zero dependencies, no build step**. They read `dist/` only, never `src/`.
 - Variant names match `^[a-z0-9][a-z0-9-]*$`, are unique within a component, and a component with nothing to split declares exactly one variant named `default`.
-- The sheet file `dist/components/<name>.excalidraw` and `dist/comic-ui.excalidrawlib` must stay **byte-identical** to their pre-change output. This refactor reorganises, it does not restyle.
+- The sheet file `dist/components/<name>.excalidraw` and `dist/ui.excalidrawlib` must stay **byte-identical** to their pre-change output. This refactor reorganises, it does not restyle.
 - Variant files are normalised so their bounding box starts at `(0, 0)`.
 - In a layout, `{"component": "x"}` means variant `default`, never the sheet.
 - Composer output is deterministic: the same layout produces a byte-identical scene.
@@ -34,7 +34,7 @@ Components need a way to say which elements form which variant. This task adds t
 - Consumes: `ExcalidrawElement` from `src/element.ts`.
 - Produces: `interface Variant { name: string; elements: ExcalidrawElement[] }`, `interface ComponentOutput { elements: ExcalidrawElement[]; variants: Variant[] }`, `function variants(parts: Variant[]): ComponentOutput`, `function toOutput(result: ExcalidrawElement[] | ComponentOutput): ComponentOutput`, `function normalize(elements: ExcalidrawElement[]): ExcalidrawElement[]`.
 
-> Naming note: the helper is `variants()`, not `sheet()` as the spec sketched, because `sheet` is already a component (`src/components/sheet.ts`). It lives in its own module rather than `comic.ts`, which is house-style drawing helpers.
+> Naming note: the helper is `variants()`, not `sheet()` as the spec sketched, because `sheet` is already a component (`src/components/sheet.ts`). It lives in its own module rather than `style.ts`, which is house-style drawing helpers.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -296,7 +296,7 @@ Expected: PASS. The existing "is deterministic" test must still pass — variant
 npm run build
 git status --short dist | grep -v '^?? ' || echo "no modifications, only additions"
 ```
-Expected: no `M` lines. Sheets and `comic-ui.excalidrawlib` are byte-identical; only new directories appear.
+Expected: no `M` lines. Sheets and `ui.excalidrawlib` are byte-identical; only new directories appear.
 
 - [ ] **Step 6: Commit**
 
@@ -326,7 +326,7 @@ Append to `tests/validate.test.ts`:
 
 ```ts
   it("reports a variant file that is not at the origin", () => {
-    const dir = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    const dir = mkdtempSync(join(tmpdir(), "ui-"));
     buildAll(theme, dir);
     const file = join(dir, "components", "button", "default.excalidraw");
     const scene = JSON.parse(readFileSync(file, "utf8"));
@@ -339,7 +339,7 @@ Append to `tests/validate.test.ts`:
   });
 
   it("reports a variant whose elements are missing from the sheet", () => {
-    const dir = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    const dir = mkdtempSync(join(tmpdir(), "ui-"));
     buildAll(theme, dir);
     const file = join(dir, "components", "button", "default.excalidraw");
     const scene = JSON.parse(readFileSync(file, "utf8"));
@@ -352,7 +352,7 @@ Append to `tests/validate.test.ts`:
   });
 
   it("reports a component with no variant directory", () => {
-    const dir = mkdtempSync(join(tmpdir(), "comic-ui-"));
+    const dir = mkdtempSync(join(tmpdir(), "ui-"));
     buildAll(theme, dir);
     rmSync(join(dir, "components", "button"), { recursive: true, force: true });
 
@@ -511,7 +511,7 @@ Note the local array is renamed `specs` — `variants` is now the imported helpe
 **Verification after each batch (same steps every time):**
 
 - [ ] Run `npm run build`
-- [ ] Run `git diff --stat dist/components/*.excalidraw dist/comic-ui.excalidrawlib` — expected: **empty**. Any change means construction order moved; fix it before continuing.
+- [ ] Run `git diff --stat dist/components/*.excalidraw dist/ui.excalidrawlib` — expected: **empty**. Any change means construction order moved; fix it before continuing.
 - [ ] Run `npm run validate` — expected: no errors, which proves each new variant sits at origin and partitions its sheet.
 - [ ] Run `npm test` — expected: PASS.
 - [ ] Commit: `git add src/components dist && git commit -m "refactor: declare variants for <batch> components"`
@@ -651,7 +651,7 @@ let fake: string;
 beforeAll(() => {
   fake = mkdtempSync(join(tmpdir(), "lib-"));
   mkdirSync(join(fake, "dist", "components", "widget"), { recursive: true });
-  writeFileSync(join(fake, "dist", "comic-ui.excalidrawlib"), "{}");
+  writeFileSync(join(fake, "dist", "ui.excalidrawlib"), "{}");
   writeFileSync(join(fake, "dist", "components", "widget", "default.excalidraw"), JSON.stringify({
     elements: [{ id: "a", x: 0, y: 0, width: 30, height: 10 }, { id: "b", x: 10, y: 5, width: 30, height: 20 }],
     appState: { gridSize: null, viewBackgroundColor: "#ffffff" },
@@ -745,7 +745,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 export const PLUGIN_ROOT = join(HERE, "..");
 export const CONFIG_PATH = join(homedir(), ".claude", "excalidraw-lib.json");
 
-const MARKER = join("dist", "comic-ui.excalidrawlib");
+const MARKER = join("dist", "ui.excalidrawlib");
 
 function isLibrary(dir) {
   return typeof dir === "string" && existsSync(join(dir, MARKER));
@@ -1122,7 +1122,7 @@ export function compose(layout, { root = resolveRoot(), preset } = {}) {
   return {
     type: "excalidraw",
     version: 2,
-    source: "excalidraw-comic-components",
+    source: "excalidraw-ui",
     elements,
     appState,
     files: {},
@@ -1218,9 +1218,9 @@ git commit -m "feat: compose scenes from row and column layouts"
 ```json
 // .claude-plugin/plugin.json
 {
-  "name": "excalidraw-comic",
+  "name": "excalidraw-ui",
   "version": "0.1.0",
-  "description": "Compose Excalidraw mockups from the comic component library, and build style presets",
+  "description": "Compose Excalidraw mockups from the component library, and build style presets",
   "author": { "name": "guido" }
 }
 ```
@@ -1228,13 +1228,13 @@ git commit -m "feat: compose scenes from row and column layouts"
 ```json
 // .claude-plugin/marketplace.json
 {
-  "name": "excalidraw-comic-marketplace",
+  "name": "excalidraw-ui-marketplace",
   "owner": { "name": "guido" },
   "plugins": [
     {
-      "name": "excalidraw-comic",
+      "name": "excalidraw-ui",
       "source": "./",
-      "description": "Compose Excalidraw mockups from the comic component library, and build style presets"
+      "description": "Compose Excalidraw mockups from the component library, and build style presets"
     }
   ]
 }
@@ -1261,12 +1261,12 @@ try {
 ````markdown
 ---
 name: composing-scenes
-description: Use when mocking up a screen, wireframe, or UI sketch with the hand-drawn Excalidraw comic components — composes a .excalidraw scene from row and column layouts.
+description: Use when mocking up a screen, wireframe, or UI sketch with the hand-drawn Excalidraw components — composes a .excalidraw scene from row and column layouts.
 ---
 
 # Composing Excalidraw Scenes
 
-Build a `.excalidraw` mockup out of the comic component library. The user opens the
+Build a `.excalidraw` mockup out of the component library. The user opens the
 result in Excalidraw with **Menu → Open**.
 
 ## Workflow
@@ -1333,7 +1333,7 @@ that component's variants. No library found → write `{"path": "..."}` to
 ````markdown
 ---
 name: building-presets
-description: Use when creating or building a style preset for the Excalidraw comic components — wraps npm run preset, build, and validate.
+description: Use when creating or building a style preset for the Excalidraw components — wraps npm run preset, build, and validate.
 ---
 
 # Building Style Presets
@@ -1378,7 +1378,7 @@ user is at the terminal.
 - The filename and the `name` field must match; the filename is what `--preset`
   selects, the field picks the output directory.
 - A name must be a plain path segment: `[a-z0-9][a-z0-9-]*`.
-- `components` and `comic-ui` are reserved — they collide with the default preset's
+- `components` and `ui` are reserved — they collide with the default preset's
   own output paths.
 
 Report what the CLIs print. Do not paraphrase their errors.
@@ -1398,7 +1398,7 @@ The repo is also a Claude Code plugin:
 ```
 
 Two skills come with it. **composing-scenes** builds a `.excalidraw` mockup from a
-row/column layout — ask for "a login screen with the comic components". **building-presets**
+row/column layout — ask for "a login screen with the hand-drawn components". **building-presets**
 wraps the preset and build CLIs.
 
 The composer works with no configuration, using the `dist/` committed here. To compose
@@ -1439,6 +1439,6 @@ git commit -m "feat: ship the library as a Claude Code plugin with two skills"
 
 **Spec coverage.** Plugin shape → Task 13. Path resolution and preflight → Tasks 11, 13. Variant declaration → Tasks 1, 4–10. Variant output and normalisation → Task 2. Validation and the partition invariant → Task 3. Layout schema, CLI, algorithm, errors → Task 12. Skills → Task 13. Testing → spread across each task's tests.
 
-**Deviations from the spec, deliberate:** the helper is `variants()` in `src/variants.ts`, not `sheet()` in `comic.ts`, because `sheet` is already a component name. `toOutput` is a temporary bridge so the 58-file migration can land in reviewable batches; Task 10 removes it, and the end state matches the spec exactly.
+**Deviations from the spec, deliberate:** the helper is `variants()` in `src/variants.ts`, not `sheet()` in `style.ts`, because `sheet` is already a component name. `toOutput` is a temporary bridge so the 58-file migration can land in reviewable batches; Task 10 removes it, and the end state matches the spec exactly.
 
 **Type consistency.** `ComponentOutput`, `Variant`, `variants()`, `normalize()`, `toOutput()` defined in Task 1 and used under those names in Tasks 2, 4–10. `resolveRoot`, `ensureLibrary`, `componentsDir`, `loadVariant`, `measure`, `listComponents` defined in Task 11 and consumed under those names in Tasks 12 and 13. `compose(layout, { root, preset })` and `parseArgs(argv)` defined in Task 12 and used by the skill in Task 13.

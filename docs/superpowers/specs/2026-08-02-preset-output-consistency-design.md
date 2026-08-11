@@ -5,17 +5,17 @@ Date: 2026-08-02
 ## Problem
 
 The default preset is not built like the other presets. It writes to `dist/` itself
-(`dist/components/`, `dist/comic-ui.excalidrawlib`) while every named preset writes to
+(`dist/components/`, `dist/ui.excalidrawlib`) while every named preset writes to
 `dist/<name>/`. That one exception is load-bearing in six places:
 
 - `src/build.ts` — `outDirFor` branches on `theme.name === DEFAULT_PRESET.name`.
 - `src/build.ts` — `buildAll` cannot `rmSync` its own output directory, because for the
   default preset that directory is `dist/`, which holds every other preset's output. The
   removal is narrowed to the two paths the function writes.
-- `src/theme.ts` — `RESERVED_NAMES = ["components", "comic-ui"]` exists only to stop a
+- `src/theme.ts` — `RESERVED_NAMES = ["components", "ui"]` exists only to stop a
   preset from naming its way onto the default preset's flat paths.
 - `scripts/library.mjs` — `componentsDir()` and `buildCommand()` each branch on
-  `preset === "default"`; `MARKER` points at the flat `dist/comic-ui.excalidrawlib`.
+  `preset === "default"`; `MARKER` points at the flat `dist/ui.excalidrawlib`.
 - `.gitignore` — `dist/*/` plus `!dist/components/` to commit the default output only.
 - `README.md`, `skills/building-presets/SKILL.md` and the tests all document or assert
   the exception.
@@ -126,7 +126,7 @@ function buildCommand(preset) {
 
 ### Library detection
 
-`MARKER` in `scripts/library.mjs` becomes `join("dist", "default", "comic-ui.excalidrawlib")`.
+`MARKER` in `scripts/library.mjs` becomes `join("dist", "default", "ui.excalidrawlib")`.
 `resolveRoot` and `ensureLibrary` are otherwise unchanged; their error messages quote
 `MARKER`, so they update themselves.
 
@@ -136,8 +136,8 @@ function buildCommand(preset) {
 explaining them. `NAME_PATTERN` stays: a preset name is still a path segment, and it
 still must be unable to express a traversal.
 
-A preset named `components` or `comic-ui` is now legal and writes to `dist/components/`
-or `dist/comic-ui/`, which collide with nothing.
+A preset named `components` or `ui` is now legal and writes to `dist/components/`
+or `dist/ui/`, which collide with nothing.
 
 ### Git
 
@@ -158,7 +158,7 @@ step.
   - The existing "builds every preset without destroying the others" test still passes,
     now without relying on the narrowed removal.
 - `tests/theme.test.ts` — `RESERVED_NAMES` has no test today, so there is nothing to
-  remove. Add one asserting `components` and `comic-ui` now resolve like any other
+  remove. Add one asserting `components` and `ui` now resolve like any other
   name. The `NAME_PATTERN` traversal cases in `tests/build.test.ts` stay.
 - `tests/library.test.ts` — the fixture writes `dist/default/…`; `componentsDir(fake)`
   is `dist/default/components`; the marker and its error messages follow.
@@ -168,7 +168,7 @@ step.
 
 ## Documentation
 
-- `README.md` — "Use it" points at `dist/default/comic-ui.excalidrawlib` and
+- `README.md` — "Use it" points at `dist/default/ui.excalidrawlib` and
   `dist/default/components/<name>.excalidraw`. "Styles" drops the "only the default
   preset's `dist/` is committed" sentence and the reserved-names paragraph, and states
   that a bare `npm run build` builds every preset and prunes orphaned output.
@@ -181,7 +181,7 @@ no change.
 
 One commit carries the code change and the rebuilt output:
 
-1. `git rm -r --cached` the old `dist/components/` and `dist/comic-ui.excalidrawlib`, and
+1. `git rm -r --cached` the old `dist/components/` and `dist/ui.excalidrawlib`, and
    delete them from the working tree.
 2. Apply the code, documentation and test changes.
 3. `npm run build` — writes `dist/default/` and `dist/blueprint/`, prunes `dist/soft/`.
@@ -189,6 +189,6 @@ One commit carries the code change and the rebuilt output:
 
 ## Out of scope
 
-Nothing about how a preset resolves into elements changes: `tokens.ts`, `comic.ts`,
+Nothing about how a preset resolves into elements changes: `tokens.ts`, `style.ts`,
 `element.ts`, `scene.ts` and every component are untouched. The rendered output of the
 default preset is byte-identical to what is committed today; only its location changes.

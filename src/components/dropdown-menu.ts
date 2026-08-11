@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
+import { color, fillBand, font, inkBox, label, rule, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 260;
@@ -51,7 +51,7 @@ export default function dropdownMenu(theme: Theme): ComponentOutput {
       fontSize: size.fontSm,
       stroke: color.ink,
       // The palette is grayscale, so the destructive item is emphasised by weight,
-      // not hue: full-ink in the heavier comic face.
+      // not hue: full-ink in the heavier heading face.
       fontFamily: item.danger ? font.heading : font.body,
     }));
   });

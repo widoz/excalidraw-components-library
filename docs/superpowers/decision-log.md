@@ -1,4 +1,4 @@
-# SDD ledger — plan: docs/superpowers/plans/2026-07-28-excalidraw-comic-components.md
+# SDD ledger — plan: docs/superpowers/plans/2026-07-28-excalidraw-ui.md
 
 Branch: main (fresh repo, no pre-existing history to protect)
 Task 1: complete (commits beb3dad..a48a9e0, review clean)
@@ -21,7 +21,7 @@ Task 4: adjudicated (plan-mandated finding) — reviewer flagged rule() defaulti
   border. Amended the plan's Global Constraints to state the two exceptions explicitly
   (commit on docs). Code stands unchanged.
 Task 4: minor (deferred): task-4-report.md line counts wrong (says 171/142; diff shows 177/107).
-Task 4: minor (deferred): comic.ts re-exports { color, font, size, style } — unrequested surface area, but the plan's component code relies on it.
+Task 4: minor (deferred): style.ts re-exports { color, font, size, style } — unrequested surface area, but the plan's component code relies on it.
 Task 4: minor (deferred): bubble() tail base spans [tailX, tailX+40] rather than centring on tailX; undocumented.
 Task 4: complete (commits 454b99a..121e284, review approved, 3 minors deferred)
 Task 5: fix round 1/5 (3 addressed, 0 open — inline #ffffff routed through new color.canvas token +
@@ -30,7 +30,7 @@ Task 5: fix round 1/5 (3 addressed, 0 open — inline #ffffff routed through new
 Task 5: minor (deferred): validate.ts type-checks only x/y/width/height as finite numbers; angle, strokeWidth, roughness, opacity, seed, version, versionNonce are presence-checked only.
 Task 5: complete (commits 1209c4b..9b26376, review clean, 1 minor deferred)
 Task 5: NOTE — brief Step 8 (visual check in Excalidraw) deferred to controller; still outstanding.
-Task 6: implementer fixed a REAL pre-existing bug in comic.ts checkMark — its line points did not
+Task 6: implementer fixed a REAL pre-existing bug in style.ts checkMark — its line points did not
   start at [0,0], violating the Factory.line contract. Caught by the per-type validator check added
   in Task 5's fix round. Reviewer verified the fix geometry-preserving by hand (absolute coords
   identical) and confirmed no existing test was weakened. Good catch; the Task 5 fix paid for itself.
@@ -115,7 +115,7 @@ CONTROLLER VISUAL VERIFICATION IN REAL EXCALIDRAW — done twice, before and aft
   header/stripe, dropdown hover and select highlight rendered as outlined boxes. After: all read as
   clean fills; textarea grip draws three strokes; avatar glyph sits inside its circle. Confirmed.
 BRANCH COMPLETE.
-# SDD ledger — plan: docs/superpowers/plans/2026-07-29-excalidraw-comic-components-batch-2.md
+# SDD ledger — plan: docs/superpowers/plans/2026-07-29-excalidraw-ui-batch-2.md
 Task 1: complete (commit ee6563d, review clean via controller — dist unchanged as required)
 Task 2: complete (commit c02ac5b, review approved). 5 judgement calls all sound. Calendar grid
   centred at x=6 (left-flush at 22 would overflow by 4px); aspect-ratio shadow suppressed.

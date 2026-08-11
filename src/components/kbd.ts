@@ -1,6 +1,6 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, inkBox, label, size } from "../comic.js";
+import { color, font, inkBox, label, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const CAP_H = 52;

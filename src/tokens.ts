@@ -24,7 +24,7 @@ export const color = {
  */
 
 /**
- * The comic look, applied to every shape.
+ * The hand-drawn look, applied to every shape.
  *
  * `roughness` and `strokeWidth` used to live here as fixed numbers. Both are preset
  * choices now (`theme.roughness`, `theme.strokes.*`), and a component reaching for a
@@ -60,7 +60,7 @@ export const CANVAS = "#ffffff";
 
 /** Stroke ladder rungs. Names, not values — `Factory` resolves them per theme. */
 export const stroke = {
-  /** The bold comic ink: component silhouettes. */
+  /** The bold ink: component silhouettes. */
   outline: "outline",
   /** Hairlines: table rules, separators, carets, resize grips. */
   hairline: "hairline",

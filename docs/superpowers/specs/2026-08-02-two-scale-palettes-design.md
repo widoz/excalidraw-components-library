@@ -240,7 +240,7 @@ accuracy. A stopped task is recoverable; a table of invented colours is not.
 
 ## Out of scope
 
-No component changes. `src/comic.ts`, `src/element.ts`, `src/scene.ts` and every file in
+No component changes. `src/style.ts`, `src/element.ts`, `src/scene.ts` and every file in
 `src/components/` are untouched — components reference role names, and only `theme.ts`
 resolves those to hex, which is exactly why this change reaches every component without
 editing any of them.

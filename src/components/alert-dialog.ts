@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { burst, color, font, inkBox, label, rule, size, stroke } from "../comic.js";
+import { burst, color, font, inkBox, label, rule, size, stroke } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 420;
@@ -8,7 +8,7 @@ const H = 250;
 const BTN_W = 130;
 const BTN_H = 50;
 
-/** Comic panel frame that forces a choice: no close X, two footer buttons. */
+/** Ink panel frame that forces a choice: no close X, two footer buttons. */
 export default function alertDialog(theme: Theme): ComponentOutput {
   const f = new Factory("alert-dialog", theme);
   const els: ExcalidrawElement[] = [];

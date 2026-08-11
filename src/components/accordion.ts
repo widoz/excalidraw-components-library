@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { chevron, color, font, inkBox, label, rule, size } from "../comic.js";
+import { chevron, color, font, inkBox, label, rule, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 320;
@@ -34,7 +34,7 @@ export default function accordion(theme: Theme): ComponentOutput {
       fontFamily: font.heading,
     }));
     // "down" spans [0, s*2] wide by [0, s*0.7] tall; "right" spans [0, s*0.7] wide by
-    // [0, s*2] tall (see comic.ts chevron()) — each direction is centred on its own extent.
+    // [0, s*2] tall (see style.ts chevron()) — each direction is centred on its own extent.
     target.push(...chevron(f, {
       x: W - 24 - (row.expanded ? CHEVRON_S * 2 : CHEVRON_S * 0.7),
       y: y + ROW_H / 2 - (row.expanded ? CHEVRON_S * 0.35 : CHEVRON_S),

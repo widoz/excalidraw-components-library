@@ -1,6 +1,6 @@
 import { Factory } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, inkBox, inkCircle, label, size } from "../comic.js";
+import { color, inkBox, inkCircle, label, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const TRACK_W = 88;

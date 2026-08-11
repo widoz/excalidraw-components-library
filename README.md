@@ -1,6 +1,6 @@
 # Excalidraw Components Library
 
-Hand-drawn, comic-styled UI components for [Excalidraw](https://excalidraw.com),
+Hand-drawn UI components for [Excalidraw](https://excalidraw.com),
 modelled on the [shadcn/ui](https://ui.shadcn.com) component set.
 
 Bold wobbly ink, flat fills, hard offset shadows. Colours are the shadcn **zinc** scale.
@@ -8,7 +8,7 @@ Bold wobbly ink, flat fills, hard offset shadows. Colours are the shadcn **zinc*
 ## Use it
 
 **Whole library:** in Excalidraw open **Library → Load from file** and pick
-`dist/default/comic-ui.excalidrawlib`. All 58 components land in your library panel.
+`dist/default/ui.excalidrawlib`. All 58 components land in your library panel.
 
 **One component:** open `dist/default/components/<name>.excalidraw` via **Menu → Open**,
 then copy what you need.
@@ -44,7 +44,7 @@ npm run check      # build + validate + typecheck + test
 npm run preset     # create a new style preset
 ```
 
-`src/tokens.ts` holds the palette and sizing. `src/comic.ts` holds the house style and is
+`src/tokens.ts` holds the palette and sizing. `src/style.ts` holds the house style and is
 the first place to change when restyling — though components may still drop to a
 `src/element.ts` primitive for a one-off shape, so a restyle sweeps those too.
 `src/element.ts` is the only module that writes raw Excalidraw JSON and resolves preset
@@ -115,7 +115,7 @@ The repo is also a Claude Code plugin:
 ```
 
 Two skills come with it. **composing-scenes** builds a `.excalidraw` mockup from a
-row/column layout — ask for "a login screen with the comic components". **building-presets**
+row/column layout — ask for "a login screen with the hand-drawn components". **building-presets**
 wraps the preset and build CLIs.
 
 The composer works with no configuration, using the `dist/` committed here. To compose

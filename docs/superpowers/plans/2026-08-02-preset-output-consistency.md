@@ -11,8 +11,8 @@
 ## Global Constraints
 
 - **Zero runtime dependencies.** Node core modules only. Do not add a package.
-- **No component output changes.** `src/tokens.ts`, `src/comic.ts`, `src/element.ts`, `src/scene.ts` and every file in `src/components/` are out of scope. The default preset's rendered JSON must stay byte-identical; only its location moves.
-- **Clean break on paths.** No compatibility copy, symlink or alias for the old `dist/components/` and `dist/comic-ui.excalidrawlib`. They cease to exist.
+- **No component output changes.** `src/tokens.ts`, `src/style.ts`, `src/element.ts`, `src/scene.ts` and every file in `src/components/` are out of scope. The default preset's rendered JSON must stay byte-identical; only its location moves.
+- **Clean break on paths.** No compatibility copy, symlink or alias for the old `dist/components/` and `dist/ui.excalidrawlib`. They cease to exist.
 - **Preset names are still path segments.** `NAME_PATTERN = /^[a-z0-9][a-z0-9-]*$/i` in `src/theme.ts` and `assertInsideDist` in `src/build.ts` both stay exactly as they are. Only `RESERVED_NAMES` goes.
 - **`--all` keeps working.** After this change it is an accepted alias for the bare form, not the only way to build everything.
 - **Comment style.** This codebase writes comments that explain *why*, often referencing the bug the code prevents. When you delete a guard, delete its comment. When you add one, say what breaks without it.
@@ -31,7 +31,7 @@
 | `src/validate.ts` | Structural checks on built output | `validateAll` default `outDir` becomes `outDirFor(theme)` |
 | `scripts/library.mjs` | Locating a library root and reading built components | `MARKER` moves; `componentsDir` and `buildCommand` unbranched |
 | `tests/build.test.ts` | Build behaviour and path rules | Invert the default-path assertion; add prune tests |
-| `tests/theme.test.ts` | Theme resolution | Add a test that `components`/`comic-ui` are legal names |
+| `tests/theme.test.ts` | Theme resolution | Add a test that `components`/`ui` are legal names |
 | `tests/library.test.ts` | Library resolution and component reading | Fixtures move to `dist/default/`; assertions follow |
 | `tests/frame.test.ts`, `tests/text.test.ts` | Read committed output | Read from `dist/default/components/` |
 | `.gitignore` | What git tracks | Drop `dist/*/` and `!dist/components/` |
@@ -70,10 +70,10 @@ Add to `tests/theme.test.ts` (import `resolveTheme` from `../src/theme.js` if th
 
 ```ts
 describe("preset names that used to be reserved", () => {
-  // "components" and "comic-ui" were rejected only because the default preset wrote
+  // "components" and "ui" were rejected only because the default preset wrote
   // flat into dist/. Now that every preset writes to dist/<name>/, they collide with
   // nothing and must resolve like any other name.
-  it.each(["components", "comic-ui"])("accepts the name %j", (name) => {
+  it.each(["components", "ui"])("accepts the name %j", (name) => {
     expect(resolveTheme({ name }).name).toBe(name);
   });
 });
@@ -174,14 +174,14 @@ EOF
 - Modify: `scripts/library.mjs:12` (`MARKER`), `scripts/library.mjs:120-124` (`componentsDir`), `scripts/library.mjs:139-141` (`buildCommand`)
 - Modify: `.gitignore`
 - Test: `tests/library.test.ts`, `tests/frame.test.ts:8`, `tests/text.test.ts:8`
-- Delete: `dist/components/`, `dist/comic-ui.excalidrawlib`, `dist/soft/`
+- Delete: `dist/components/`, `dist/ui.excalidrawlib`, `dist/soft/`
 - Create (by building): `dist/default/`, `dist/blueprint/`
 
 **Interfaces:**
 - Consumes: `outDirFor` from Task 1 — the build now writes `dist/default/` and `dist/blueprint/`.
 - Produces:
   - `componentsDir(root: string, preset?: string): string` — `join(root, "dist", preset ?? "default", "components")`.
-  - `MARKER` (module-private) — `join("dist", "default", "comic-ui.excalidrawlib")`. Quoted in `resolveRoot`'s error messages, so they update themselves.
+  - `MARKER` (module-private) — `join("dist", "default", "ui.excalidrawlib")`. Quoted in `resolveRoot`'s error messages, so they update themselves.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -190,7 +190,7 @@ In `tests/library.test.ts`, change the fixture in `beforeAll` (lines 13-18) to b
 ```ts
   fake = mkdtempSync(join(tmpdir(), "lib-"));
   mkdirSync(join(fake, "dist", "default", "components", "widget"), { recursive: true });
-  writeFileSync(join(fake, "dist", "default", "comic-ui.excalidrawlib"), "{}");
+  writeFileSync(join(fake, "dist", "default", "ui.excalidrawlib"), "{}");
   writeFileSync(join(fake, "dist", "default", "components", "widget", "default.excalidraw"), JSON.stringify({
     elements: [{ id: "a", x: 0, y: 0, width: 30, height: 10 }, { id: "b", x: 10, y: 5, width: 30, height: 20 }],
     appState: { gridSize: null, viewBackgroundColor: "#ffffff" },
@@ -219,7 +219,7 @@ Replace the test at lines 56-65 — the build command is no longer special-cased
   it("names the preset in the build command for a missing default build", () => {
     const noDist = mkdtempSync(join(tmpdir(), "nodist-"));
     mkdirSync(join(noDist, "dist", "default"), { recursive: true });
-    writeFileSync(join(noDist, "dist", "default", "comic-ui.excalidrawlib"), "{}");
+    writeFileSync(join(noDist, "dist", "default", "ui.excalidrawlib"), "{}");
 
     expect(() => loadVariant(noDist, undefined, "widget", "default"))
       .toThrow(/Run: npm run build -- --preset default$/);
@@ -235,7 +235,7 @@ In `makeCloneLike` (lines 149-158), move the marker file:
 ```ts
     const clone = mkdtempSync(join(tmpdir(), "clone-"));
     mkdirSync(join(clone, "dist", "default"), { recursive: true });
-    writeFileSync(join(clone, "dist", "default", "comic-ui.excalidrawlib"), "{}");
+    writeFileSync(join(clone, "dist", "default", "ui.excalidrawlib"), "{}");
 ```
 
 In `tests/frame.test.ts` and `tests/text.test.ts`, change the `load` helper on line 8 in each file from `join(root, "dist", "components", ...)` to:
@@ -254,7 +254,7 @@ Expected: FAIL. `componentsDir` returns `dist/components`; `resolveRoot` no long
 Line 12:
 
 ```js
-const MARKER = join("dist", "default", "comic-ui.excalidrawlib");
+const MARKER = join("dist", "default", "ui.excalidrawlib");
 ```
 
 Lines 120-124:
@@ -284,7 +284,7 @@ Update the comment on line 34 — it says "the plugin's own root (dist/ is commi
 
 ```bash
 cd /Volumes/Dev/mine/excalidraw-components-library
-git rm -r --quiet dist/components dist/comic-ui.excalidrawlib
+git rm -r --quiet dist/components dist/ui.excalidrawlib
 rm -rf dist/soft
 npm run build -- --preset default
 npm run build -- --preset blueprint
@@ -338,7 +338,7 @@ git add -A dist .gitignore scripts/library.mjs tests/library.test.ts tests/frame
 git commit -m "$(cat <<'EOF'
 refactor: move the default preset's output to dist/default/
 
-The committed output moves from dist/components/ and dist/comic-ui.excalidrawlib
+The committed output moves from dist/components/ and dist/ui.excalidrawlib
 to dist/default/. library.mjs stops branching on the preset name — "default" is
 now a fallback name, not a special path. dist/ is tracked in full, so every
 preset composes with no build. Stale dist/soft/ output is removed.
@@ -392,7 +392,7 @@ And the test at lines 237-241 — the bare build now builds blueprint rather tha
   it("building one named preset leaves other presets' output alone", () => {
     const blueprint = outDirFor(resolveTheme(loadPreset("blueprint")));
     execFileSync("npx", ["tsx", "src/build.ts", "--preset", "default"], { cwd: REPO_ROOT, encoding: "utf8" });
-    expect(existsSync(join(blueprint, "comic-ui.excalidrawlib"))).toBe(true);
+    expect(existsSync(join(blueprint, "ui.excalidrawlib"))).toBe(true);
   });
 ```
 
@@ -644,7 +644,7 @@ Replace the two path references:
 
 ```markdown
 **Whole library:** in Excalidraw open **Library → Load from file** and pick
-`dist/default/comic-ui.excalidrawlib`. All 58 components land in your library panel.
+`dist/default/ui.excalidrawlib`. All 58 components land in your library panel.
 
 **One component:** open `dist/default/components/<name>.excalidraw` via **Menu → Open**,
 then copy what you need.
@@ -698,7 +698,7 @@ segment (`[a-z0-9][a-z0-9-]*`): it becomes a directory under `dist/`, and buildi
 preset removes and rewrites that directory.
 ```
 
-The sentence about `components` and `comic-ui` being reserved is deleted — they are not.
+The sentence about `components` and `ui` being reserved is deleted — they are not.
 
 - [ ] **Step 4: Update `skills/building-presets/SKILL.md`**
 
@@ -726,7 +726,7 @@ Replace the Naming rules list (lines 45-49) with:
 
 ```bash
 cd /Volumes/Dev/mine/excalidraw-components-library
-grep -rn "dist/components\|dist/comic-ui\|reserved" README.md skills/ src/ scripts/ tests/
+grep -rn "dist/components\|dist/ui\|reserved" README.md skills/ src/ scripts/ tests/
 ```
 
 Expected: no output. Any hit is a leftover to fix before committing.

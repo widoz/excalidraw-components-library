@@ -11,7 +11,7 @@ let fake: string;
 beforeAll(() => {
   fake = mkdtempSync(join(tmpdir(), "lib-"));
   mkdirSync(join(fake, "dist", "default", "components", "widget"), { recursive: true });
-  writeFileSync(join(fake, "dist", "default", "comic-ui.excalidrawlib"), "{}");
+  writeFileSync(join(fake, "dist", "default", "ui.excalidrawlib"), "{}");
   writeFileSync(join(fake, "dist", "default", "components", "widget", "default.excalidraw"), JSON.stringify({
     elements: [{ id: "a", x: 0, y: 0, width: 30, height: 10 }, { id: "b", x: 10, y: 5, width: 30, height: 20 }],
     appState: { gridSize: null, viewBackgroundColor: "#ffffff" },
@@ -60,7 +60,7 @@ describe("componentsDir", () => {
   it("names the preset in the build command for a missing default build", () => {
     const noDist = mkdtempSync(join(tmpdir(), "nodist-"));
     mkdirSync(join(noDist, "dist", "default"), { recursive: true });
-    writeFileSync(join(noDist, "dist", "default", "comic-ui.excalidrawlib"), "{}");
+    writeFileSync(join(noDist, "dist", "default", "ui.excalidrawlib"), "{}");
 
     expect(() => loadVariant(noDist, undefined, "widget", "default"))
       .toThrow(/Run: npm run build -- --preset default$/);
@@ -155,7 +155,7 @@ describe("ensureLibrary: only ever installs into a verified git clone", () => {
   function makeCloneLike({ withGit = false, packageJson = JSON.stringify({ name: pkgName }) } = {}) {
     const clone = mkdtempSync(join(tmpdir(), "clone-"));
     mkdirSync(join(clone, "dist", "default"), { recursive: true });
-    writeFileSync(join(clone, "dist", "default", "comic-ui.excalidrawlib"), "{}");
+    writeFileSync(join(clone, "dist", "default", "ui.excalidrawlib"), "{}");
     mkdirSync(join(clone, "src"), { recursive: true });
     writeFileSync(join(clone, "src", "build.ts"), "");
     writeFileSync(join(clone, "package.json"), packageJson);

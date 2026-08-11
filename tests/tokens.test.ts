@@ -28,7 +28,7 @@ describe("tokens", () => {
     expect(PALETTE_VALUES.has(theme.palette.canvas)).toBe(true);
   });
 
-  it("pins the comic style constants", () => {
+  it("pins the house style constants", () => {
     expect(style.shadowOffset).toBe(6);
     expect(font.body).toBe("body");
     expect(font.heading).toBe("heading");

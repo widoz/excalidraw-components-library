@@ -132,7 +132,7 @@ export function buildAll(theme: Theme, outDir: string = outDirFor(theme)): void 
   }
 
   writeFileSync(
-    join(outDir, "comic-ui.excalidrawlib"),
+    join(outDir, "ui.excalidrawlib"),
     `${JSON.stringify(toLibrary(items), null, 2)}\n`,
   );
 

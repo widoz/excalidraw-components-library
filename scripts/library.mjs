@@ -9,7 +9,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 export const PLUGIN_ROOT = join(HERE, "..");
 export const CONFIG_PATH = join(homedir(), ".claude", "excalidraw-lib.json");
 
-const MARKER = join("dist", "default", "comic-ui.excalidrawlib");
+const MARKER = join("dist", "default", "ui.excalidrawlib");
 
 function isLibrary(dir) {
   return typeof dir === "string" && existsSync(join(dir, MARKER));

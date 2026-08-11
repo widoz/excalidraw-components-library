@@ -1,6 +1,6 @@
 ---
 name: building-presets
-description: Use when creating or building a style preset for the Excalidraw comic components — wraps npm run preset, build, and validate.
+description: Use when creating or building a style preset for the Excalidraw components — wraps npm run preset, build, and validate.
 ---
 
 # Building Style Presets

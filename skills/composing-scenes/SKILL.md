@@ -1,11 +1,11 @@
 ---
 name: composing-scenes
-description: Use when mocking up a screen, wireframe, or UI sketch with the hand-drawn Excalidraw comic components — composes a .excalidraw scene from row and column layouts.
+description: Use when mocking up a screen, wireframe, or UI sketch with the hand-drawn Excalidraw components — composes a .excalidraw scene from row and column layouts.
 ---
 
 # Composing Excalidraw Scenes
 
-Build a `.excalidraw` mockup out of the comic component library. The user opens the
+Build a `.excalidraw` mockup out of the component library. The user opens the
 result in Excalidraw with **Menu → Open**.
 
 ## Workflow

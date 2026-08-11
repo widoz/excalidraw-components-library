@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, inkBox, label, rule, size, stroke, xMark } from "../comic.js";
+import { color, font, inkBox, label, rule, size, stroke, xMark } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 420;
@@ -8,14 +8,14 @@ const H = 250;
 const BTN_W = 130;
 const BTN_H = 50;
 
-/** Comic panel frame: title, body lines, close X, and two footer buttons. */
+/** Ink panel frame: title, body lines, close X, and two footer buttons. */
 export default function dialog(theme: Theme): ComponentOutput {
   const f = new Factory("dialog", theme);
   const els: ExcalidrawElement[] = [];
 
-  // Sharp corners read as a comic panel rather than a soft modal.
+  // Sharp corners read as an ink panel rather than a soft modal.
   els.push(...inkBox(f, { x: 0, y: 0, w: W, h: H, rounded: false }));
-  // Inner panel line, the classic comic double frame.
+  // Inner panel line, the classic double panel frame.
   els.push(f.rect({
     x: 10,
     y: 10,

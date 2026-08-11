@@ -14,7 +14,7 @@ import {
   rule,
   swash,
   xMark,
-} from "../src/comic.js";
+} from "../src/style.js";
 import { color, style } from "../src/tokens.js";
 import { DEFAULT_PRESET, resolveTheme } from "../src/theme.js";
 

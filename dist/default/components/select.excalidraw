@@ -1,7 +1,7 @@
 {
   "type": "excalidraw",
   "version": 2,
-  "source": "excalidraw-comic-components",
+  "source": "excalidraw-ui",
   "elements": [
     {
       "id": "select-group-0-l5msif",
@@ -319,8 +319,8 @@
       "updated": 1,
       "link": null,
       "locked": false,
-      "text": "Comic",
-      "originalText": "Comic",
+      "text": "Inked",
+      "originalText": "Inked",
       "fontSize": 16,
       "fontFamily": 1,
       "textAlign": "left",

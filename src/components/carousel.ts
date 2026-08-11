@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { chevron, color, dots, font, inkBox, inkCircle, label, size } from "../comic.js";
+import { chevron, color, dots, font, inkBox, inkCircle, label, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const W = 360;
@@ -30,7 +30,7 @@ export default function carousel(theme: Theme): ComponentOutput {
   // and right edges by half their own radius.
   const cy = H / 2;
   els.push(...inkCircle(f, { cx: 0, cy, r: BTN_R }));
-  // "left"/"right" chevrons are s*0.7 wide by s*2 tall (see comic.ts) and centred
+  // "left"/"right" chevrons are s*0.7 wide by s*2 tall (see style.ts) and centred
   // on their own bbox, so offset x/y by half that box to centre inside the button.
   els.push(...chevron(f, { x: 0 - CHEVRON_S * 0.35, y: cy - CHEVRON_S, s: CHEVRON_S, dir: "left" }));
 

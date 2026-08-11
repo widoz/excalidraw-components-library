@@ -1,6 +1,6 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { color, font, inkBox, inkCircle, label, rule, size } from "../comic.js";
+import { color, font, inkBox, inkCircle, label, rule, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const CARD_W = 300;

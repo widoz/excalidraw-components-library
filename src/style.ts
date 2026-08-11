@@ -187,7 +187,7 @@ export function bubble(
   return out;
 }
 
-/** Comic action starburst. */
+/** Ink action starburst. */
 export function burst(
   f: Factory,
   o: { cx: number; cy: number; r: number; spikes?: number; fill?: string; stroke?: string },

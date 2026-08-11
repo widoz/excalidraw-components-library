@@ -250,7 +250,7 @@ export function validateAll(theme: Theme, outDir: string = outDirFor(theme)): st
   }
 
   const lib = JSON.parse(
-    readFileSync(join(outDir, "comic-ui.excalidrawlib"), "utf8"),
+    readFileSync(join(outDir, "ui.excalidrawlib"), "utf8"),
   ) as Record<string, unknown>;
   if (lib.type !== "excalidrawlib") errors.push("library: type is not \"excalidrawlib\"");
   if (lib.version !== 2) errors.push("library: version is not 2");

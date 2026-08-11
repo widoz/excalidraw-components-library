@@ -16,7 +16,7 @@
 - All elements of one component share exactly one groupId.
 - Text elements are standalone: `containerId` and `boundElements` always `null`.
 - `Factory.line` contract: `x`/`y` is the origin, `points` relative, first point always `[0, 0]`, non-zero extent.
-- Fill-only rectangles go through `comic.fillBand()`, never a bare `f.rect`.
+- Fill-only rectangles go through `style.fillBand()`, never a bare `f.rect`.
 - Never nest a rounded shape inside another rounded shape.
 - Text-width arithmetic calls `estimateTextWidth`, never re-derived.
 - Registry keys stay alphabetical. The default preset's `dist/` is committed; other presets' output is not.
@@ -33,7 +33,7 @@
 | `src/tokens.ts` (modify) | Role names, the seven palettes, stroke ladders, font maps, advance factors. No logic. |
 | `src/theme.ts` (create) | `Preset` schema, `Theme` type, `resolveTheme`, `DEFAULT_PRESET`. Pure. |
 | `src/element.ts` (modify) | `Factory` holds a `Theme` and resolves roles at emission. |
-| `src/comic.ts` (modify) | Literal stroke widths → rungs. |
+| `src/style.ts` (modify) | Literal stroke widths → rungs. |
 | `src/components/*.ts` (modify, 58) | Builder signature; stroke rungs; font roles. No geometry changes. |
 | `src/registry.ts` (modify) | `ComponentBuilder` takes a `Theme`. |
 | `src/validate.ts` (modify) | Validates against the theme the output was built with. |
@@ -466,7 +466,7 @@ The first of three refactor sweeps. Each ends with `git diff --stat dist/` empty
 - Produces:
   - `color` is now `Record<ColorRole, ColorRole>` — `color.accent === "accent"`.
   - `new Factory(componentName: string, theme: Theme)`
-  - `Factory.theme: Theme` (readonly, so `comic.ts` helpers can reach rungs and components can reach `advance`)
+  - `Factory.theme: Theme` (readonly, so `style.ts` helpers can reach rungs and components can reach `advance`)
   - `type ComponentBuilder = (theme: Theme) => ExcalidrawElement[]`
 
 - [ ] **Step 1: Turn `color` into role names**
@@ -648,7 +648,7 @@ git commit -m "refactor: resolve colour roles through the theme at emission"
 **Files:**
 - Modify: `src/tokens.ts` (add `stroke` rung names)
 - Modify: `src/element.ts` (resolve rung → px)
-- Modify: `src/comic.ts` (literal widths → rungs)
+- Modify: `src/style.ts` (literal widths → rungs)
 - Modify: 19 `src/components/*.ts` files carrying literal `strokeWidth: 2` or `1`
 
 **Interfaces:**
@@ -662,7 +662,7 @@ In `src/tokens.ts`:
 ```ts
 /** Stroke ladder rungs. Names, not values — `Factory` resolves them per theme. */
 export const stroke = {
-  /** The bold comic ink: component silhouettes. */
+  /** The bold ink: component silhouettes. */
   outline: "outline",
   /** Hairlines: table rules, separators, carets, resize grips. */
   hairline: "hairline",
@@ -687,7 +687,7 @@ In `src/element.ts`, change the option types from `strokeWidth?: number` to `str
 
 Replace every `o.strokeWidth ?? style.strokeWidth` with `this.weight(o.strokeWidth)`, and the hardcoded `strokeWidth: style.strokeWidth` in `text()` with `this.weight("outline")`.
 
-- [ ] **Step 3: Sweep `src/comic.ts`**
+- [ ] **Step 3: Sweep `src/style.ts`**
 
 Replace the literals:
 
@@ -707,7 +707,7 @@ Find them:
 grep -ln "strokeWidth: [0-9]" src/components/*.ts
 ```
 
-In each, `strokeWidth: 4` → `stroke.outline`, `strokeWidth: 2` → `stroke.hairline`, `strokeWidth: 1` → `stroke.shadow`. Import `stroke` from `../comic.js` (re-export it there alongside `color`, `font`, `size`, `style`).
+In each, `strokeWidth: 4` → `stroke.outline`, `strokeWidth: 2` → `stroke.hairline`, `strokeWidth: 1` → `stroke.shadow`. Import `stroke` from `../style.js` (re-export it there alongside `color`, `font`, `size`, `style`).
 
 Confirm none remain:
 

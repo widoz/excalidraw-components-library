@@ -1,6 +1,6 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { chevron, color, fillBand, font, inkBox, label, rule, size } from "../comic.js";
+import { chevron, color, fillBand, font, inkBox, label, rule, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const PITCH = 130;

@@ -1,11 +1,11 @@
 import { Factory, estimateTextWidth, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { chevron, color, font, label, size } from "../comic.js";
+import { chevron, color, font, label, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const GAP = 20;
 const CHEVRON_S = 8;
-// A "right" chevron's drawn width is s * 0.7, not s (see comic.ts): the glyph is an
+// A "right" chevron's drawn width is s * 0.7, not s (see style.ts): the glyph is an
 // angle bracket, not a square. Advancing by GAP + s + GAP after it would leave a
 // trailing gap of GAP + (s - s * 0.7) = GAP + s * 0.3, wider than the GAP that leads
 // into it. Advancing by the chevron's actual width keeps both gaps equal to GAP.

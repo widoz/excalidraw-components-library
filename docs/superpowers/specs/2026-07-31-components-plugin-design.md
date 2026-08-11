@@ -18,7 +18,7 @@ current output does not offer — so the build also learns to emit one file per 
 - `scripts/compose.mjs` — CLI: layout file → `.excalidraw` scene; also `list`.
 - `scripts/library.mjs` — resolve the library root, load and measure variant files.
 - `scripts/ensure-library.mjs` — verify the root, install the toolchain when needed.
-- `src/comic.ts` — a `sheet()` helper and the `ComponentOutput` type.
+- `src/style.ts` — a `sheet()` helper and the `ComponentOutput` type.
 - The 58 components in `src/components/` — each declares its variants.
 - `src/build.ts` — writes `dist/components/<name>/<variant>.excalidraw`.
 - `src/validate.ts` — checks variant files and the union-equals-sheet invariant.
@@ -64,7 +64,7 @@ Install: `/plugin marketplace add /Volumes/Dev/mine/excalidraw-components-librar
    configuration in any project.
 3. Otherwise fail, naming the fix: give a path and write the file. The message suggests a
    candidate found by checking cwd, `~`, and `~/Dev` for a directory containing
-   `dist/comic-ui.excalidrawlib`.
+   `dist/ui.excalidrawlib`.
 
 The override in step 1 matters when a clone is newer than the installed plugin, and for
 locally built presets — those land in the clone's `dist/<name>/` and never in the
@@ -90,7 +90,7 @@ TypeScript; the first invocation installs, later ones are an `existsSync` check.
 
 Two guards on the install. The candidate's `package.json` `name` must equal the `name` in
 the `package.json` beside the scripts — derived, not hardcoded, so a rename cannot break
-it — and `src/build.ts` and `dist/comic-ui.excalidrawlib` must both exist. The installed
+it — and `src/build.ts` and `dist/ui.excalidrawlib` must both exist. The installed
 plugin copy is never used as a build target: preset output belongs in a clone the user can
 commit, not in a cache directory that a plugin update wipes.
 
@@ -118,7 +118,7 @@ export default function button(theme: Theme): ComponentOutput {
 }
 ```
 
-`sheet()` lives in `comic.ts` and returns `{ elements, variants }`, where `elements` is the
+`sheet()` lives in `style.ts` and returns `{ elements, variants }`, where `elements` is the
 concatenation in declaration order. The sheet file and the library item stay byte-identical
 to today's output — the refactor is a reorganisation, not a restyle.
 
@@ -217,7 +217,7 @@ with the layout file kept beside it so a revision is a one-line edit and a re-ru
 
 **`building-presets`** is a thin wrapper. It documents the five preset fields and their
 values, the naming rules (`[a-z0-9][a-z0-9-]*`, filename must equal the `name` field,
-`components` and `comic-ui` reserved), and the commands `npm run preset`,
+`components` and `ui` reserved), and the commands `npm run preset`,
 `npm run build -- --preset <n>`, `npm run validate -- --preset <n>`, and `--all`. It calls
 `ensureLibrary({ needsToolchain: true })` first and reports what the CLIs print rather than
 paraphrasing. It offers no style guidance.

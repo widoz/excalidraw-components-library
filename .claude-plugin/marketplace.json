@@ -1,11 +1,11 @@
 {
-  "name": "excalidraw-comic-marketplace",
+  "name": "excalidraw-ui-marketplace",
   "owner": { "name": "guido" },
   "plugins": [
     {
-      "name": "excalidraw-comic",
+      "name": "excalidraw-ui",
       "source": "./",
-      "description": "Compose Excalidraw mockups from the comic component library, and build style presets"
+      "description": "Compose Excalidraw mockups from the component library, and build style presets"
     }
   ]
 }

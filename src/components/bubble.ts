@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { bubble as bubbleShape, color, rule } from "../comic.js";
+import { bubble as bubbleShape, color, rule } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const IN_W = 220;

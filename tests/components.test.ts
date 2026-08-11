@@ -18,7 +18,7 @@ it("every component declares at least one variant", () => {
 
 let out: string;
 beforeAll(() => {
-  out = mkdtempSync(join(tmpdir(), "comic-ui-comp-"));
+  out = mkdtempSync(join(tmpdir(), "ui-comp-"));
   buildAll(theme, out);
 });
 afterAll(() => rmSync(out, { recursive: true, force: true }));
@@ -135,7 +135,7 @@ describe("select", () => {
   it("shows a trigger with a chevron and an open menu with a highlighted item", () => {
     const els = load(out, "select");
     expect(texts(els)).toContain("Pick a style");
-    expect(texts(els)).toContain("Comic");
+    expect(texts(els)).toContain("Inked");
     // One chevron line.
     expect(count(els, "line")).toBe(1);
     // The highlighted menu row is an accent-filled rectangle.

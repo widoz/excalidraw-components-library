@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { chevron, color, fillBand, inkBox, label, size } from "../comic.js";
+import { chevron, color, fillBand, inkBox, label, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const W = size.control;
@@ -22,14 +22,14 @@ export default function select(theme: Theme): ComponentOutput {
   els.push(...chevron(f, { x: W - 42, y: TRIGGER_H / 2 - 5, s: 12, dir: "down" }));
 
   // Open menu.
-  const items = ["Sketchy", "Comic", "Clean"];
+  const items = ["Sketchy", "Inked", "Clean"];
   const menuY = TRIGGER_H + 22;
   const menuH = items.length * ITEM_H + 16;
   els.push(...inkBox(f, { x: 0, y: menuY, w: W, h: menuH }));
 
   items.forEach((text, i) => {
     const y = menuY + 8 + i * ITEM_H;
-    const highlighted = text === "Comic";
+    const highlighted = text === "Inked";
     if (highlighted) {
       els.push(...fillBand(f, { x: 8, y, w: W - 16, h: ITEM_H, fill: color.accent, rounded: false }));
     }

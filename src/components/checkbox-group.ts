@@ -1,6 +1,6 @@
 import { Factory, type ExcalidrawElement } from "../element.js";
 import type { Theme } from "../theme.js";
-import { checkMark, color, inkBox, label, size } from "../comic.js";
+import { checkMark, color, inkBox, label, size } from "../style.js";
 import { variants, type ComponentOutput } from "../variants.js";
 
 const BOX = 34;
