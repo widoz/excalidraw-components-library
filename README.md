@@ -3,6 +3,8 @@
 ![A field of the library's own hand-drawn components on white, with the title
 "Excalidraw Components Library" in the clear centre](./docs/banner.png)
 
+[![checks](https://github.com/widoz/excalidraw-components-library/actions/workflows/checks.yml/badge.svg)](https://github.com/widoz/excalidraw-components-library/actions/workflows/checks.yml)
+
 Hand-drawn UI components for [Excalidraw](https://excalidraw.com),
 modelled on the [shadcn/ui](https://ui.shadcn.com) component set.
 
