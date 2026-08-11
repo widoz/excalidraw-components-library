@@ -3,8 +3,6 @@
 ![A field of the library's own hand-drawn components on white, with the title
 "Excalidraw Components Library" in the clear centre](./docs/banner.png)
 
-![Preset Script](./docs/preset.gif)
-
 Hand-drawn UI components for [Excalidraw](https://excalidraw.com),
 modelled on the [shadcn/ui](https://ui.shadcn.com) component set.
 
@@ -98,8 +96,9 @@ npm run validate                  # checks every preset
 npm run validate -- --preset soft # checks dist/soft/
 ```
 
-The bare `npm run preset` colours its questionnaire: every palette prints in its own
-scale, so you choose a colour by seeing it.
+The bare `npm run preset` colours its questionnaire: every palette prints in its own scale, so you choose a colour by seeing it.
+
+![Preset Script](./docs/preset.gif)
 
 Colour goes to a terminal only — a pipe, a redirect or `NO_COLOR` gets the same plain
 text as before. `src/term.ts` holds every styled string, and `docs/preset.tape` records
