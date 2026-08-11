@@ -5,7 +5,8 @@ import { stdin, stdout } from "node:process";
 import { PRESETS_DIR } from "./build.js";
 import { DEFAULT_PRESET, resolveTheme, type Preset } from "./theme.js";
 import { fontFaces, sloppinessValues, strokeLadders } from "./tokens.js";
-import { palettes, paletteGroups } from "./palettes.js";
+import { palettes } from "./palettes.js";
+import { fail, fieldPrompt, header, namePrompt, ok, summary } from "./term.js";
 
 const FLAGS: Record<string, keyof Preset> = {
   "--name": "name",
@@ -57,20 +58,6 @@ const CHOICES: Record<string, readonly string[]> = {
 const PROMPT_FIELDS = Object.entries(CHOICES);
 
 /**
- * 26 palette names on one bracketed line is unreadable, so the two palette fields print
- * their choices grouped over several lines. Every other field keeps the one-line form.
- */
-function renderChoices(field: string, choices: readonly string[]): string {
-  if (field !== "palette" && field !== "accent") {
-    return `[${choices.join(" | ")}]`;
-  }
-  const rows = Object.entries(paletteGroups)
-    .map(([group, names]) => `  ${group.padEnd(8)} ${names.join(" ")}`)
-    .join("\n");
-  return `\n${rows}\n`;
-}
-
-/**
  * When a non-TTY stdin (a pipe, a redirected file, or anything an automated test
  * drives) already has several newline-terminated answers queued, Node's `readline`
  * splits the buffered chunk into `'line'` events and emits them all synchronously as
@@ -94,7 +81,8 @@ function prompt(): Promise<Preset> {
     rl.on("close", () => {
       if (!answered) reject(new Error("Aborted before every field was answered."));
     });
-    rl.question("Preset name: ", (rawName) => {
+    stdout.write(header());
+    rl.question(namePrompt(), (rawName) => {
       const preset: Preset = { name: rawName.trim() };
       const askField = (i: number): void => {
         if (i >= PROMPT_FIELDS.length) {
@@ -105,8 +93,7 @@ function prompt(): Promise<Preset> {
         }
         const [field, choices] = PROMPT_FIELDS[i]!;
         const fallback = DEFAULT_PRESET[field as keyof Preset];
-        const shown = field === "accent" ? "blank = same as base" : String(fallback);
-        rl.question(`${field} ${renderChoices(field, choices)}(${shown}): `, (raw) => {
+        rl.question(fieldPrompt(field, choices, fallback), (raw) => {
           const answer = raw.trim();
           if (answer) (preset as unknown as Record<string, string>)[field] = answer;
           askField(i + 1);
@@ -121,12 +108,14 @@ async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
   const { force, ...fields } = args;
   const preset = fields.name ? (fields as Preset) : await prompt();
-  console.log(`Wrote ${writePreset(preset, force)}`);
+  const path = writePreset(preset, force);
+  console.log(`\n${summary(preset)}`);
+  console.log(ok(path, preset.name));
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch((error: unknown) => {
-    console.error(error instanceof Error ? error.message : String(error));
+    console.error(fail(error instanceof Error ? error.message : String(error)));
     process.exit(1);
   });
 }

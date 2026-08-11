@@ -90,6 +90,11 @@ npm run validate                  # checks every preset
 npm run validate -- --preset soft # checks dist/soft/
 ```
 
+The bare `npm run preset` colours its questionnaire: every palette prints in its own
+scale, so you choose a colour by seeing it. Colour goes to a terminal only — a pipe, a
+redirect or `NO_COLOR` gets the same plain text as before. `src/term.ts` holds every
+styled string.
+
 `presets/` and `dist/` are both committed, so every style is reproducible and usable
 without a build. `dist/` mirrors `presets/` exactly: a full build writes one directory
 per preset and removes any directory no preset backs, so deleting a preset and
