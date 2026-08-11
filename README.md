@@ -67,17 +67,22 @@ picks six things:
 | `edges` | `sharp` · `round` (default) |
 | `font` | `excalifont` (default) · `comic-shanns` · `nunito` — body text only; headings stay Comic Shanns |
 | `palette` | any of 26 scales — Tailwind's 22 (`slate` `gray` `zinc` `neutral` `stone` `red` `orange` `amber` `yellow` `lime` `green` `emerald` `teal` `cyan` `sky` `blue` `indigo` `violet` `purple` `fuchsia` `pink` `rose`) plus `mauve` `olive` `mist` `taupe`. Default `zinc` |
-| `accent` | any palette — drives `accent`, `accentText`, `subtle` and `mutedText`. Defaults to `palette`, so omitting it keeps the single-scale look |
+| `accent` | any palette — drives `accent`, `accentText` and `subtle`. Defaults to `palette`, so omitting it keeps the single-scale look |
 
 A preset names up to two scales. The base `palette` colours the chrome — every stroke,
-panel, muted fill and border. The `accent` scale colours buttons, badges, focus rings
-and secondary text. Leaving `accent` out points both at the same scale, which is how
-every preset behaved before the field existed. `presets/wp-admin.json` is the two-scale
+panel, muted fill, border and secondary text. The `accent` scale colours buttons, badges
+and focus rings. Leaving `accent` out points both at the same scale, which is how every
+preset behaved before the field existed. `presets/wp-admin.json` is the two-scale
 example: neutral chrome, blue accents.
+
+Secondary text (`mutedText`) stays on the base scale on purpose. It is the one role that
+renders as plain body text on the surface, so a light or high-chroma accent drops it
+below 4.5:1 contrast. On the base scale every preset stays legible whatever accent you
+pick.
 
 ```bash
 npm run preset                    # prompts, writes presets/<name>.json
-npm run preset -- --name soft --palette stone --edges sharp
+npm run preset -- --name soft --palette stone --accent blue --edges sharp
 npm run build                     # every preset → dist/<name>/
 npm run build -- --all            # same as a bare build
 npm run build -- --preset soft    # just soft → dist/soft/

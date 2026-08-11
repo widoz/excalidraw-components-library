@@ -27,7 +27,7 @@ to point it at. Run every later command from the printed root.
 | `edges` | `sharp` · `round` (default) |
 | `font` | `excalifont` (default) · `comic-shanns` · `nunito` — body text only |
 | `palette` | any of 26 scales, grouped: neutral · warm · green · cool · purple · shadcn |
-| `accent` | any of the same 26 — colours buttons, badges, focus rings and secondary text. Defaults to `palette` |
+| `accent` | any of the same 26 — colours buttons, badges and focus rings. Defaults to `palette` |
 
 ## Choosing palettes
 
