@@ -1,5 +1,8 @@
 # Excalidraw Components Library
 
+![A field of the library's own hand-drawn components on white, with the title
+"Excalidraw Components Library" in the clear centre](./docs/banner.png)
+
 ![Preset Script](./docs/preset.gif)
 
 Hand-drawn UI components for [Excalidraw](https://excalidraw.com),
@@ -54,6 +57,9 @@ tokens (colour, font, stroke weight) into concrete values.
 `src/theme.ts` resolves a preset file into a `Theme`; `src/build.ts` and `src/preset.ts`
 are the CLI entry points.
 `src/components/*.ts` is one file per component.
+`scripts/banner.mjs` rebuilds the banner above from `dist/default/`: run
+`node scripts/banner.mjs` after a restyle, and it rewrites `docs/banner.svg` and
+`docs/banner.png`.
 `dist/` is generated but committed, so the library works without a build. Every preset's
 output is committed, one directory per preset — see [Styles](#styles).
 
