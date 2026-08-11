@@ -95,9 +95,6 @@ npm run validate -- --preset soft # checks dist/soft/
 The bare `npm run preset` colours its questionnaire: every palette prints in its own
 scale, so you choose a colour by seeing it.
 
-![npm run preset asks for each field, lists the 26 palettes as coloured swatches, and
-prints the resolved preset](docs/preset.gif)
-
 Colour goes to a terminal only — a pipe, a redirect or `NO_COLOR` gets the same plain
 text as before. `src/term.ts` holds every styled string, and `docs/preset.tape` records
 the GIF above with [vhs](https://github.com/charmbracelet/vhs): `vhs docs/preset.tape`.
