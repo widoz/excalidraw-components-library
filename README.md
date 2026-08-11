@@ -1,5 +1,7 @@
 # Excalidraw Components Library
 
+![Preset Script](./docs/preset.gif)
+
 Hand-drawn UI components for [Excalidraw](https://excalidraw.com),
 modelled on the [shadcn/ui](https://ui.shadcn.com) component set.
 
